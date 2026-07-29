@@ -226,10 +226,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border:0;border-radiu
 .cases{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .case{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--surface);transition:.35s;position:relative}
 .case:hover{transform:translateY(-6px);border-color:rgba(34,211,238,.4);box-shadow:var(--shadow)}
-.case-img{height:170px;position:relative;overflow:hidden;display:grid;place-items:center}
-.case:nth-child(1) .case-img{background:linear-gradient(135deg,#0e7490,#1e3a8a)}
-.case:nth-child(2) .case-img{background:linear-gradient(135deg,#7c2d12,#b91c1c)}
-.case:nth-child(3) .case-img{background:linear-gradient(135deg,#4c1d95,#1e3a8a)}
+.case-img{height:190px;position:relative;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,#0e7490,#1e3a8a)}
+.case-img img{width:100%;height:100%;object-fit:cover;display:block;transition:.5s}
+.case:hover .case-img img{transform:scale(1.05)}
+.case-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(4,12,22,.55))}
 .case-img span{font-size:38px;font-weight:800;color:rgba(255,255,255,.9);letter-spacing:-.03em;text-align:center;padding:0 20px;line-height:1.1}
 .case-body{padding:22px}
 .case-body h3{font-size:18px;margin-bottom:8px}
@@ -245,8 +245,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border:0;border-radiu
 .stars svg{width:16px;height:16px;fill:#fbbf24}
 .rev p{font-size:14.5px;color:#cbd5e1;flex:1;margin-bottom:18px}
 .rev-author{display:flex;align-items:center;gap:12px}
-.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;color:#04121a;
+.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;color:#04121a;overflow:hidden;
   background:linear-gradient(135deg,var(--accent),var(--accent-2));flex-shrink:0}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
 .rev-author b{font-size:14.5px;display:block}
 .rev-author span{font-size:12.5px;color:var(--muted)}
 
@@ -391,7 +392,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       <a href="#services">Услуги</a>
       <a href="#why">Преимущества</a>
       <a href="#calc">Расчёт</a>
-      <a href="#cases">Портфолио</a>
+      <a href="#cases">Кейсы</a>
       <a href="#reviews">Отзывы</a>
       <a href="#faq">FAQ</a>
       <a href="#contacts">Контакты</a>
@@ -599,32 +600,72 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section id="cases">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Портфолио</span>
-      <h2>Реализованные проекты</h2>
+      <span class="eyebrow">Практический опыт</span>
+      <h2>Кейсы для бизнеса</h2>
     </div>
     <div class="cases">
       <article class="case reveal">
-        <div class="case-img"><span>ДКП<br>Дальние Дачи</span></div>
+        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/ef4/ef4eebf6af5b2a6f48159fdf090843e6/ofis_chasovoi_kompanii_2x_1x.jpg" alt="Офис часовой компании" loading="lazy"></div>
         <div class="case-body">
-          <h3>Посёлок «Дальние Дачи»</h3>
-          <p>Система видеонаблюдения по периметру и на въездных группах, контроль доступа для жителей.</p>
-          <div class="case-tags"><span>Видеонаблюдение</span><span>СКУД</span><span>СКС</span></div>
+          <h3>Компания по оптовой торговле часами</h3>
+          <p>Оборудование офиса 200 м². Сборка и подготовка 28 рабочих мест «под ключ».</p>
+          <div class="case-tags"><span>ИТ-инфраструктура</span><span>СКС</span><span>Рабочие места</span></div>
         </div>
       </article>
       <article class="case reveal">
-        <div class="case-img"><span>ДоДо<br>Пицца</span></div>
+        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/1dc/1dc7d852c0825e46e16e94a97e698c04/avtoservis_1x.jpeg" alt="СКУД в автосервисе" loading="lazy"></div>
         <div class="case-body">
-          <h3>Два объекта сети пиццерий</h3>
-          <p>Монтаж СКС, настройка сети и касс, видеонаблюдение зала и кухни, поддержка на аутсорсе.</p>
-          <div class="case-tags"><span>СКС</span><span>Видеонаблюдение</span><span>Аутсорсинг</span></div>
+          <h3>Установка СКУД в автосервисе</h3>
+          <p>Контроль и безопасность на всей территории сервиса, полная ясность в текущем моменте.</p>
+          <div class="case-tags"><span>СКУД</span><span>Безопасность</span></div>
         </div>
       </article>
       <article class="case reveal">
-        <div class="case-img"><span>КП<br>Лесные Озёра</span></div>
+        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/4cd/4cde2a7a4a0e2210fcce8319ac5d93c6/kottedj_pos2_1x_1x.png" alt="Видеонаблюдение в коттеджном посёлке" loading="lazy"></div>
         <div class="case-body">
-          <h3>КП «Лесные Озёра»</h3>
-          <p>Инфраструктура управляющей компании: телефония, сеть, серверы 1С и постоянное сопровождение.</p>
-          <div class="case-tags"><span>IP-телефония</span><span>1С</span><span>Серверы</span></div>
+          <h3>Видеонаблюдение для коттеджного посёлка</h3>
+          <p>Сокращение штата охраны на 30%, уровень безопасности вырос втрое.</p>
+          <div class="case-tags"><span>Видеонаблюдение</span><span>Периметр</span></div>
+        </div>
+      </article>
+      <article class="case reveal">
+        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/9c0/9c03ab7a4395261b50c0f1d6838dac65/stomatologiya_1x_1x.png" alt="Стоматологическая клиника" loading="lazy"></div>
+        <div class="case-body">
+          <h3>ИТ-аутсорсинг стоматологической клиники на Арбате</h3>
+          <p>Замена приходящего сисадмина, порядок в серверной и модернизация всей ИТ-инфраструктуры.</p>
+          <div class="case-tags"><span>Аутсорсинг</span><span>Серверы</span></div>
+        </div>
+      </article>
+      <article class="case reveal">
+        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/d17/d17e0099a2e42a3a3cb6acf10662d0de/perevozim_ofis_2x_1x.jpg" alt="Переезд офиса" loading="lazy"></div>
+        <div class="case-body">
+          <h3>Переезд офиса на 40 сотрудников за 2 дня</h3>
+          <p>Переезд в новый офис, смена ЦОД и облака, переход на другого провайдера без простоя.</p>
+          <div class="case-tags"><span>Проект</span><span>Миграция</span></div>
+        </div>
+      </article>
+      <article class="case reveal">
+        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/169/169e3c87e17d673a7587fba1c9b74148/snimok_ekrana_2026_07_26_v_14_23_34_1x_1x.png" alt="Замена СКУД в ЖК" loading="lazy"></div>
+        <div class="case-body">
+          <h3>ЖК бизнес-класса: замена старой СКУД</h3>
+          <p>Демонтаж устаревшего оборудования, установка Face ID и распознавания автомобильных номеров.</p>
+          <div class="case-tags"><span>СКУД</span><span>Face ID</span></div>
+        </div>
+      </article>
+      <article class="case reveal">
+        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/7c9/7c93e6677e0c3ab8d59efb34a4f595b0/pult_okhrany_2x_1x.jpg" alt="Пульт охраны" loading="lazy"></div>
+        <div class="case-body">
+          <h3>Сигнализация с центральным пультом охраны</h3>
+          <p>Система индивидуальной охраны в посёлке на 350 домовладений.</p>
+          <div class="case-tags"><span>Сигнализация</span><span>Пульт охраны</span></div>
+        </div>
+      </article>
+      <article class="case reveal">
+        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/d5f/d5f104887df98690bf777d53ebbe77ff/5_1_1x.jpg" alt="Логистическая компания" loading="lazy"></div>
+        <div class="case-body">
+          <h3>ИТ-аутсорсинг логистической компании</h3>
+          <p>Создание ИТ-инфраструктуры с нуля, СКУД и видеонаблюдение в едином проекте.</p>
+          <div class="case-tags"><span>Аутсорсинг</span><span>СКУД</span><span>Видеонаблюдение</span></div>
         </div>
       </article>
     </div>
@@ -636,38 +677,38 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Отзывы</span>
-      <h2>Что говорят клиенты</h2>
+      <h2>Вот что говорят о нас</h2>
     </div>
     <div class="reviews">
       <div class="rev reveal">
         <div class="stars"></div>
-        <p>Обслуживаемся не первый год. Адекватные цены, заявки закрывают быстро, ни разу не подвели с серверами.</p>
-        <div class="rev-author"><div class="avatar">С</div><div><b>Смирнов В.</b><span>руководитель компании</span></div></div>
+        <p>Офигенный сервис, круто что всё в одном месте! Просто передал подготовку помещения и установку всех коммуникаций ребятам, потом принял всё в рабочем состоянии — оставалось только мебель поставить.</p>
+        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/4a5/4a5a0035c4015f40e2527317c68f2f94/snimok_ekrana_2026_07_26_v_02_13_05_1x.png" alt="" loading="lazy"></div><div><b>Sky Time</b><span>Компания</span></div></div>
       </div>
       <div class="rev reveal">
         <div class="stars"></div>
-        <p>Ставили видеонаблюдение на складе. Приехали, сами всё замерили, смонтировали аккуратно, объяснили как пользоваться.</p>
-        <div class="rev-author"><div class="avatar">Г</div><div><b>Григорьев Р.</b><span>директор по логистике</span></div></div>
+        <p>Обратился по рекомендации друзей — нужно было срочно поднять все коммуникации в арендованном помещении под кофейню. Пара дней, и всё было готово на высшем уровне. Советую.</p>
+        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/12a/12ac1169fbb50beee4158e0cc68ac779/snimok_ekrana_2026_07_26_v_02_14_27_1x_1x_1x.png" alt="" loading="lazy"></div><div><b>ДоДо пицца</b><span>Компания</span></div></div>
       </div>
       <div class="rev reveal">
         <div class="stars"></div>
-        <p>Перевели 1С в облако — бухгалтерия перестала жаловаться на тормоза. Переезд прошёл за выходные.</p>
-        <div class="rev-author"><div class="avatar">П</div><div><b>Петров И.</b><span>финансовый директор</span></div></div>
+        <p>В прошлом году делали мой салон красоты. Когда расширилась и взяла помещение побольше — снова позвала их, уже с переделкой всех коммуникаций под салон. Справились.</p>
+        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/4ab/4ab25e3154289955294dd97c5d6890a4/snimok_ekrana_2026_07_26_v_02_18_04_1x.png" alt="" loading="lazy"></div><div><b>BS Time</b><span>Компания</span></div></div>
       </div>
       <div class="rev reveal">
         <div class="stars"></div>
-        <p>Понравилось, что есть персональный менеджер: не нужно каждый раз объяснять новому человеку, как у нас всё устроено.</p>
-        <div class="rev-author"><div class="avatar">Х</div><div><b>Халимов Н.</b><span>owner, розничная сеть</span></div></div>
+        <p>Ребята закончили работы, и это просто чудо: всё работает на высшем уровне, ещё и пару световых экранов подключили по акции. Спасибо за работу, рекомендую.</p>
+        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/43e/43e54c5040b03678c839cd7d346a51f3/snimok_ekrana_2026_07_26_v_02_20_00_1x_1x.png" alt="" loading="lazy"></div><div><b>Loyal-Shop</b><span>Компания</span></div></div>
       </div>
       <div class="rev reveal">
         <div class="stars"></div>
-        <p>Сделали СКУД в офисе, теперь учёт рабочего времени выгружается автоматически. Качественная работа.</p>
-        <div class="rev-author"><div class="avatar">А</div><div><b>Арсеньева К.</b><span>HR-директор</span></div></div>
+        <p>Заменили приходящего сисадмина на полноценную поддержку. Навели порядок в серверной, обновили инфраструктуру — теперь клиника не встаёт из-за ИТ.</p>
+        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/a37/a373db19e8100d40087335877137a877/snimok_ekrana_2026_07_26_v_02_22_41_1x_1x.png" alt="" loading="lazy"></div><div><b>Стоматологическая клиника на Арбате</b><span>Клиент с 2024 года</span></div></div>
       </div>
       <div class="rev reveal">
         <div class="stars"></div>
-        <p>Начали с бесплатного аудита — честно показали проблемы и не стали навязывать лишнего. Рекомендую.</p>
-        <div class="rev-author"><div class="avatar">Ш</div><div><b>Шурко Е.</b><span>управляющий</span></div></div>
+        <p>Переехали офисом на 40 человек за выходные — в понедельник все сели и работали. Отдельное спасибо за то, что заранее описали риски и план отката.</p>
+        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/4a5/4a5a0035c4015f40e2527317c68f2f94/snimok_ekrana_2026_07_26_v_02_13_05_1x.png" alt="" loading="lazy"></div><div><b>Логистическая компания</b><span>Комплексный проект</span></div></div>
       </div>
     </div>
   </div>
@@ -853,7 +894,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <h4>Компания</h4>
         <ul>
           <li><a href="#why">О нас</a></li>
-          <li><a href="#cases">Портфолио</a></li>
+          <li><a href="#cases">Кейсы</a></li>
           <li><a href="#reviews">Отзывы</a></li>
           <li><a href="#blog">Блог</a></li>
           <li><a href="#faq">FAQ</a></li>
