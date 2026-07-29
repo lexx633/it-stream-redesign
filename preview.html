@@ -7,6 +7,11 @@ figcaption{margin-bottom:8px}
 iframe{border:0;background:#000}
 </style></head>
 <body>
-<figure><figcaption>390 x 780</figcaption><iframe src="index.html" width="390" height="780"></iframe></figure>
-<figure><figcaption>768 x 780</figcaption><iframe src="index.html" width="768" height="780"></iframe></figure>
+<figure><figcaption>390 x 780</figcaption><iframe id="a" width="390" height="780"></iframe></figure>
+<figure><figcaption>768 x 780</figcaption><iframe id="b" width="768" height="780"></iframe></figure>
+<script>
+var v = 'index.html?cb=' + Date.now();
+document.getElementById('a').src = v;
+document.getElementById('b').src = v;
+</script>
 </body></html>
