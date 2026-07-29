@@ -226,11 +226,18 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border:0;border-radiu
 .cases{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .case{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--surface);transition:.35s;position:relative}
 .case:hover{transform:translateY(-6px);border-color:rgba(34,211,238,.4);box-shadow:var(--shadow)}
-.case-img{height:190px;position:relative;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,#0e7490,#1e3a8a)}
-.case-img img{width:100%;height:100%;object-fit:cover;display:block;transition:.5s}
-.case:hover .case-img img{transform:scale(1.05)}
-.case-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(4,12,22,.55))}
-.case-img span{font-size:38px;font-weight:800;color:rgba(255,255,255,.9);letter-spacing:-.03em;text-align:center;padding:0 20px;line-height:1.1}
+.case-ico{height:136px;position:relative;display:grid;place-items:center;overflow:hidden;
+  border-bottom:1px solid var(--line);
+  background:radial-gradient(120% 120% at 50% 0%,rgba(34,211,238,.13),transparent 62%),rgba(255,255,255,.02)}
+.case-ico::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(circle at 50% 42%,#000,transparent 72%);
+  mask-image:radial-gradient(circle at 50% 42%,#000,transparent 72%)}
+.case-ico i{position:relative;width:64px;height:64px;border-radius:19px;display:grid;place-items:center;transition:.35s;
+  background:linear-gradient(135deg,rgba(34,211,238,.2),rgba(99,102,241,.2));border:1px solid rgba(34,211,238,.3)}
+.case-ico svg{width:30px;height:30px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.case:hover .case-ico i{transform:translateY(-3px) scale(1.06);border-color:rgba(34,211,238,.6)}
 .case-body{padding:22px}
 .case-body h3{font-size:18px;margin-bottom:8px}
 .case-body p{font-size:14px;color:var(--muted);margin-bottom:14px}
@@ -605,7 +612,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     </div>
     <div class="cases">
       <article class="case reveal">
-        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/ef4/ef4eebf6af5b2a6f48159fdf090843e6/ofis_chasovoi_kompanii_2x_1x.jpg" alt="Офис часовой компании" loading="lazy"></div>
+        <div class="case-ico"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 7.5v3.8M11.2 11.8L6.4 16.4M12.8 11.8l4.8 4.6"/></svg></i></div>
         <div class="case-body">
           <h3>Компания по оптовой торговле часами</h3>
           <p>Оборудование офиса 200 м². Сборка и подготовка 28 рабочих мест «под ключ».</p>
@@ -613,7 +620,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         </div>
       </article>
       <article class="case reveal">
-        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/1dc/1dc7d852c0825e46e16e94a97e698c04/avtoservis_1x.jpeg" alt="СКУД в автосервисе" loading="lazy"></div>
+        <div class="case-ico"><i><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20M6 14.5h4"/><circle cx="16.5" cy="14.5" r="1.6"/></svg></i></div>
         <div class="case-body">
           <h3>Установка СКУД в автосервисе</h3>
           <p>Контроль и безопасность на всей территории сервиса, полная ясность в текущем моменте.</p>
@@ -621,7 +628,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         </div>
       </article>
       <article class="case reveal">
-        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/4cd/4cde2a7a4a0e2210fcce8319ac5d93c6/kottedj_pos2_1x_1x.png" alt="Видеонаблюдение в коттеджном посёлке" loading="lazy"></div>
+        <div class="case-ico"><i><svg viewBox="0 0 24 24"><path d="M23 7.5l-6.5 4.5 6.5 4.5v-9z"/><rect x="1" y="5.5" width="15" height="13" rx="2.5"/><path d="M4.5 15h5"/></svg></i></div>
         <div class="case-body">
           <h3>Видеонаблюдение для коттеджного посёлка</h3>
           <p>Сокращение штата охраны на 30%, уровень безопасности вырос втрое.</p>
@@ -629,7 +636,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         </div>
       </article>
       <article class="case reveal">
-        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/9c0/9c03ab7a4395261b50c0f1d6838dac65/stomatologiya_1x_1x.png" alt="Стоматологическая клиника" loading="lazy"></div>
+        <div class="case-ico"><i><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="8" rx="2.2"/><rect x="2.5" y="13.5" width="19" height="8" rx="2.2"/><path d="M6.5 6.5h.01M6.5 17.5h.01M10.5 6.5h4M10.5 17.5h4"/></svg></i></div>
         <div class="case-body">
           <h3>ИТ-аутсорсинг стоматологической клиники на Арбате</h3>
           <p>Замена приходящего сисадмина, порядок в серверной и модернизация всей ИТ-инфраструктуры.</p>
@@ -637,7 +644,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         </div>
       </article>
       <article class="case reveal">
-        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/d17/d17e0099a2e42a3a3cb6acf10662d0de/perevozim_ofis_2x_1x.jpg" alt="Переезд офиса" loading="lazy"></div>
+        <div class="case-ico"><i><svg viewBox="0 0 24 24"><rect x="1" y="6" width="13" height="10" rx="1.8"/><path d="M14 9.5h3.6L21 13v3h-7z"/><circle cx="6" cy="18.6" r="1.8"/><circle cx="17.6" cy="18.6" r="1.8"/></svg></i></div>
         <div class="case-body">
           <h3>Переезд офиса на 40 сотрудников за 2 дня</h3>
           <p>Переезд в новый офис, смена ЦОД и облака, переход на другого провайдера без простоя.</p>
@@ -645,27 +652,11 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         </div>
       </article>
       <article class="case reveal">
-        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/169/169e3c87e17d673a7587fba1c9b74148/snimok_ekrana_2026_07_26_v_14_23_34_1x_1x.png" alt="Замена СКУД в ЖК" loading="lazy"></div>
+        <div class="case-ico"><i><svg viewBox="0 0 24 24"><path d="M3 8.5V5.5A2.5 2.5 0 015.5 3h3M15.5 3h3A2.5 2.5 0 0121 5.5v3M21 15.5v3a2.5 2.5 0 01-2.5 2.5h-3M8.5 21h-3A2.5 2.5 0 013 18.5v-3"/><circle cx="12" cy="11" r="2.2"/><path d="M8.6 16.2c.9-1.4 2-2.1 3.4-2.1s2.5.7 3.4 2.1"/></svg></i></div>
         <div class="case-body">
           <h3>ЖК бизнес-класса: замена старой СКУД</h3>
           <p>Демонтаж устаревшего оборудования, установка Face ID и распознавания автомобильных номеров.</p>
           <div class="case-tags"><span>СКУД</span><span>Face ID</span></div>
-        </div>
-      </article>
-      <article class="case reveal">
-        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/7c9/7c93e6677e0c3ab8d59efb34a4f595b0/pult_okhrany_2x_1x.jpg" alt="Пульт охраны" loading="lazy"></div>
-        <div class="case-body">
-          <h3>Сигнализация с центральным пультом охраны</h3>
-          <p>Система индивидуальной охраны в посёлке на 350 домовладений.</p>
-          <div class="case-tags"><span>Сигнализация</span><span>Пульт охраны</span></div>
-        </div>
-      </article>
-      <article class="case reveal">
-        <div class="case-img"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/d5f/d5f104887df98690bf777d53ebbe77ff/5_1_1x.jpg" alt="Логистическая компания" loading="lazy"></div>
-        <div class="case-body">
-          <h3>ИТ-аутсорсинг логистической компании</h3>
-          <p>Создание ИТ-инфраструктуры с нуля, СКУД и видеонаблюдение в едином проекте.</p>
-          <div class="case-tags"><span>Аутсорсинг</span><span>СКУД</span><span>Видеонаблюдение</span></div>
         </div>
       </article>
     </div>
