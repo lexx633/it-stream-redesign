@@ -347,9 +347,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   .incl-wrap,.calc,.contacts{grid-template-columns:1fr;gap:32px}
   .foot-grid{grid-template-columns:1fr 1fr;gap:32px}
 }
-@media(max-width:760px){
-  section{padding:70px 0}
-  .hero{padding:120px 0 60px}
+@media(max-width:900px){
   .nav-links{
     position:fixed;top:76px;left:0;right:0;flex-direction:column;gap:0;
     background:rgba(7,11,22,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--line);
@@ -359,6 +357,10 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   .nav-links a{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:16px}
   .nav-phone{display:none}
   .burger{display:flex;margin-left:auto}
+}
+@media(max-width:760px){
+  section{padding:70px 0}
+  .hero{padding:120px 0 60px}
   .stats{grid-template-columns:repeat(2,1fr);gap:14px;margin-top:48px}
   .services,.cases,.reviews,.posts,.benefits,.incl{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr}
@@ -368,7 +370,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   .fab a{width:50px;height:50px}
 }
 @media(max-width:440px){
-  .hero h1 .nb{white-space:normal}
+  .hero h1{font-size:31px}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
