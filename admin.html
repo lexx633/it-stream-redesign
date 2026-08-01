@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Админка · IT-Stream</title>
+<style>
+  :root{
+    --bg:#0e1116; --panel:#171b22; --panel2:#1e232c; --line:#2a313c;
+    --text:#e7ebf0; --muted:#93a0b1; --accent:#5b8cff; --ok:#34d399; --err:#f87171;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.55;padding:24px 16px 80px}
+  .wrap{max-width:860px;margin:0 auto}
+  h1{font-size:22px;margin-bottom:4px}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px}
+  .card h2{font-size:15px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:14px}
+  label{display:block;font-size:13px;color:var(--muted);margin:12px 0 5px}
+  .key{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#6b7686}
+  input,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;
+    color:var(--text);padding:9px 11px;font-size:14px;font-family:inherit;resize:vertical}
+  input:focus,textarea:focus{outline:none;border-color:var(--accent)}
+  textarea{min-height:44px}
+  .html-hint{color:#d9a441;font-size:11px;margin-left:6px}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .row>div{flex:1;min-width:180px}
+  .bar{position:fixed;left:0;right:0;bottom:0;background:rgba(14,17,22,.92);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:center}
+  button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:11px 22px;font-size:15px;
+    font-weight:600;cursor:pointer}
+  button.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .msg{font-size:14px}
+  .msg.ok{color:var(--ok)} .msg.err{color:var(--err)}
+  a{color:var(--accent)}
+  .note{font-size:12px;color:var(--muted);margin-top:8px}
+  details summary{cursor:pointer;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Редактор контента · IT-Stream</h1>
+  <div class="sub">Правит тексты и кнопки лендинга. Сохранение коммитит <span class="key">content.json</span> в GitHub — сайт обновится через 1–2 минуты.</div>
+
+  <div class="card">
+    <h2>Доступ к GitHub</h2>
+    <div class="row">
+      <div><label>Владелец (owner)</label><input id="gh_owner" value="lexx633"></div>
+      <div><label>Репозиторий</label><input id="gh_repo" value="it-stream-redesign"></div>
+      <div><label>Ветка</label><input id="gh_branch" value="main"></div>
+    </div>
+    <label>Токен доступа (Personal Access Token, scope <span class="key">repo</span> или Contents: write)</label>
+    <input id="gh_token" type="password" placeholder="ghp_… — хранится только в этом браузере">
+    <div class="note">Токен сохраняется в localStorage этого браузера и никуда, кроме api.github.com, не отправляется.
+      Создать: GitHub → Settings → Developer settings → Personal access tokens.</div>
+  </div>
+
+  <div class="card">
+    <h2>Контент</h2>
+    <div id="fields"><div class="note">Загрузка content.json…</div></div>
+    <details style="margin-top:14px">
+      <summary>Как добавить новое поле</summary>
+      <div class="note">1. В <span class="key">index.html</span> добавь элементу атрибут <span class="key">data-cms="раздел.ключ"</span>
+        (для текста с разметкой — ещё <span class="key">data-cms-html</span>, для ссылки — <span class="key">data-cms-href="ключ"</span>).<br>
+        2. В <span class="key">content.json</span> добавь этот ключ со значением. Поле само появится здесь.</div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>Что пока не редактируется здесь</h2>
+    <div class="note">Карточки услуг, кейсы, отзывы, вопросы FAQ и цены калькулятора правятся прямо в <span class="key">index.html</span>.
+      Их можно вынести в этот редактор тем же приёмом <span class="key">data-cms</span> — это следующий шаг основы.</div>
+  </div>
+</div>
+
+<div class="bar">
+  <a href="index.html" target="_blank"><button type="button" class="ghost">Открыть сайт</button></a>
+  <button id="save" type="button" disabled>Сохранить в GitHub</button>
+  <span id="msg" class="msg"></span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var els = {
+    owner: document.getElementById('gh_owner'),
+    repo:  document.getElementById('gh_repo'),
+    branch:document.getElementById('gh_branch'),
+    token: document.getElementById('gh_token'),
+    fields:document.getElementById('fields'),
+    save:  document.getElementById('save'),
+    msg:   document.getElementById('msg')
+  };
+  var PATH = 'content.json';
+  var data = null, order = [];
+
+  // восстановить сохранённые настройки
+  ['owner','repo','branch'].forEach(function(k){
+    var v = localStorage.getItem('gh_'+k); if(v) els[k].value = v;
+  });
+  els.token.value = localStorage.getItem('gh_pat') || '';
+  function persist(){
+    localStorage.setItem('gh_owner', els.owner.value.trim());
+    localStorage.setItem('gh_repo', els.repo.value.trim());
+    localStorage.setItem('gh_branch', els.branch.value.trim());
+    localStorage.setItem('gh_pat', els.token.value.trim());
+  }
+  ['owner','repo','branch','token'].forEach(function(k){ els[k].addEventListener('change', persist); });
+
+  function setMsg(text, cls){ els.msg.textContent = text; els.msg.className = 'msg ' + (cls||''); }
+
+  var LABELS = {
+    'header.cta':'Кнопка в шапке',
+    'hero.eyebrow':'Хиро · надпись сверху','hero.title':'Хиро · заголовок','hero.lead':'Хиро · подзаголовок',
+    'hero.cta_primary':'Хиро · главная кнопка','hero.cta_secondary':'Хиро · вторая кнопка',
+    'services.title':'Услуги · заголовок','services.lead':'Услуги · описание',
+    'why.title':'Преимущества · заголовок',
+    'includes.title':'Что входит · заголовок','includes.lead':'Что входит · описание','includes.cta':'Что входит · кнопка',
+    'calc.title':'Калькулятор · заголовок','calc.lead':'Калькулятор · описание','calc.cta':'Калькулятор · кнопка',
+    'cases.title':'Кейсы · заголовок','reviews.title':'Отзывы · заголовок','faq.title':'FAQ · заголовок',
+    'contacts.title':'Контакты · заголовок','contacts.lead':'Контакты · описание',
+    'contacts.phone_free':'Телефон 8-800 (текст)','contacts.phone_free_href':'Телефон 8-800 (ссылка tel:)',
+    'contacts.phone_support':'Телефон поддержки (текст)','contacts.phone_support_href':'Телефон поддержки (ссылка tel:)',
+    'contacts.phone_sales':'Телефон продаж (текст)','contacts.phone_sales_href':'Телефон продаж (ссылка tel:)',
+    'contacts.email':'E-mail (текст)','contacts.email_href':'E-mail (ссылка mailto:)',
+    'form.title':'Форма · заголовок','form.submit':'Форма · кнопка отправки',
+    'cta.title':'Нижний блок · заголовок','cta.lead':'Нижний блок · описание','cta.button':'Нижний блок · кнопка'
+  };
+
+  function render(){
+    els.fields.innerHTML = '';
+    order.forEach(function(key){
+      var val = data[key] == null ? '' : String(data[key]);
+      var wrap = document.createElement('div');
+      var lab = document.createElement('label');
+      lab.innerHTML = (LABELS[key] || key) + ' <span class="key">' + key + '</span>' +
+        (val.indexOf('<') > -1 ? '<span class="html-hint">HTML</span>' : '');
+      var ta = document.createElement('textarea');
+      ta.value = val;
+      ta.rows = Math.min(6, Math.max(1, Math.ceil(val.length / 60)));
+      ta.addEventListener('input', function(){ data[key] = ta.value; });
+      wrap.appendChild(lab); wrap.appendChild(ta);
+      els.fields.appendChild(wrap);
+    });
+  }
+
+  fetch(PATH + '?_=' + Date.now(), {cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw new Error('content.json ' + r.status); return r.json(); })
+    .then(function(j){ data = j; order = Object.keys(j); render(); els.save.disabled = false; })
+    .catch(function(e){ els.fields.innerHTML = '<div class="msg err">Не удалось загрузить content.json: ' + e.message + '</div>'; });
+
+  function b64(str){
+    return btoa(String.fromCharCode.apply(null, new TextEncoder().encode(str)));
+  }
+
+  function api(method, extra){
+    var u = 'https://api.github.com/repos/' + els.owner.value.trim() + '/' + els.repo.value.trim() +
+            '/contents/' + PATH;
+    var opts = { method: method, headers: {
+      'Authorization': 'token ' + els.token.value.trim(),
+      'Accept': 'application/vnd.github+json'
+    }};
+    if(extra) opts.body = JSON.stringify(extra);
+    return fetch(u + (method === 'GET' ? '?ref=' + els.branch.value.trim() + '&_=' + Date.now() : ''), opts);
+  }
+
+  els.save.addEventListener('click', function(){
+    if(!els.token.value.trim()){ setMsg('Укажите токен доступа', 'err'); els.token.focus(); return; }
+    persist();
+    els.save.disabled = true; setMsg('Сохраняю…');
+    var body = JSON.stringify(data, null, 2) + '\n';
+    // 1) получить свежий sha
+    api('GET').then(function(r){
+      if(r.status === 401){ throw new Error('токен не принят (401)'); }
+      if(r.status === 404){ return null; } // файла нет — создадим
+      if(!r.ok) throw new Error('GET ' + r.status);
+      return r.json();
+    }).then(function(cur){
+      var payload = {
+        message: 'admin: обновление контента лендинга',
+        content: b64(body),
+        branch: els.branch.value.trim()
+      };
+      if(cur && cur.sha) payload.sha = cur.sha;
+      return api('PUT', payload);
+    }).then(function(r){
+      return r.json().then(function(j){ return {ok:r.ok, status:r.status, j:j}; });
+    }).then(function(res){
+      if(!res.ok) throw new Error((res.j && res.j.message) || ('PUT ' + res.status));
+      setMsg('Сохранено. Сайт обновится через 1–2 минуты.', 'ok');
+      els.save.disabled = false;
+    }).catch(function(e){
+      setMsg('Ошибка: ' + e.message, 'err');
+      els.save.disabled = false;
+    });
+  });
+})();
+</script>
+</body>
+</html>

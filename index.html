@@ -31,7 +31,7 @@
   --shadow:0 24px 60px -20px rgba(0,0,0,.8);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:90px}
+html{scroll-behavior:auto;scroll-padding-top:90px}
 body{
   font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
   background:var(--bg);color:var(--text);line-height:1.6;
@@ -404,8 +404,8 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       <a href="#faq">FAQ</a>
       <a href="#contacts">Контакты</a>
     </nav>
-    <a href="tel:88003012660" class="nav-phone">8 (800) 301-26-60<span>звонок бесплатный</span></a>
-    <a href="#contacts" class="btn btn-primary btn-sm" style="flex-shrink:0">Консультация</a>
+    <a href="tel:88003012660" class="nav-phone" data-cms-href="contacts.phone_free_href"><span data-cms="contacts.phone_free">8 (800) 301-26-60</span><span>звонок бесплатный</span></a>
+    <a href="#contacts" class="btn btn-primary btn-sm" style="flex-shrink:0" data-cms="header.cta">Консультация</a>
     <button class="burger" id="burger" aria-label="Меню"><i></i><i></i><i></i></button>
   </div>
 </header>
@@ -417,14 +417,14 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="hero-grid">
       <div>
-        <span class="eyebrow">15 лет на рынке · Москва</span>
-        <h1><span class="nb">ИТ-инфраструктура,</span><br>которая <span class="grad">просто работает</span></h1>
-        <p class="lead">Берём на себя всё: серверы, сети, телефонию, видеонаблюдение и СКУД. Вы занимаетесь бизнесом — мы держим ИТ в рабочем состоянии по договору и SLA.</p>
+        <span class="eyebrow" data-cms="hero.eyebrow">15 лет на рынке · Москва</span>
+        <h1 data-cms="hero.title" data-cms-html><span class="nb">ИТ-инфраструктура,</span><br>которая <span class="grad">просто работает</span></h1>
+        <p class="lead" data-cms="hero.lead">Берём на себя всё: серверы, сети, телефонию, видеонаблюдение и СКУД. Вы занимаетесь бизнесом — мы держим ИТ в рабочем состоянии по договору и SLA.</p>
         <div class="hero-cta">
-          <a href="#contacts" class="btn btn-primary">Бесплатный ИТ-аудит
+          <a href="#contacts" class="btn btn-primary"><span data-cms="hero.cta_primary">Бесплатный ИТ-аудит</span>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
-          <a href="#calc" class="btn btn-ghost">Рассчитать стоимость</a>
+          <a href="#calc" class="btn btn-ghost" data-cms="hero.cta_secondary">Рассчитать стоимость</a>
         </div>
         <div class="chips">
           <span class="chip">IT-аутсорсинг</span>
@@ -476,8 +476,8 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Услуги</span>
-      <h2>Полный ИТ-контур<br>под одним договором</h2>
-      <p class="section-lead">Не нужно собирать пять подрядчиков. Проектируем, монтируем и обслуживаем — от розетки в стене до сервера в дата-центре.</p>
+      <h2 data-cms="services.title" data-cms-html>Полный ИТ-контур<br>под одним договором</h2>
+      <p class="section-lead" data-cms="services.lead">Не нужно собирать пять подрядчиков. Проектируем, монтируем и обслуживаем — от розетки в стене до сервера в дата-центре.</p>
     </div>
 
     <div class="services">
@@ -531,7 +531,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Почему мы</span>
-      <h2>Четыре причины<br>передать ИТ на аутсорс</h2>
+      <h2 data-cms="why.title" data-cms-html>Четыре причины<br>передать ИТ на аутсорс</h2>
     </div>
     <div class="benefits">
       <div class="ben reveal"><div class="ben-num">01</div><h3>Экономия</h3><p>Аутсорсинг обходится дешевле штатного специалиста: без налогов, отпусков и простоев.</p></div>
@@ -548,9 +548,9 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     <div class="incl-wrap">
       <div class="reveal">
         <span class="eyebrow">Что входит</span>
-        <h2>Абонентское<br>обслуживание</h2>
-        <p class="section-lead">Фиксированная стоимость в месяц. Без «сюрпризов» в счёте и доплат за каждый выезд.</p>
-        <a href="#contacts" class="btn btn-primary" style="margin-top:26px">Получить КП</a>
+        <h2 data-cms="includes.title" data-cms-html>Абонентское<br>обслуживание</h2>
+        <p class="section-lead" data-cms="includes.lead">Фиксированная стоимость в месяц. Без «сюрпризов» в счёте и доплат за каждый выезд.</p>
+        <a href="#contacts" class="btn btn-primary" style="margin-top:26px" data-cms="includes.cta">Получить КП</a>
       </div>
       <div class="incl">
         <div class="incl-item reveal"><span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Сетевое оборудование бесплатно</div>
@@ -571,8 +571,8 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Калькулятор</span>
-      <h2>Прикиньте стоимость<br>обслуживания</h2>
-      <p class="section-lead">Ориентировочный расчёт по вашей инфраструктуре. Точную цену менеджер назовёт после аудита.</p>
+      <h2 data-cms="calc.title" data-cms-html>Прикиньте стоимость<br>обслуживания</h2>
+      <p class="section-lead" data-cms="calc.lead">Ориентировочный расчёт по вашей инфраструктуре. Точную цену менеджер назовёт после аудита.</p>
     </div>
 
     <div class="calc reveal">
@@ -597,7 +597,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div class="lbl">Ориентировочно</div>
         <div class="val" id="price">— ₽</div>
         <div class="per">в месяц</div>
-        <a href="#contacts" class="btn btn-primary" style="width:100%">Уточнить точную цену</a>
+        <a href="#contacts" class="btn btn-primary" style="width:100%" data-cms="calc.cta">Уточнить точную цену</a>
       </div>
     </div>
   </div>
@@ -608,7 +608,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Практический опыт</span>
-      <h2>Кейсы для бизнеса</h2>
+      <h2 data-cms="cases.title">Кейсы для бизнеса</h2>
     </div>
     <div class="cases">
       <article class="case reveal">
@@ -668,7 +668,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Отзывы</span>
-      <h2>Вот что говорят о нас</h2>
+      <h2 data-cms="reviews.title">Вот что говорят о нас</h2>
     </div>
     <div class="reviews">
       <div class="rev reveal">
@@ -710,7 +710,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal" style="text-align:center">
       <span class="eyebrow">FAQ</span>
-      <h2>Частые вопросы</h2>
+      <h2 data-cms="faq.title">Частые вопросы</h2>
     </div>
     <div class="faq">
       <div class="q reveal">
@@ -776,8 +776,8 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Контакты</span>
-      <h2>Начнём с бесплатного аудита</h2>
-      <p class="section-lead">Оставьте заявку — приедем, посмотрим инфраструктуру и подготовим предложение под ваши задачи.</p>
+      <h2 data-cms="contacts.title">Начнём с бесплатного аудита</h2>
+      <p class="section-lead" data-cms="contacts.lead">Оставьте заявку — приедем, посмотрим инфраструктуру и подготовим предложение под ваши задачи.</p>
     </div>
 
     <div class="contacts">
@@ -786,28 +786,28 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
           <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></div>
           <div>
             <span>Единый call-центр · Пн–Пт 09:00–20:00</span>
-            <a href="tel:88003012660">8 (800) 301-26-60</a>
+            <a href="tel:88003012660" data-cms="contacts.phone_free" data-cms-href="contacts.phone_free_href">8 (800) 301-26-60</a>
           </div>
         </div>
         <div class="ci reveal">
           <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
           <div>
             <span>Техническая поддержка · круглосуточно</span>
-            <a href="tel:74951233757">8 (495) 123-37-57</a>
+            <a href="tel:74951233757" data-cms="contacts.phone_support" data-cms-href="contacts.phone_support_href">8 (495) 123-37-57</a>
           </div>
         </div>
         <div class="ci reveal">
           <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
           <div>
             <span>Отдел продаж · Пн–Пт 09:00–20:00</span>
-            <a href="tel:74951233738">8 (495) 123-37-38</a>
+            <a href="tel:74951233738" data-cms="contacts.phone_sales" data-cms-href="contacts.phone_sales_href">8 (495) 123-37-38</a>
           </div>
         </div>
         <div class="ci reveal">
           <div class="ci-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></div>
           <div>
             <span>Почта</span>
-            <a href="mailto:info@it-stream.ru">info@it-stream.ru</a>
+            <a href="mailto:info@it-stream.ru" data-cms="contacts.email" data-cms-href="contacts.email_href">info@it-stream.ru</a>
           </div>
         </div>
         <div class="ci reveal">
@@ -821,7 +821,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       </div>
 
       <form class="lead-form reveal" id="leadForm" novalidate>
-        <h3>Заявка на консультацию</h3>
+        <h3 data-cms="form.title">Заявка на консультацию</h3>
         <p>Перезвоним в течение 15 минут в рабочее время.</p>
         <div class="field"><input type="text" name="name" placeholder="Ваше имя" required></div>
         <div class="field"><input type="tel" name="phone" placeholder="Телефон" required></div>
@@ -841,7 +841,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         </div>
         <div class="field"><textarea name="comment" placeholder="Коротко о задаче"></textarea></div>
         <label class="agree"><input type="checkbox" required checked>Согласен на обработку персональных данных в соответствии с политикой конфиденциальности</label>
-        <button type="submit" class="btn btn-primary" style="width:100%">Отправить заявку</button>
+        <button type="submit" class="btn btn-primary" style="width:100%" data-cms="form.submit">Отправить заявку</button>
         <div class="form-msg" id="formMsg">Заявка отправлена. Менеджер свяжется с вами в ближайшее время.</div>
       </form>
     </div>
@@ -852,11 +852,11 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section style="padding-top:0">
   <div class="container">
     <div class="cta-band reveal">
-      <h2>Скидка <span class="grad">50%</span> на первый месяц</h2>
-      <p>Действует для новых клиентов на абонентское ИТ-обслуживание. Аудит инфраструктуры — бесплатно.</p>
+      <h2 data-cms="cta.title" data-cms-html>Скидка <span class="grad">50%</span> на первый месяц</h2>
+      <p data-cms="cta.lead">Действует для новых клиентов на абонентское ИТ-обслуживание. Аудит инфраструктуры — бесплатно.</p>
       <div class="hero-cta">
-        <a href="#contacts" class="btn btn-primary">Получить предложение</a>
-        <a href="tel:88003012660" class="btn btn-ghost">8 (800) 301-26-60</a>
+        <a href="#contacts" class="btn btn-primary" data-cms="cta.button">Получить предложение</a>
+        <a href="tel:88003012660" class="btn btn-ghost" data-cms="contacts.phone_free" data-cms-href="contacts.phone_free_href">8 (800) 301-26-60</a>
       </div>
     </div>
   </div>
@@ -894,9 +894,9 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       <div class="foot-col">
         <h4>Контакты</h4>
         <ul>
-          <li><a href="tel:88003012660">8 (800) 301-26-60</a></li>
-          <li><a href="tel:74951233757">8 (495) 123-37-57</a></li>
-          <li><a href="mailto:info@it-stream.ru">info@it-stream.ru</a></li>
+          <li><a href="tel:88003012660" data-cms="contacts.phone_free" data-cms-href="contacts.phone_free_href">8 (800) 301-26-60</a></li>
+          <li><a href="tel:74951233757" data-cms="contacts.phone_support" data-cms-href="contacts.phone_support_href">8 (495) 123-37-57</a></li>
+          <li><a href="mailto:info@it-stream.ru" data-cms="contacts.email" data-cms-href="contacts.email_href">info@it-stream.ru</a></li>
           <li><a href="#contacts">Воронцовская, 35Б к3</a></li>
           <li><a href="#contacts">Енисейская, 7 с4 оф18</a></li>
         </ul>
@@ -914,6 +914,30 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
   </a>
 </div>
+
+<!-- CMS: подстановка редактируемого контента из content.json.
+     Прогрессивно: если файл недоступен или сломан — на странице остаётся
+     текст по умолчанию из разметки. Правится через admin.html. -->
+<script>
+(function(){
+  'use strict';
+  fetch('content.json', {cache:'no-store'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(data){
+      if(!data) return;
+      document.querySelectorAll('[data-cms]').forEach(function(el){
+        var v = data[el.getAttribute('data-cms')];
+        if(v == null) return;
+        if(el.hasAttribute('data-cms-html')) el.innerHTML = v; else el.textContent = v;
+      });
+      document.querySelectorAll('[data-cms-href]').forEach(function(el){
+        var v = data[el.getAttribute('data-cms-href')];
+        if(v != null) el.setAttribute('href', v);
+      });
+    })
+    .catch(function(){ /* оставляем дефолтный текст из HTML */ });
+})();
+</script>
 
 <script>
 (function(){
