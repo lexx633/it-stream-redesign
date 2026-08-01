@@ -65,6 +65,7 @@
   <span class="spacer"></span>
   <span id="msg" class="msg"></span>
   <button class="ghost" id="reload" type="button" title="Отменить несохранённые правки">Сбросить</button>
+  <button class="ghost" id="vars" type="button" title="Телефон, почта, адрес, название — в одном месте">Переменные…</button>
   <button class="ghost" id="gear" type="button">GitHub…</button>
   <button id="save" type="button" disabled>Сохранить</button>
 </div>
@@ -88,7 +89,8 @@
 <div class="legend">
   <span class="sw" style="background:#5b8cff33;outline:1px solid #5b8cff"></span><b>Наведите</b> — подсветка поля ·
   <b>клик</b> — правка текста · <b>×</b> удалить блок · <b>＋ добавить</b> в конце списка ·
-  клик по аватарке — сменить ссылку.
+  клик по аватарке — ссылка · по иконке — выбор из набора · по звёздам — рейтинг ·
+  <b>Переменные…</b> — телефон/почта/адрес в одном месте.
 </div>
 
 <script>
@@ -123,6 +125,54 @@
 
   function setMsg(t, cls){ els.msg.textContent = t || ''; els.msg.className = 'msg ' + (cls||''); }
 
+  // ---- панель «Переменные»: правим в одном месте — меняется везде ----
+  var VARS = [
+    {p:'vars.company',               t:'Название компании'},
+    {p:'vars.logo_mark',             t:'Символ логотипа'},
+    {p:'contacts.phone_free',        t:'Телефон (бесплатный)'},
+    {p:'contacts.phone_free_href',   t:'  ↳ ссылка (tel:)'},
+    {p:'contacts.phone_support',     t:'Телефон (поддержка)'},
+    {p:'contacts.phone_support_href',t:'  ↳ ссылка (tel:)'},
+    {p:'contacts.phone_sales',       t:'Телефон (продажи)'},
+    {p:'contacts.phone_sales_href',  t:'  ↳ ссылка (tel:)'},
+    {p:'contacts.email',             t:'E-mail'},
+    {p:'contacts.email_href',        t:'  ↳ ссылка (mailto:)'},
+    {p:'vars.address1',              t:'Адрес 1'},
+    {p:'vars.address2',              t:'Адрес 2'},
+    {p:'vars.office_label',          t:'Подпись адресов'}
+  ];
+  var varsPanel = null;
+  function buildVarsPanel(){
+    varsPanel = document.createElement('div');
+    varsPanel.className = 'settings';
+    varsPanel.id = 'varsPanel';
+    var h = '<h2>Переменные — правим в одном месте</h2>';
+    VARS.forEach(function(v){ h += '<label>'+v.t+'</label><input data-vp="'+v.p+'" type="text">'; });
+    h += '<div class="note">Эти значения повторяются по всей странице (телефоны в шапке, контактах '+
+         'и подвале; название — в логотипе и подвале). Правка здесь меняет их сразу везде.</div>';
+    varsPanel.innerHTML = h;
+    document.body.appendChild(varsPanel);
+    Array.prototype.forEach.call(varsPanel.querySelectorAll('input[data-vp]'), function(inp){
+      inp.addEventListener('input', function(){
+        setVal(inp.getAttribute('data-vp'), inp.value);
+        if(idoc) reRender();
+        markDirty();
+      });
+    });
+  }
+  function toggleVarsPanel(){
+    if(!varsPanel) buildVarsPanel();
+    els.settings.classList.remove('open');
+    var open = varsPanel.classList.toggle('open');
+    if(open && data){
+      Array.prototype.forEach.call(varsPanel.querySelectorAll('input[data-vp]'), function(inp){
+        var v = getVal(inp.getAttribute('data-vp'));
+        inp.value = v == null ? '' : v;
+      });
+    }
+  }
+  document.getElementById('vars').addEventListener('click', toggleVarsPanel);
+
   // ---- доступ к значению по пути ("services.items.0.title") ----
   // Верхние ключи в content.json плоские с точками ("services.items"),
   // внутри — настоящие массивы/объекты. Ищем самый длинный существующий
@@ -152,8 +202,15 @@
   var ITEM_TPL = {
     'services.items': function(){ return {icon:'', title:'Новая услуга', desc:'Короткое описание услуги.', list:['Пункт списка']}; },
     'cases.items':    function(){ return {icon:'', title:'Новый кейс', desc:'Короткое описание кейса.', tags:['Тег']}; },
-    'reviews.items':  function(){ return {text:'Текст нового отзыва.', name:'Имя автора', role:'Компания', avatar:''}; },
-    'faq.items':      function(){ return {q:'Новый вопрос?', a:'Ответ на вопрос.'}; }
+    'reviews.items':  function(){ return {rating:5, text:'Текст нового отзыва.', name:'Имя автора', role:'Компания', avatar:''}; },
+    'faq.items':      function(){ return {q:'Новый вопрос?', a:'Ответ на вопрос.'}; },
+    'nav.links':      function(){ return {label:'Пункт меню', href:'#'}; },
+    'hero.card.rows': function(){ return {l:'Показатель', v:'значение'}; },
+    'stats.items':    function(){ return {value:'100+', label:'подпись показателя'}; },
+    'why.benefits':   function(){ return {num:'05', title:'Преимущество', text:'Короткое описание преимущества.'}; },
+    'blog.posts':     function(){ return {tag:'Раздел', title:'Заголовок статьи', desc:'Короткое описание статьи.'}; },
+    'footer.services':function(){ return {label:'Ссылка', href:'#services'}; },
+    'footer.company': function(){ return {label:'Ссылка', href:'#'}; }
   };
   function newItemFor(listPath){
     if(ITEM_TPL[listPath]) return ITEM_TPL[listPath]();
@@ -224,6 +281,61 @@
     return null;
   }
 
+  // ---- набор готовых иконок (внутренняя разметка svg, viewBox 0 0 24 24) ----
+  var ICON_PRESETS = [
+    '<rect x="2" y="3" width="20" height="6" rx="1.5"></rect><rect x="2" y="13" width="20" height="6" rx="1.5"></rect><path d="M6 6h.01M6 16h.01"></path>',
+    '<path d="M18 10h1a4 4 0 010 8H6a4.5 4.5 0 01-.6-8.96A6 6 0 0117.7 8.2"></path>',
+    '<path d="M23 7l-7 5 7 5V7z"></path><rect height="14" rx="2" width="15" x="1" y="5"></rect>',
+    '<rect height="11" rx="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path>',
+    '<path d="M12 2v6M12 16v6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M16 12h6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"></path>',
+    '<path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"></path>',
+    '<rect height="14" rx="2" width="20" x="2" y="3"></rect><path d="M8 21h8M12 17v4"></path>',
+    '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>',
+    '<path d="M5 12.5a10 10 0 0114 0M8.5 16a5 5 0 017 0M2 9a15 15 0 0120 0"></path><circle cx="12" cy="19.5" r="1"></circle>',
+    '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path>',
+    '<path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path>',
+    '<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path>',
+    '<rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M22 6l-10 7L2 6"></path>',
+    '<path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle>',
+    '<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>',
+    '<rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"></path>',
+    '<path d="M9 12l2 2 4-4"></path><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>',
+    '<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path>'
+  ];
+  // модальное окно выбора иконки (в документе редактора, не в iframe)
+  function openIconPicker(cur, cb){
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:50;background:rgba(6,8,12,.72);'+
+      'display:flex;align-items:center;justify-content:center;padding:20px';
+    var box = document.createElement('div');
+    box.style.cssText = 'background:var(--panel);border:1px solid var(--line);border-radius:16px;'+
+      'padding:20px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5)';
+    box.innerHTML = '<h2 style="margin:0 0 4px;font-size:15px">Выберите иконку</h2>'+
+      '<p style="margin:0 0 14px;font-size:12px;color:var(--muted)">Клик по иконке — применить к карточке.</p>';
+    var grid = document.createElement('div');
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(6,1fr);gap:10px';
+    ICON_PRESETS.forEach(function(mk){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.style.cssText = 'aspect-ratio:1;display:flex;align-items:center;justify-content:center;'+
+        'background:var(--panel2);border:1px solid '+(mk===cur?'var(--accent)':'var(--line)')+';'+
+        'border-radius:12px;cursor:pointer;padding:10px';
+      b.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#e7ebf0" '+
+        'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+mk+'</svg>';
+      b.addEventListener('click', function(){ cb(mk); if(ov.parentNode) document.body.removeChild(ov); });
+      grid.appendChild(b);
+    });
+    box.appendChild(grid);
+    var cancel = document.createElement('button');
+    cancel.type = 'button'; cancel.className = 'ghost'; cancel.textContent = 'Отмена';
+    cancel.style.marginTop = '16px';
+    cancel.addEventListener('click', function(){ if(ov.parentNode) document.body.removeChild(ov); });
+    box.appendChild(cancel);
+    ov.appendChild(box);
+    ov.addEventListener('click', function(e){ if(e.target === ov) document.body.removeChild(ov); });
+    document.body.appendChild(ov);
+  }
+
   function enhance(){
     // 1) стиль правки — один раз
     if(!idoc.getElementById('__ed_style')){
@@ -235,6 +347,10 @@
         '[data-cms]:focus{outline:2px solid #5b8cff;background:rgba(91,140,255,.14)}'+
         'img[data-cms-src]{outline:2px dashed transparent;outline-offset:2px;cursor:pointer}'+
         'img[data-cms-src]:hover{outline-color:#5b8cff}'+
+        '[data-cms-icon]{outline:1px dashed transparent;outline-offset:3px;cursor:pointer;border-radius:8px}'+
+        '[data-cms-icon]:hover{outline-color:#5b8cff;background:rgba(91,140,255,.10)}'+
+        '[data-cms-rating]{cursor:pointer;border-radius:6px;outline:1px dashed transparent;outline-offset:3px}'+
+        '[data-cms-rating]:hover{outline-color:#fbbf24}'+
         '.__ed-add{display:inline-flex;align-items:center;gap:6px;margin:10px auto 0;padding:8px 16px;'+
           'font:600 14px/1 inherit;color:#5b8cff;background:rgba(91,140,255,.10);'+
           'border:1px dashed #5b8cff;border-radius:10px;cursor:pointer}'+
@@ -286,6 +402,42 @@
       });
       wrap.appendChild(b);
       cont.appendChild(wrap);
+    });
+
+    // 5) иконки карточек → выбор из набора по клику
+    Array.prototype.forEach.call(idoc.querySelectorAll('[data-cms-icon]'), function(box){
+      if(box.__edIcon) return;
+      box.__edIcon = true;
+      box.title = 'Клик — выбрать иконку из набора';
+      box.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        var path = box.getAttribute('data-cms-icon');
+        openIconPicker(getVal(path) || '', function(mk){ setVal(path, mk); reRender(); markDirty(); });
+      });
+    });
+
+    // 6) звёзды рейтинга → клик задаёт оценку (левая половина звезды = половинка)
+    Array.prototype.forEach.call(idoc.querySelectorAll('[data-cms-rating]'), function(box){
+      if(box.__edRate) return;
+      box.__edRate = true;
+      box.title = 'Клик — рейтинг · левая половина звезды = половинка';
+      box.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        var path = box.getAttribute('data-cms-rating');
+        var r = box.getBoundingClientRect();
+        var starW = r.width / 5, idx = Math.floor((e.clientX - r.left) / starW);
+        if(idx < 0) idx = 0; if(idx > 4) idx = 4;
+        var frac = ((e.clientX - r.left) - idx * starW) / starW;
+        setVal(path, idx + (frac <= 0.5 ? 0.5 : 1));
+        reRender(); markDirty();
+      });
+    });
+
+    // 7) FAQ — раскрываем все ответы, чтобы их можно было править
+    Array.prototype.forEach.call(idoc.querySelectorAll('.q'), function(q){
+      q.classList.add('open');
+      var body = q.querySelector('.q-body');
+      if(body) body.style.maxHeight = 'none';
     });
   }
 

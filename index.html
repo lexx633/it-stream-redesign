@@ -394,17 +394,9 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 
 <header id="header">
   <div class="container nav">
-    <a href="#top" class="logo"><span class="logo-mark">Λ</span> IT-Stream</a>
-    <nav class="nav-links" id="navLinks">
-      <a href="#services">Услуги</a>
-      <a href="#why">Преимущества</a>
-      <a href="#calc">Расчёт</a>
-      <a href="#cases">Кейсы</a>
-      <a href="#reviews">Отзывы</a>
-      <a href="#faq">FAQ</a>
-      <a href="#contacts">Контакты</a>
-    </nav>
-    <a href="tel:88003012660" class="nav-phone" data-cms-href="contacts.phone_free_href"><span data-cms="contacts.phone_free">8 (800) 301-26-60</span><span>звонок бесплатный</span></a>
+    <a href="#top" class="logo"><span class="logo-mark" data-cms="vars.logo_mark">Λ</span> <span data-cms="vars.company">IT-Stream</span></a>
+    <nav class="nav-links" id="navLinks" data-cms-list="nav.links"></nav>
+    <a href="tel:88003012660" class="nav-phone" data-cms-href="contacts.phone_free_href"><span data-cms="contacts.phone_free">8 (800) 301-26-60</span><span data-cms="header.phone_hint">звонок бесплатный</span></a>
     <a href="#contacts" class="btn btn-primary btn-sm" style="flex-shrink:0" data-cms="header.cta">Консультация</a>
     <button class="burger" id="burger" aria-label="Меню"><i></i><i></i><i></i></button>
   </div>
@@ -430,43 +422,30 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       </div>
 
       <div class="hero-card reveal">
-        <div class="hc-title">Мониторинг инфраструктуры</div>
-        <div class="hc-sub">Пример панели клиента · режим реального времени</div>
-        <div class="status-row"><span class="l"><i class="dot"></i>Серверы 1С</span><span class="v">6 / 6 online</span></div>
-        <div class="status-row"><span class="l"><i class="dot"></i>Сетевое оборудование</span><span class="v">24 / 24</span></div>
-        <div class="status-row"><span class="l"><i class="dot"></i>Резервные копии</span><span class="v">сегодня 03:40</span></div>
-        <div class="status-row"><span class="l"><i class="dot"></i>Открытых заявок</span><span class="v">2</span></div>
-        <div class="status-row"><span class="l"><i class="dot"></i>Реакция по SLA</span><span class="v">до 15 мин</span></div>
+        <div class="hc-title" data-cms="hero.card.title">Мониторинг инфраструктуры</div>
+        <div class="hc-sub" data-cms="hero.card.sub">Пример панели клиента · режим реального времени</div>
+        <div data-cms-list="hero.card.rows"></div>
         <div class="hc-foot">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Техподдержка дежурит круглосуточно, 365 дней в году
+          <span data-cms="hero.card.foot">Техподдержка дежурит круглосуточно, 365 дней в году</span>
         </div>
       </div>
     </div>
 
-    <div class="stats">
-      <div class="stat reveal"><b data-count="15">0</b><span>лет опыта в ИТ</span></div>
-      <div class="stat reveal"><b data-count="24" data-suffix="/7">0</b><span>мониторинг и поддержка</span></div>
-      <div class="stat reveal"><b data-count="150" data-suffix="+">0</b><span>компаний на обслуживании</span></div>
-      <div class="stat reveal"><b data-count="15" data-suffix=" мин">0</b><span>реакция на инцидент</span></div>
-    </div>
+    <div class="stats" data-cms-list="stats.items"></div>
   </div>
 </section>
 
 <!-- MARQUEE -->
 <div class="marquee">
-  <div class="marquee-track" id="marquee">
-    <span>ДоДо Пицца</span><span>КП «Лесные Озёра»</span><span>ДКП «Дальние Дачи»</span><span>ООО «Новый Лидер»</span>
-    <span>Сеть стоматологий</span><span>Часовой сервис</span><span>Производство</span><span>Логистика</span>
-    <span>Розничные сети</span><span>Медицинские центры</span><span>Девелопмент</span><span>Образование</span>
-  </div>
+  <div class="marquee-track" id="marquee" data-cms-list="marquee.items"></div>
 </div>
 
 <!-- SERVICES -->
 <section id="services">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Услуги</span>
+      <span class="eyebrow" data-cms="services.eyebrow">Услуги</span>
       <h2 data-cms="services.title" data-cms-html>Полный ИТ-контур<br>под одним договором</h2>
       <p class="section-lead" data-cms="services.lead">Не нужно собирать пять подрядчиков. Проектируем, монтируем и обслуживаем — от розетки в стене до сервера в дата-центре.</p>
     </div>
@@ -479,15 +458,10 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section id="why">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Почему мы</span>
+      <span class="eyebrow" data-cms="why.eyebrow">Почему мы</span>
       <h2 data-cms="why.title" data-cms-html>Четыре причины<br>передать ИТ на аутсорс</h2>
     </div>
-    <div class="benefits">
-      <div class="ben reveal"><div class="ben-num">01</div><h3>Экономия</h3><p>Аутсорсинг обходится дешевле штатного специалиста: без налогов, отпусков и простоев.</p></div>
-      <div class="ben reveal"><div class="ben-num">02</div><h3>Надёжность</h3><p>Команда специалистов работает 24/7 по договору, а не один человек, который может заболеть.</p></div>
-      <div class="ben reveal"><div class="ben-num">03</div><h3>Контроль</h3><p>Регулярные отчёты о состоянии инфраструктуры и понятные рекомендации, что улучшить.</p></div>
-      <div class="ben reveal"><div class="ben-num">04</div><h3>Результат</h3><p>Бесплатный аудит и индивидуальное коммерческое предложение под ваши задачи.</p></div>
-    </div>
+    <div class="benefits" data-cms-list="why.benefits"></div>
   </div>
 </section>
 
@@ -496,21 +470,12 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="incl-wrap">
       <div class="reveal">
-        <span class="eyebrow">Что входит</span>
+        <span class="eyebrow" data-cms="includes.eyebrow">Что входит</span>
         <h2 data-cms="includes.title" data-cms-html>Абонентское<br>обслуживание</h2>
         <p class="section-lead" data-cms="includes.lead">Фиксированная стоимость в месяц. Без «сюрпризов» в счёте и доплат за каждый выезд.</p>
         <a href="#contacts" class="btn btn-primary" style="margin-top:26px" data-cms="includes.cta">Получить КП</a>
       </div>
-      <div class="incl">
-        <div class="incl-item reveal"><span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Сетевое оборудование бесплатно</div>
-        <div class="incl-item reveal"><span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Неограниченное число выездов</div>
-        <div class="incl-item reveal"><span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Удалённое администрирование 24/7</div>
-        <div class="incl-item reveal"><span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Персональный менеджер</div>
-        <div class="incl-item reveal"><span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Соглашение об уровне сервиса (SLA)</div>
-        <div class="incl-item reveal"><span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Поддержка рабочих мест</div>
-        <div class="incl-item reveal"><span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Обслуживание оргтехники</div>
-        <div class="incl-item reveal"><span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Полный отчёт о состоянии ИТ</div>
-      </div>
+      <div class="incl" data-cms-list="includes.list"></div>
     </div>
   </div>
 </section>
@@ -519,7 +484,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section id="calc">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Калькулятор</span>
+      <span class="eyebrow" data-cms="calc.eyebrow">Калькулятор</span>
       <h2 data-cms="calc.title" data-cms-html>Прикиньте стоимость<br>обслуживания</h2>
       <p class="section-lead" data-cms="calc.lead">Ориентировочный расчёт по вашей инфраструктуре. Точную цену менеджер назовёт после аудита.</p>
     </div>
@@ -539,7 +504,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
           <label class="toggle"><input type="checkbox" id="org"><span class="box"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Оргтехника</label>
           <label class="toggle"><input type="checkbox" id="cctv"><span class="box"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>Видеонаблюдение</label>
         </div>
-        <p class="calc-note">Расчёт носит справочный характер и не является публичной офертой. На первый месяц обслуживания действует скидка 50%.</p>
+        <p class="calc-note" data-cms="calc.note">Расчёт носит справочный характер и не является публичной офертой. На первый месяц обслуживания действует скидка 50%.</p>
       </div>
 
       <div class="calc-result">
@@ -556,7 +521,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section id="cases">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Практический опыт</span>
+      <span class="eyebrow" data-cms="cases.eyebrow">Практический опыт</span>
       <h2 data-cms="cases.title">Кейсы для бизнеса</h2>
     </div>
     <div class="cases" data-cms-list="cases.items"></div>
@@ -567,7 +532,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section id="reviews">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Отзывы</span>
+      <span class="eyebrow" data-cms="reviews.eyebrow">Отзывы</span>
       <h2 data-cms="reviews.title">Вот что говорят о нас</h2>
     </div>
     <div class="reviews" data-cms-list="reviews.items"></div>
@@ -578,7 +543,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section id="faq">
   <div class="container">
     <div class="section-head reveal" style="text-align:center">
-      <span class="eyebrow">FAQ</span>
+      <span class="eyebrow" data-cms="faq.eyebrow">FAQ</span>
       <h2 data-cms="faq.title">Частые вопросы</h2>
     </div>
     <div class="faq" data-cms-list="faq.items"></div>
@@ -589,29 +554,10 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section id="blog">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Блог</span>
-      <h2>Полезные материалы</h2>
+      <span class="eyebrow" data-cms="blog.eyebrow">Блог</span>
+      <h2 data-cms="blog.title">Полезные материалы</h2>
     </div>
-    <div class="posts">
-      <a href="#contacts" class="post reveal">
-        <span class="date">ИТ-аутсорсинг</span>
-        <h3>ИТ-обслуживание организаций</h3>
-        <p>Как устроено абонентское обслуживание, что входит в SLA и как считать экономию против штатного админа.</p>
-        <span class="more">Читать →</span>
-      </a>
-      <a href="#contacts" class="post reveal">
-        <span class="date">Серверы</span>
-        <h3>Администрирование серверов</h3>
-        <p>Мониторинг, обновления, резервные копии и защита: базовая гигиена, которая спасает бизнес от простоя.</p>
-        <span class="more">Читать →</span>
-      </a>
-      <a href="#contacts" class="post reveal">
-        <span class="date">Облако</span>
-        <h3>Облачные решения для бизнеса</h3>
-        <p>Когда переезд в облако действительно окупается, а когда лучше оставить сервер на площадке.</p>
-        <span class="more">Читать →</span>
-      </a>
-    </div>
+    <div class="posts" data-cms-list="blog.posts"></div>
   </div>
 </section>
 
@@ -619,7 +565,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section id="contacts">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Контакты</span>
+      <span class="eyebrow" data-cms="contacts.eyebrow">Контакты</span>
       <h2 data-cms="contacts.title">Начнём с бесплатного аудита</h2>
       <p class="section-lead" data-cms="contacts.lead">Оставьте заявку — приедем, посмотрим инфраструктуру и подготовим предложение под ваши задачи.</p>
     </div>
@@ -629,44 +575,44 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div class="ci reveal">
           <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></div>
           <div>
-            <span>Единый call-центр · Пн–Пт 09:00–20:00</span>
+            <span data-cms="contacts.cc_label">Единый call-центр · Пн–Пт 09:00–20:00</span>
             <a href="tel:88003012660" data-cms="contacts.phone_free" data-cms-href="contacts.phone_free_href">8 (800) 301-26-60</a>
           </div>
         </div>
         <div class="ci reveal">
           <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
           <div>
-            <span>Техническая поддержка · круглосуточно</span>
+            <span data-cms="contacts.support_label">Техническая поддержка · круглосуточно</span>
             <a href="tel:74951233757" data-cms="contacts.phone_support" data-cms-href="contacts.phone_support_href">8 (495) 123-37-57</a>
           </div>
         </div>
         <div class="ci reveal">
           <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
           <div>
-            <span>Отдел продаж · Пн–Пт 09:00–20:00</span>
+            <span data-cms="contacts.sales_label">Отдел продаж · Пн–Пт 09:00–20:00</span>
             <a href="tel:74951233738" data-cms="contacts.phone_sales" data-cms-href="contacts.phone_sales_href">8 (495) 123-37-38</a>
           </div>
         </div>
         <div class="ci reveal">
           <div class="ci-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></div>
           <div>
-            <span>Почта</span>
+            <span data-cms="contacts.email_label">Почта</span>
             <a href="mailto:info@it-stream.ru" data-cms="contacts.email" data-cms-href="contacts.email_href">info@it-stream.ru</a>
           </div>
         </div>
         <div class="ci reveal">
           <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
           <div>
-            <b>Офисы в Москве</b>
-            <span>ул. Воронцовская, д. 35Б, к. 3</span>
-            <span>ул. Енисейская, д. 7, с. 4, оф. 18</span>
+            <b data-cms="vars.office_label">Офисы в Москве</b>
+            <span data-cms="vars.address1">ул. Воронцовская, д. 35Б, к. 3</span>
+            <span data-cms="vars.address2">ул. Енисейская, д. 7, с. 4, оф. 18</span>
           </div>
         </div>
       </div>
 
       <form class="lead-form reveal" id="leadForm" novalidate>
         <h3 data-cms="form.title">Заявка на консультацию</h3>
-        <p>Перезвоним в течение 15 минут в рабочее время.</p>
+        <p data-cms="form.sub">Перезвоним в течение 15 минут в рабочее время.</p>
         <div class="field"><input type="text" name="name" placeholder="Ваше имя" required></div>
         <div class="field"><input type="tel" name="phone" placeholder="Телефон" required></div>
         <div class="field"><input type="email" name="email" placeholder="E-mail"></div>
@@ -712,43 +658,31 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="foot-grid">
       <div class="foot-col foot-about">
-        <a href="#top" class="logo"><span class="logo-mark">Λ</span> IT-Stream</a>
-        <p>ИТ-компания для вашего бизнеса. 15 лет обслуживаем инфраструктуру организаций в Москве и области.</p>
+        <a href="#top" class="logo"><span class="logo-mark" data-cms="vars.logo_mark">Λ</span> <span data-cms="vars.company">IT-Stream</span></a>
+        <p data-cms="footer.about">ИТ-компания для вашего бизнеса. 15 лет обслуживаем инфраструктуру организаций в Москве и области.</p>
       </div>
       <div class="foot-col">
-        <h4>Услуги</h4>
-        <ul>
-          <li><a href="#services">IT-аутсорсинг</a></li>
-          <li><a href="#services">Облачные решения</a></li>
-          <li><a href="#services">Видеонаблюдение</a></li>
-          <li><a href="#services">СКУД</a></li>
-          <li><a href="#services">СКС</a></li>
-        </ul>
+        <h4 data-cms="footer.services_title">Услуги</h4>
+        <ul data-cms-list="footer.services"></ul>
       </div>
       <div class="foot-col">
-        <h4>Компания</h4>
-        <ul>
-          <li><a href="#why">О нас</a></li>
-          <li><a href="#cases">Кейсы</a></li>
-          <li><a href="#reviews">Отзывы</a></li>
-          <li><a href="#blog">Блог</a></li>
-          <li><a href="#faq">FAQ</a></li>
-        </ul>
+        <h4 data-cms="footer.company_title">Компания</h4>
+        <ul data-cms-list="footer.company"></ul>
       </div>
       <div class="foot-col">
-        <h4>Контакты</h4>
+        <h4 data-cms="footer.contacts_title">Контакты</h4>
         <ul>
           <li><a href="tel:88003012660" data-cms="contacts.phone_free" data-cms-href="contacts.phone_free_href">8 (800) 301-26-60</a></li>
           <li><a href="tel:74951233757" data-cms="contacts.phone_support" data-cms-href="contacts.phone_support_href">8 (495) 123-37-57</a></li>
           <li><a href="mailto:info@it-stream.ru" data-cms="contacts.email" data-cms-href="contacts.email_href">info@it-stream.ru</a></li>
-          <li><a href="#contacts">Воронцовская, 35Б к3</a></li>
-          <li><a href="#contacts">Енисейская, 7 с4 оф18</a></li>
+          <li><a href="#contacts" data-cms="vars.address1">ул. Воронцовская, д. 35Б, к. 3</a></li>
+          <li><a href="#contacts" data-cms="vars.address2">ул. Енисейская, д. 7, с. 4, оф. 18</a></li>
         </ul>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 IT-Stream. Концепт-редизайн главной страницы.</span>
-      <span>Политика конфиденциальности · Согласие на обработку ПДн</span>
+      <span data-cms="footer.copyright">© 2026 IT-Stream. Концепт-редизайн главной страницы.</span>
+      <span data-cms="footer.legal">Политика конфиденциальности · Согласие на обработку ПДн</span>
     </div>
   </div>
 </footer>
@@ -777,25 +711,78 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function escAttr(s){ return esc(s).replace(/"/g,'&quot;'); }
 
-  var starSvg = '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+  var STAR_D = 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z';
+  var STAR_FULL = '#fbbf24', STAR_EMPTY = 'rgba(255,255,255,.16)';
+  // рейтинг 0..5 с шагом 0.5 → пять svg-звёзд; половинка через линейный градиент
+  function starsHtml(rating, uid){
+    rating = parseFloat(rating); if(isNaN(rating)) rating = 5;
+    var full = Math.floor(rating + 0.001), half = (rating - full) >= 0.5, out = '';
+    for(var i=0;i<5;i++){
+      if(i < full){
+        out += '<svg viewBox="0 0 24 24"><path fill="'+STAR_FULL+'" d="'+STAR_D+'"/></svg>';
+      } else if(i === full && half){
+        var gid = 'hg_'+uid+'_'+i;
+        out += '<svg viewBox="0 0 24 24"><defs><linearGradient id="'+gid+'">'+
+               '<stop offset="50%" stop-color="'+STAR_FULL+'"/><stop offset="50%" stop-color="'+STAR_EMPTY+'"/>'+
+               '</linearGradient></defs><path fill="url(#'+gid+')" d="'+STAR_D+'"/></svg>';
+      } else {
+        out += '<svg viewBox="0 0 24 24"><path fill="'+STAR_EMPTY+'" d="'+STAR_D+'"/></svg>';
+      }
+    }
+    return out;
+  }
 
   var TPL = {
     'hero.chips': function(item, pth){
       return '<span class="chip" data-cms-item="'+pth+'" data-cms="'+pth+'">'+esc(item)+'</span>';
     },
+    'nav.links': function(it, pth){
+      return '<a data-cms-item="'+pth+'" href="'+escAttr(it.href)+'" data-cms-href="'+pth+'.href" data-cms="'+pth+'.label">'+esc(it.label)+'</a>';
+    },
+    'hero.card.rows': function(it, pth){
+      return '<div class="status-row" data-cms-item="'+pth+'">'+
+        '<span class="l"><i class="dot"></i><span data-cms="'+pth+'.l">'+esc(it.l)+'</span></span>'+
+        '<span class="v" data-cms="'+pth+'.v">'+esc(it.v)+'</span>'+
+      '</div>';
+    },
+    'stats.items': function(it, pth){
+      var val = String(it.value==null?'':it.value);
+      var m = val.match(/^(\d[\d\s]*)(.*)$/);
+      var num = m ? m[1].replace(/\s/g,'') : '', suf = m ? m[2] : '';
+      var b = num
+        ? '<b data-count="'+escAttr(num)+'" data-suffix="'+escAttr(suf)+'" data-cms="'+pth+'.value">'+esc(val)+'</b>'
+        : '<b data-cms="'+pth+'.value">'+esc(val)+'</b>';
+      return '<div class="stat reveal" data-cms-item="'+pth+'">'+b+'<span data-cms="'+pth+'.label">'+esc(it.label)+'</span></div>';
+    },
+    'marquee.items': function(it, pth){
+      return '<span data-cms-item="'+pth+'" data-cms="'+pth+'">'+esc(it)+'</span>';
+    },
     'services.items': function(it, pth){
       var lis = (it.list||[]).map(function(t,j){ return '<li data-cms="'+pth+'.list.'+j+'">'+esc(t)+'</li>'; }).join('');
       return '<article class="svc reveal" data-cms-item="'+pth+'">'+
-        '<div class="svc-icon"><svg viewBox="0 0 24 24">'+(it.icon||'')+'</svg></div>'+
+        '<div class="svc-icon" data-cms-icon="'+pth+'.icon"><svg viewBox="0 0 24 24">'+(it.icon||'')+'</svg></div>'+
         '<h3 data-cms="'+pth+'.title">'+esc(it.title)+'</h3>'+
         '<p data-cms="'+pth+'.desc">'+esc(it.desc)+'</p>'+
         '<ul data-cms-list="'+pth+'.list">'+lis+'</ul>'+
       '</article>';
     },
+    'why.benefits': function(it, pth){
+      return '<div class="ben reveal" data-cms-item="'+pth+'">'+
+        '<div class="ben-num" data-cms="'+pth+'.num">'+esc(it.num)+'</div>'+
+        '<h3 data-cms="'+pth+'.title">'+esc(it.title)+'</h3>'+
+        '<p data-cms="'+pth+'.text">'+esc(it.text)+'</p>'+
+      '</div>';
+    },
+    'includes.list': function(it, pth){
+      return '<div class="incl-item reveal" data-cms-item="'+pth+'">'+
+        '<span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>'+
+        '<span data-cms="'+pth+'">'+esc(it)+'</span>'+
+      '</div>';
+    },
     'cases.items': function(it, pth){
       var tags = (it.tags||[]).map(function(t,j){ return '<span data-cms="'+pth+'.tags.'+j+'">'+esc(t)+'</span>'; }).join('');
       return '<article class="case reveal" data-cms-item="'+pth+'">'+
-        '<div class="case-ico"><i><svg viewBox="0 0 24 24">'+(it.icon||'')+'</svg></i></div>'+
+        '<div class="case-ico"><i data-cms-icon="'+pth+'.icon"><svg viewBox="0 0 24 24">'+(it.icon||'')+'</svg></i></div>'+
         '<div class="case-body">'+
           '<h3 data-cms="'+pth+'.title">'+esc(it.title)+'</h3>'+
           '<p data-cms="'+pth+'.desc">'+esc(it.desc)+'</p>'+
@@ -804,8 +791,9 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       '</article>';
     },
     'reviews.items': function(it, pth){
+      var uid = pth.replace(/[^a-z0-9]/gi,'_');
       return '<div class="rev reveal" data-cms-item="'+pth+'">'+
-        '<div class="stars">'+starSvg.repeat(5)+'</div>'+
+        '<div class="stars" data-cms-rating="'+pth+'.rating">'+starsHtml(it.rating, uid)+'</div>'+
         '<p data-cms="'+pth+'.text">'+esc(it.text)+'</p>'+
         '<div class="rev-author"><div class="avatar"><img src="'+escAttr(it.avatar)+'" data-cms-src="'+pth+'.avatar" alt="" loading="lazy"></div>'+
         '<div><b data-cms="'+pth+'.name">'+esc(it.name)+'</b><span data-cms="'+pth+'.role">'+esc(it.role)+'</span></div></div>'+
@@ -816,6 +804,20 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         '<button class="q-head"><span data-cms="'+pth+'.q">'+esc(it.q)+'</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>'+
         '<div class="q-body"><p data-cms="'+pth+'.a">'+esc(it.a)+'</p></div>'+
       '</div>';
+    },
+    'blog.posts': function(it, pth){
+      return '<a href="#contacts" class="post reveal" data-cms-item="'+pth+'">'+
+        '<span class="date" data-cms="'+pth+'.tag">'+esc(it.tag)+'</span>'+
+        '<h3 data-cms="'+pth+'.title">'+esc(it.title)+'</h3>'+
+        '<p data-cms="'+pth+'.desc">'+esc(it.desc)+'</p>'+
+        '<span class="more">Читать →</span>'+
+      '</a>';
+    },
+    'footer.services': function(it, pth){
+      return '<li data-cms-item="'+pth+'"><a href="'+escAttr(it.href)+'" data-cms-href="'+pth+'.href" data-cms="'+pth+'.label">'+esc(it.label)+'</a></li>';
+    },
+    'footer.company': function(it, pth){
+      return '<li data-cms-item="'+pth+'"><a href="'+escAttr(it.href)+'" data-cms-href="'+pth+'.href" data-cms="'+pth+'.label">'+esc(it.label)+'</a></li>';
     }
   };
 
