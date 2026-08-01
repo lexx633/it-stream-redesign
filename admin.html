@@ -4,103 +4,113 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Админка · IT-Stream</title>
+<title>Визуальный редактор · IT-Stream</title>
 <style>
   :root{
     --bg:#0e1116; --panel:#171b22; --panel2:#1e232c; --line:#2a313c;
     --text:#e7ebf0; --muted:#93a0b1; --accent:#5b8cff; --ok:#34d399; --err:#f87171;
+    --bar-h:56px;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
-    background:var(--bg);color:var(--text);line-height:1.55;padding:24px 16px 80px}
-  .wrap{max-width:860px;margin:0 auto}
-  h1{font-size:22px;margin-bottom:4px}
-  .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px}
-  .card h2{font-size:15px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:14px}
-  label{display:block;font-size:13px;color:var(--muted);margin:12px 0 5px}
-  .key{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#6b7686}
-  input,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;
-    color:var(--text);padding:9px 11px;font-size:14px;font-family:inherit;resize:vertical}
-  input:focus,textarea:focus{outline:none;border-color:var(--accent)}
-  textarea{min-height:44px}
-  .html-hint{color:#d9a441;font-size:11px;margin-left:6px}
-  .row{display:flex;gap:10px;flex-wrap:wrap}
-  .row>div{flex:1;min-width:180px}
-  .bar{position:fixed;left:0;right:0;bottom:0;background:rgba(14,17,22,.92);backdrop-filter:blur(8px);
-    border-top:1px solid var(--line);padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:center}
-  button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:11px 22px;font-size:15px;
-    font-weight:600;cursor:pointer}
-  button.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+    background:var(--bg);color:var(--text)}
+
+  /* верхняя панель */
+  .bar{position:fixed;top:0;left:0;right:0;height:var(--bar-h);z-index:20;
+    display:flex;align-items:center;gap:12px;padding:0 14px;
+    background:rgba(14,17,22,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .bar .title{font-size:15px;font-weight:600;margin-right:6px;white-space:nowrap}
+  .bar .hint{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar .spacer{flex:1}
+  button{font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;
+    border:0;border-radius:9px;padding:9px 16px;background:var(--accent);color:#fff}
+  button.ghost{background:transparent;border:1px solid var(--line);color:var(--text);font-weight:500}
   button:disabled{opacity:.5;cursor:not-allowed}
-  .msg{font-size:14px}
-  .msg.ok{color:var(--ok)} .msg.err{color:var(--err)}
-  a{color:var(--accent)}
-  .note{font-size:12px;color:var(--muted);margin-top:8px}
-  details summary{cursor:pointer;color:var(--muted);font-size:13px}
+  .msg{font-size:13px;white-space:nowrap}
+  .msg.ok{color:var(--ok)} .msg.err{color:var(--err)} .msg.wait{color:var(--muted)}
+
+  /* область превью */
+  .stage{position:absolute;top:var(--bar-h);left:0;right:0;bottom:0;background:#0a0c10}
+  iframe{width:100%;height:100%;border:0;display:block;background:#fff}
+
+  /* панель настроек GitHub */
+  .settings{position:fixed;top:var(--bar-h);right:0;width:360px;max-width:92vw;z-index:19;
+    background:var(--panel);border-left:1px solid var(--line);border-bottom:1px solid var(--line);
+    border-bottom-left-radius:14px;padding:16px 18px;transform:translateX(105%);transition:transform .25s;
+    box-shadow:-14px 14px 40px rgba(0,0,0,.4)}
+  .settings.open{transform:none}
+  .settings h2{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 0 12px}
+  .settings label{display:block;font-size:12px;color:var(--muted);margin:12px 0 5px}
+  .settings input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+    color:var(--text);padding:8px 10px;font-size:13px}
+  .settings input:focus{outline:none;border-color:var(--accent)}
+  .settings .key{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#6b7686}
+  .settings .note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
+  .row{display:flex;gap:8px}.row>div{flex:1}
+
+  /* легенда снизу */
+  .legend{position:fixed;left:14px;bottom:14px;z-index:18;font-size:12px;color:var(--muted);
+    background:rgba(23,27,34,.9);border:1px solid var(--line);border-radius:10px;padding:8px 12px;
+    max-width:min(520px,92vw);line-height:1.6}
+  .legend b{color:var(--text)}
+  .legend .sw{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Редактор контента · IT-Stream</h1>
-  <div class="sub">Правит тексты и кнопки лендинга. Сохранение коммитит <span class="key">content.json</span> в GitHub — сайт обновится через 1–2 минуты.</div>
-
-  <div class="card">
-    <h2>Доступ к GitHub</h2>
-    <div class="row">
-      <div><label>Владелец (owner)</label><input id="gh_owner" value="lexx633"></div>
-      <div><label>Репозиторий</label><input id="gh_repo" value="it-stream-redesign"></div>
-      <div><label>Ветка</label><input id="gh_branch" value="main"></div>
-    </div>
-    <label>Токен доступа (Personal Access Token, scope <span class="key">repo</span> или Contents: write)</label>
-    <input id="gh_token" type="password" placeholder="ghp_… — хранится только в этом браузере">
-    <div class="note">Токен сохраняется в localStorage этого браузера и никуда, кроме api.github.com, не отправляется.
-      Создать: GitHub → Settings → Developer settings → Personal access tokens.</div>
-  </div>
-
-  <div class="card">
-    <h2>Контент</h2>
-    <div id="fields"><div class="note">Загрузка content.json…</div></div>
-    <details style="margin-top:14px">
-      <summary>Как добавить новое поле</summary>
-      <div class="note">1. В <span class="key">index.html</span> добавь элементу атрибут <span class="key">data-cms="раздел.ключ"</span>
-        (для текста с разметкой — ещё <span class="key">data-cms-html</span>, для ссылки — <span class="key">data-cms-href="ключ"</span>).<br>
-        2. В <span class="key">content.json</span> добавь этот ключ со значением. Поле само появится здесь.</div>
-    </details>
-  </div>
-
-  <div class="card">
-    <h2>Что пока не редактируется здесь</h2>
-    <div class="note">Карточки услуг, кейсы, отзывы, вопросы FAQ и цены калькулятора правятся прямо в <span class="key">index.html</span>.
-      Их можно вынести в этот редактор тем же приёмом <span class="key">data-cms</span> — это следующий шаг основы.</div>
-  </div>
-</div>
 
 <div class="bar">
-  <a href="index.html" target="_blank"><button type="button" class="ghost">Открыть сайт</button></a>
-  <button id="save" type="button" disabled>Сохранить в GitHub</button>
+  <span class="title">Редактор IT-Stream</span>
+  <span class="hint" id="hint">Кликните по любому тексту и правьте прямо на странице</span>
+  <span class="spacer"></span>
   <span id="msg" class="msg"></span>
+  <button class="ghost" id="reload" type="button" title="Отменить несохранённые правки">Сбросить</button>
+  <button class="ghost" id="gear" type="button">GitHub…</button>
+  <button id="save" type="button" disabled>Сохранить</button>
+</div>
+
+<div class="settings" id="settings">
+  <h2>Публикация в GitHub</h2>
+  <div class="row">
+    <div><label>Владелец</label><input id="gh_owner" value="lexx633"></div>
+    <div><label>Репозиторий</label><input id="gh_repo" value="it-stream-redesign"></div>
+  </div>
+  <label>Ветка</label><input id="gh_branch" value="main">
+  <label>Токен доступа (PAT, scope <span class="key">repo</span> / Contents: write)</label>
+  <input id="gh_token" type="password" placeholder="ghp_… — хранится только в этом браузере">
+  <div class="note">Токен лежит в localStorage этого браузера и уходит только на api.github.com.
+    Создать: GitHub → Settings → Developer settings → Personal access tokens.
+    После «Сохранить» сайт обновится за 1–2 минуты.</div>
+</div>
+
+<div class="stage"><iframe id="frame" src="index.html?_edit=1"></iframe></div>
+
+<div class="legend">
+  <span class="sw" style="background:#5b8cff33;outline:1px solid #5b8cff"></span><b>Наведите</b> — подсветка поля ·
+  <b>клик</b> — правка текста · <b>×</b> удалить блок · <b>＋ добавить</b> в конце списка ·
+  клик по аватарке — сменить ссылку.
 </div>
 
 <script>
 (function(){
   'use strict';
-  var els = {
-    owner: document.getElementById('gh_owner'),
-    repo:  document.getElementById('gh_repo'),
-    branch:document.getElementById('gh_branch'),
-    token: document.getElementById('gh_token'),
-    fields:document.getElementById('fields'),
-    save:  document.getElementById('save'),
-    msg:   document.getElementById('msg')
-  };
   var PATH = 'content.json';
-  var data = null, order = [];
+  var frame = document.getElementById('frame');
+  var els = {
+    owner:  document.getElementById('gh_owner'),
+    repo:   document.getElementById('gh_repo'),
+    branch: document.getElementById('gh_branch'),
+    token:  document.getElementById('gh_token'),
+    save:   document.getElementById('save'),
+    reload: document.getElementById('reload'),
+    gear:   document.getElementById('gear'),
+    settings:document.getElementById('settings'),
+    msg:    document.getElementById('msg')
+  };
+  var data = null;
 
-  // восстановить сохранённые настройки
-  ['owner','repo','branch'].forEach(function(k){
-    var v = localStorage.getItem('gh_'+k); if(v) els[k].value = v;
-  });
+  // ---- настройки GitHub в localStorage ----
+  ['owner','repo','branch'].forEach(function(k){ var v = localStorage.getItem('gh_'+k); if(v) els[k].value = v; });
   els.token.value = localStorage.getItem('gh_pat') || '';
   function persist(){
     localStorage.setItem('gh_owner', els.owner.value.trim());
@@ -109,94 +119,274 @@
     localStorage.setItem('gh_pat', els.token.value.trim());
   }
   ['owner','repo','branch','token'].forEach(function(k){ els[k].addEventListener('change', persist); });
+  els.gear.addEventListener('click', function(){ els.settings.classList.toggle('open'); });
 
-  function setMsg(text, cls){ els.msg.textContent = text; els.msg.className = 'msg ' + (cls||''); }
+  function setMsg(t, cls){ els.msg.textContent = t || ''; els.msg.className = 'msg ' + (cls||''); }
 
-  var LABELS = {
-    'header.cta':'Кнопка в шапке',
-    'hero.eyebrow':'Хиро · надпись сверху','hero.title':'Хиро · заголовок','hero.lead':'Хиро · подзаголовок',
-    'hero.cta_primary':'Хиро · главная кнопка','hero.cta_secondary':'Хиро · вторая кнопка',
-    'services.title':'Услуги · заголовок','services.lead':'Услуги · описание',
-    'why.title':'Преимущества · заголовок',
-    'includes.title':'Что входит · заголовок','includes.lead':'Что входит · описание','includes.cta':'Что входит · кнопка',
-    'calc.title':'Калькулятор · заголовок','calc.lead':'Калькулятор · описание','calc.cta':'Калькулятор · кнопка',
-    'cases.title':'Кейсы · заголовок','reviews.title':'Отзывы · заголовок','faq.title':'FAQ · заголовок',
-    'contacts.title':'Контакты · заголовок','contacts.lead':'Контакты · описание',
-    'contacts.phone_free':'Телефон 8-800 (текст)','contacts.phone_free_href':'Телефон 8-800 (ссылка tel:)',
-    'contacts.phone_support':'Телефон поддержки (текст)','contacts.phone_support_href':'Телефон поддержки (ссылка tel:)',
-    'contacts.phone_sales':'Телефон продаж (текст)','contacts.phone_sales_href':'Телефон продаж (ссылка tel:)',
-    'contacts.email':'E-mail (текст)','contacts.email_href':'E-mail (ссылка mailto:)',
-    'form.title':'Форма · заголовок','form.submit':'Форма · кнопка отправки',
-    'cta.title':'Нижний блок · заголовок','cta.lead':'Нижний блок · описание','cta.button':'Нижний блок · кнопка'
+  // ---- доступ к значению по пути ("services.items.0.title") ----
+  // Верхние ключи в content.json плоские с точками ("services.items"),
+  // внутри — настоящие массивы/объекты. Ищем самый длинный существующий
+  // плоский префикс, дальше идём по вложенности.
+  function splitPath(path){
+    var parts = path.split('.');
+    for(var n = parts.length; n >= 1; n--){
+      var pref = parts.slice(0, n).join('.');
+      if(Object.prototype.hasOwnProperty.call(data, pref)) return {root:pref, rest:parts.slice(n)};
+    }
+    return {root:parts[0], rest:parts.slice(1)};
+  }
+  function getVal(path){
+    var s = splitPath(path), cur = data[s.root];
+    for(var i=0;i<s.rest.length;i++){ if(cur==null) return undefined; cur = cur[s.rest[i]]; }
+    return cur;
+  }
+  function setVal(path, val){
+    var s = splitPath(path);
+    if(!s.rest.length){ data[s.root] = val; return; }
+    var cur = data[s.root];
+    for(var i=0;i<s.rest.length-1;i++) cur = cur[s.rest[i]];
+    cur[s.rest[s.rest.length-1]] = val;
+  }
+
+  // ---- шаблоны новых элементов по пути контейнера ----
+  var ITEM_TPL = {
+    'services.items': function(){ return {icon:'', title:'Новая услуга', desc:'Короткое описание услуги.', list:['Пункт списка']}; },
+    'cases.items':    function(){ return {icon:'', title:'Новый кейс', desc:'Короткое описание кейса.', tags:['Тег']}; },
+    'reviews.items':  function(){ return {text:'Текст нового отзыва.', name:'Имя автора', role:'Компания', avatar:''}; },
+    'faq.items':      function(){ return {q:'Новый вопрос?', a:'Ответ на вопрос.'}; }
   };
+  function newItemFor(listPath){
+    if(ITEM_TPL[listPath]) return ITEM_TPL[listPath]();
+    return '';                       // hero.chips, *.list, *.tags — массивы строк
+  }
 
-  function render(){
-    els.fields.innerHTML = '';
-    order.forEach(function(key){
-      var val = data[key] == null ? '' : String(data[key]);
-      var wrap = document.createElement('div');
-      var lab = document.createElement('label');
-      lab.innerHTML = (LABELS[key] || key) + ' <span class="key">' + key + '</span>' +
-        (val.indexOf('<') > -1 ? '<span class="html-hint">HTML</span>' : '');
-      var ta = document.createElement('textarea');
-      ta.value = val;
-      ta.rows = Math.min(6, Math.max(1, Math.ceil(val.length / 60)));
-      ta.addEventListener('input', function(){ data[key] = ta.value; });
-      wrap.appendChild(lab); wrap.appendChild(ta);
-      els.fields.appendChild(wrap);
+  // ================= редактор внутри iframe =================
+  var idoc, iwin, ctl, ctlTarget = null;
+
+  function esc(s){ return String(s==null?'':s); }
+
+  function reRender(){
+    iwin.CMS.data = data;
+    iwin.CMS.render();
+    iwin.CMS.revealAll();
+    enhance();
+  }
+
+  // всплывающая кнопка × над блоком
+  function ensureCtl(){
+    if(ctl) return;
+    ctl = idoc.createElement('button');
+    ctl.className = '__ed __ed-del';
+    ctl.type = 'button';
+    ctl.textContent = '×';
+    ctl.title = 'Удалить блок';
+    ctl.style.cssText = 'position:absolute;z-index:9999;display:none;width:26px;height:26px;'+
+      'line-height:1;font-size:18px;font-weight:700;border:0;border-radius:50%;cursor:pointer;'+
+      'background:#f87171;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35);padding:0';
+    ctl.contentEditable = 'false';
+    ctl.addEventListener('mousedown', function(e){ e.preventDefault(); });
+    ctl.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      if(!ctlTarget) return;
+      var cont = ctlTarget.parentElement;
+      var listPath = cont.getAttribute('data-cms-list');
+      var idx = itemIndex(ctlTarget);
+      var arr = getVal(listPath);
+      if(Array.isArray(arr) && idx > -1){ arr.splice(idx, 1); reRender(); }
+      hideCtl();
+    });
+    idoc.body.appendChild(ctl);
+  }
+  function itemIndex(item){
+    var kids = Array.prototype.filter.call(item.parentElement.children,
+      function(c){ return !c.classList.contains('__ed'); });
+    return kids.indexOf(item);
+  }
+  function showCtlFor(item){
+    ensureCtl();
+    ctlTarget = item;
+    var r = item.getBoundingClientRect();
+    ctl.style.left = (iwin.scrollX + r.right - 13) + 'px';
+    ctl.style.top  = (iwin.scrollY + r.top  - 13) + 'px';
+    ctl.style.display = 'block';
+  }
+  function hideCtl(){ if(ctl){ ctl.style.display = 'none'; } ctlTarget = null; }
+
+  // ближайший удаляемый элемент = прямой потомок контейнера [data-cms-list]
+  function deletableFrom(node){
+    var el = node;
+    while(el && el !== idoc.body){
+      var p = el.parentElement;
+      if(p && p.getAttribute && p.getAttribute('data-cms-list') != null && !el.classList.contains('__ed'))
+        return el;
+      el = p;
+    }
+    return null;
+  }
+
+  function enhance(){
+    // 1) стиль правки — один раз
+    if(!idoc.getElementById('__ed_style')){
+      var st = idoc.createElement('style');
+      st.id = '__ed_style';
+      st.textContent =
+        '[data-cms]{outline:1px dashed transparent;outline-offset:2px;transition:outline-color .1s,background .1s;border-radius:3px}'+
+        '[data-cms]:hover{outline-color:#5b8cff;background:rgba(91,140,255,.10);cursor:text}'+
+        '[data-cms]:focus{outline:2px solid #5b8cff;background:rgba(91,140,255,.14)}'+
+        'img[data-cms-src]{outline:2px dashed transparent;outline-offset:2px;cursor:pointer}'+
+        'img[data-cms-src]:hover{outline-color:#5b8cff}'+
+        '.__ed-add{display:inline-flex;align-items:center;gap:6px;margin:10px auto 0;padding:8px 16px;'+
+          'font:600 14px/1 inherit;color:#5b8cff;background:rgba(91,140,255,.10);'+
+          'border:1px dashed #5b8cff;border-radius:10px;cursor:pointer}'+
+        '.__ed-addwrap{width:100%;display:flex;justify-content:center;margin-top:8px}';
+      idoc.head.appendChild(st);
+    }
+
+    // 2) текстовые поля → contenteditable
+    Array.prototype.forEach.call(idoc.querySelectorAll('[data-cms]'), function(el){
+      if(el.__edText) return;
+      el.__edText = true;
+      var path = el.getAttribute('data-cms');
+      var isHtml = el.hasAttribute('data-cms-html');
+      el.setAttribute('contenteditable', 'true');
+      el.setAttribute('spellcheck', 'false');
+      el.addEventListener('input', function(){ setVal(path, isHtml ? el.innerHTML : el.textContent); markDirty(); });
+      el.addEventListener('keydown', function(e){ if(e.key === 'Enter' && !isHtml && el.tagName !== 'P'){ e.preventDefault(); el.blur(); } });
+    });
+
+    // 3) аватарки/картинки → правка ссылки по клику
+    Array.prototype.forEach.call(idoc.querySelectorAll('img[data-cms-src]'), function(img){
+      if(img.__edImg) return;
+      img.__edImg = true;
+      img.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        var path = img.getAttribute('data-cms-src');
+        var cur = getVal(path) || '';
+        var v = iwin.prompt('Ссылка на изображение:', cur);
+        if(v != null){ setVal(path, v.trim()); img.src = v.trim(); markDirty(); }
+      });
+    });
+
+    // 4) кнопки «＋ добавить» в конце каждого списка
+    Array.prototype.forEach.call(idoc.querySelectorAll('[data-cms-list]'), function(cont){
+      if(cont.querySelector(':scope > .__ed-addwrap')) return;
+      var listPath = cont.getAttribute('data-cms-list');
+      var wrap = idoc.createElement('div');
+      wrap.className = '__ed __ed-addwrap';
+      wrap.contentEditable = 'false';
+      var b = idoc.createElement('button');
+      b.type = 'button'; b.className = '__ed __ed-add';
+      b.textContent = '＋ добавить';
+      b.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        var arr = getVal(listPath);
+        if(!Array.isArray(arr)){ arr = []; setVal(listPath, arr); }
+        arr.push(newItemFor(listPath));
+        reRender(); markDirty();
+      });
+      wrap.appendChild(b);
+      cont.appendChild(wrap);
     });
   }
 
-  fetch(PATH + '?_=' + Date.now(), {cache:'no-store'})
-    .then(function(r){ if(!r.ok) throw new Error('content.json ' + r.status); return r.json(); })
-    .then(function(j){ data = j; order = Object.keys(j); render(); els.save.disabled = false; })
-    .catch(function(e){ els.fields.innerHTML = '<div class="msg err">Не удалось загрузить content.json: ' + e.message + '</div>'; });
+  // ---- ставим редактор поверх загруженного iframe ----
+  function installEditor(){
+    iwin = frame.contentWindow;
+    idoc = frame.contentDocument;
+    // блокируем навигацию/сабмиты/аккордеон в режиме правки
+    idoc.addEventListener('click', function(e){
+      var t = e.target;
+      if(t.closest && t.closest('.__ed')) return;                 // наши контролы
+      var a = t.closest ? t.closest('a,button') : null;
+      if(a){ e.preventDefault(); e.stopPropagation(); }
+    }, true);
+    idoc.addEventListener('submit', function(e){ e.preventDefault(); }, true);
+    // всплывающая × при наведении
+    idoc.addEventListener('mouseover', function(e){
+      var item = deletableFrom(e.target);
+      if(item) showCtlFor(item);
+    });
+    idoc.addEventListener('mouseout', function(e){
+      if(!e.relatedTarget || (e.relatedTarget !== ctl && !deletableFrom(e.relatedTarget))) hideCtl();
+    });
+    iwin.addEventListener('scroll', hideCtl, {passive:true});
 
-  function b64(str){
-    return btoa(String.fromCharCode.apply(null, new TextEncoder().encode(str)));
+    // отдаём iframe наш рабочий data и рендерим
+    iwin.CMS.data = data;
+    iwin.CMS.render();
+    iwin.CMS.revealAll();
+    enhance();
+    els.save.disabled = false;
+    setMsg('Готово к правке', 'wait');
   }
 
+  var dirty = false;
+  function markDirty(){ if(!dirty){ dirty = true; setMsg('Есть несохранённые правки', 'wait'); } }
+
+  function whenFrameReady(cb){
+    // iframe сам грузит content.json асинхронно; ждём, пока его boot() выставит
+    // window.__cmsReady. Опрос надёжнее слушателя события из-за возможной гонки.
+    var w = frame.contentWindow;
+    if(w && w.CMS && w.__cmsReady){ cb(); return; }
+    var iv = setInterval(function(){
+      var w = frame.contentWindow;
+      if(w && w.CMS && w.__cmsReady){ clearInterval(iv); cb(); }
+    }, 120);
+    setTimeout(function(){ clearInterval(iv); }, 8000);
+  }
+
+  // ---- загрузка content.json + инициализация после готовности iframe ----
+  function boot(){
+    fetch(PATH + '?_=' + Date.now(), {cache:'no-store'})
+      .then(function(r){ if(!r.ok) throw new Error('content.json ' + r.status); return r.json(); })
+      .then(function(j){ data = j; whenFrameReady(installEditor); })
+      .catch(function(e){ setMsg('Не удалось загрузить content.json: ' + e.message, 'err'); });
+  }
+  frame.addEventListener('load', boot);
+
+  // ---- сброс несохранённых правок ----
+  els.reload.addEventListener('click', function(){
+    dirty = false; setMsg('');
+    els.save.disabled = true;
+    frame.src = 'index.html?_edit=1&_=' + Date.now();  // перезагрузка iframe → повторный boot
+  });
+
+  // ================= сохранение в GitHub =================
+  function b64(str){ return btoa(String.fromCharCode.apply(null, new TextEncoder().encode(str))); }
   function api(method, extra){
-    var u = 'https://api.github.com/repos/' + els.owner.value.trim() + '/' + els.repo.value.trim() +
-            '/contents/' + PATH;
-    var opts = { method: method, headers: {
-      'Authorization': 'token ' + els.token.value.trim(),
-      'Accept': 'application/vnd.github+json'
-    }};
+    var u = 'https://api.github.com/repos/' + els.owner.value.trim() + '/' + els.repo.value.trim() + '/contents/' + PATH;
+    var opts = { method:method, headers:{ 'Authorization':'token ' + els.token.value.trim(), 'Accept':'application/vnd.github+json' } };
     if(extra) opts.body = JSON.stringify(extra);
     return fetch(u + (method === 'GET' ? '?ref=' + els.branch.value.trim() + '&_=' + Date.now() : ''), opts);
   }
-
   els.save.addEventListener('click', function(){
-    if(!els.token.value.trim()){ setMsg('Укажите токен доступа', 'err'); els.token.focus(); return; }
+    if(!els.token.value.trim()){ setMsg('Укажите токен в GitHub…', 'err'); els.settings.classList.add('open'); els.token.focus(); return; }
     persist();
-    els.save.disabled = true; setMsg('Сохраняю…');
+    els.save.disabled = true; setMsg('Сохраняю…', 'wait');
     var body = JSON.stringify(data, null, 2) + '\n';
-    // 1) получить свежий sha
     api('GET').then(function(r){
-      if(r.status === 401){ throw new Error('токен не принят (401)'); }
-      if(r.status === 404){ return null; } // файла нет — создадим
+      if(r.status === 401) throw new Error('токен не принят (401)');
+      if(r.status === 404) return null;
       if(!r.ok) throw new Error('GET ' + r.status);
       return r.json();
     }).then(function(cur){
-      var payload = {
-        message: 'admin: обновление контента лендинга',
-        content: b64(body),
-        branch: els.branch.value.trim()
-      };
+      var payload = { message:'admin: обновление контента лендинга', content:b64(body), branch:els.branch.value.trim() };
       if(cur && cur.sha) payload.sha = cur.sha;
       return api('PUT', payload);
     }).then(function(r){
       return r.json().then(function(j){ return {ok:r.ok, status:r.status, j:j}; });
     }).then(function(res){
       if(!res.ok) throw new Error((res.j && res.j.message) || ('PUT ' + res.status));
-      setMsg('Сохранено. Сайт обновится через 1–2 минуты.', 'ok');
+      dirty = false;
+      setMsg('Сохранено — сайт обновится за 1–2 мин', 'ok');
       els.save.disabled = false;
     }).catch(function(e){
       setMsg('Ошибка: ' + e.message, 'err');
       els.save.disabled = false;
     });
   });
+
+  window.addEventListener('beforeunload', function(e){ if(dirty){ e.preventDefault(); e.returnValue = ''; } });
 })();
 </script>
 </body>

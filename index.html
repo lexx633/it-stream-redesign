@@ -426,16 +426,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
           </a>
           <a href="#calc" class="btn btn-ghost" data-cms="hero.cta_secondary">Рассчитать стоимость</a>
         </div>
-        <div class="chips">
-          <span class="chip">IT-аутсорсинг</span>
-          <span class="chip">Облачные решения</span>
-          <span class="chip">СКУД</span>
-          <span class="chip">Видеонаблюдение</span>
-          <span class="chip">Терминальный сервер</span>
-          <span class="chip">Аренда 1С</span>
-          <span class="chip">IP-телефония</span>
-          <span class="chip">СКС</span>
-        </div>
+        <div class="chips" data-cms-list="hero.chips"></div>
       </div>
 
       <div class="hero-card reveal">
@@ -480,49 +471,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       <p class="section-lead" data-cms="services.lead">Не нужно собирать пять подрядчиков. Проектируем, монтируем и обслуживаем — от розетки в стене до сервера в дата-центре.</p>
     </div>
 
-    <div class="services">
-      <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-        <h3>IT-услуги</h3>
-        <p>Комплексная поддержка рабочих мест, сетей и пользователей — вместо штатного сисадмина.</p>
-        <ul><li>IT-аутсорсинг</li><li>IT-аудит</li><li>IP-телефония</li><li>Обслуживание сетей</li><li>Абонентское обслуживание ПК</li></ul>
-      </article>
-
-      <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M18 10h1a4 4 0 010 8H6a4.5 4.5 0 01-.6-8.96A6 6 0 0117.7 8.2"/></svg></div>
-        <h3>Облако и серверы</h3>
-        <p>Переносим 1С и рабочие процессы в облако: быстрее, дешевле и без своей серверной.</p>
-        <ul><li>Облачные решения</li><li>Аренда сервера 1С</li><li>Терминальный сервер</li><li>Администрирование</li><li>Размещение в дата-центре</li></ul>
-      </article>
-
-      <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
-        <h3>Видеонаблюдение</h3>
-        <p>Проектирование, монтаж и сервис систем под конкретный объект и задачу.</p>
-        <ul><li>Офис</li><li>Магазин</li><li>Склад</li><li>Производство</li><li>Школа и детский сад</li></ul>
-      </article>
-
-      <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
-        <h3>СКУД</h3>
-        <p>Контроль доступа и учёт рабочего времени: турникеты, замки, карты и биометрия.</p>
-        <ul><li>Проектирование</li><li>Монтаж</li><li>Техобслуживание</li><li>Офис</li><li>Школа</li></ul>
-      </article>
-
-      <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M12 2v6M12 16v6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M16 12h6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"/></svg></div>
-        <h3>СКС</h3>
-        <p>Структурированные кабельные сети «с нуля» — с документацией и маркировкой.</p>
-        <ul><li>Проектирование СКС</li><li>Монтаж СКС</li><li>Серверные шкафы</li><li>Wi-Fi покрытие</li></ul>
-      </article>
-
-      <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></div>
-        <h3>IP-телефония</h3>
-        <p>Виртуальная АТС, запись разговоров, интеграция с CRM и многоканальные номера.</p>
-        <ul><li>Настройка АТС</li><li>Номера 8-800</li><li>Интеграция с CRM</li><li>Аналитика звонков</li></ul>
-      </article>
-    </div>
+    <div class="services" data-cms-list="services.items"></div>
   </div>
 </section>
 
@@ -610,56 +559,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       <span class="eyebrow">Практический опыт</span>
       <h2 data-cms="cases.title">Кейсы для бизнеса</h2>
     </div>
-    <div class="cases">
-      <article class="case reveal">
-        <div class="case-ico"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 7.5v3.8M11.2 11.8L6.4 16.4M12.8 11.8l4.8 4.6"/></svg></i></div>
-        <div class="case-body">
-          <h3>Компания по оптовой торговле часами</h3>
-          <p>Оборудование офиса 200 м². Сборка и подготовка 28 рабочих мест «под ключ».</p>
-          <div class="case-tags"><span>ИТ-инфраструктура</span><span>СКС</span><span>Рабочие места</span></div>
-        </div>
-      </article>
-      <article class="case reveal">
-        <div class="case-ico"><i><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20M6 14.5h4"/><circle cx="16.5" cy="14.5" r="1.6"/></svg></i></div>
-        <div class="case-body">
-          <h3>Установка СКУД в автосервисе</h3>
-          <p>Контроль и безопасность на всей территории сервиса, полная ясность в текущем моменте.</p>
-          <div class="case-tags"><span>СКУД</span><span>Безопасность</span></div>
-        </div>
-      </article>
-      <article class="case reveal">
-        <div class="case-ico"><i><svg viewBox="0 0 24 24"><path d="M23 7.5l-6.5 4.5 6.5 4.5v-9z"/><rect x="1" y="5.5" width="15" height="13" rx="2.5"/><path d="M4.5 15h5"/></svg></i></div>
-        <div class="case-body">
-          <h3>Видеонаблюдение для коттеджного посёлка</h3>
-          <p>Сокращение штата охраны на 30%, уровень безопасности вырос втрое.</p>
-          <div class="case-tags"><span>Видеонаблюдение</span><span>Периметр</span></div>
-        </div>
-      </article>
-      <article class="case reveal">
-        <div class="case-ico"><i><svg viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="8" rx="2.2"/><rect x="2.5" y="13.5" width="19" height="8" rx="2.2"/><path d="M6.5 6.5h.01M6.5 17.5h.01M10.5 6.5h4M10.5 17.5h4"/></svg></i></div>
-        <div class="case-body">
-          <h3>ИТ-аутсорсинг стоматологической клиники на Арбате</h3>
-          <p>Замена приходящего сисадмина, порядок в серверной и модернизация всей ИТ-инфраструктуры.</p>
-          <div class="case-tags"><span>Аутсорсинг</span><span>Серверы</span></div>
-        </div>
-      </article>
-      <article class="case reveal">
-        <div class="case-ico"><i><svg viewBox="0 0 24 24"><rect x="1" y="6" width="13" height="10" rx="1.8"/><path d="M14 9.5h3.6L21 13v3h-7z"/><circle cx="6" cy="18.6" r="1.8"/><circle cx="17.6" cy="18.6" r="1.8"/></svg></i></div>
-        <div class="case-body">
-          <h3>Переезд офиса на 40 сотрудников за 2 дня</h3>
-          <p>Переезд в новый офис, смена ЦОД и облака, переход на другого провайдера без простоя.</p>
-          <div class="case-tags"><span>Проект</span><span>Миграция</span></div>
-        </div>
-      </article>
-      <article class="case reveal">
-        <div class="case-ico"><i><svg viewBox="0 0 24 24"><path d="M3 8.5V5.5A2.5 2.5 0 015.5 3h3M15.5 3h3A2.5 2.5 0 0121 5.5v3M21 15.5v3a2.5 2.5 0 01-2.5 2.5h-3M8.5 21h-3A2.5 2.5 0 013 18.5v-3"/><circle cx="12" cy="11" r="2.2"/><path d="M8.6 16.2c.9-1.4 2-2.1 3.4-2.1s2.5.7 3.4 2.1"/></svg></i></div>
-        <div class="case-body">
-          <h3>ЖК бизнес-класса: замена старой СКУД</h3>
-          <p>Демонтаж устаревшего оборудования, установка Face ID и распознавания автомобильных номеров.</p>
-          <div class="case-tags"><span>СКУД</span><span>Face ID</span></div>
-        </div>
-      </article>
-    </div>
+    <div class="cases" data-cms-list="cases.items"></div>
   </div>
 </section>
 
@@ -670,38 +570,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       <span class="eyebrow">Отзывы</span>
       <h2 data-cms="reviews.title">Вот что говорят о нас</h2>
     </div>
-    <div class="reviews">
-      <div class="rev reveal">
-        <div class="stars"></div>
-        <p>Офигенный сервис, круто что всё в одном месте! Просто передал подготовку помещения и установку всех коммуникаций ребятам, потом принял всё в рабочем состоянии — оставалось только мебель поставить.</p>
-        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/4a5/4a5a0035c4015f40e2527317c68f2f94/snimok_ekrana_2026_07_26_v_02_13_05_1x.png" alt="" loading="lazy"></div><div><b>Sky Time</b><span>Компания</span></div></div>
-      </div>
-      <div class="rev reveal">
-        <div class="stars"></div>
-        <p>Обратился по рекомендации друзей — нужно было срочно поднять все коммуникации в арендованном помещении под кофейню. Пара дней, и всё было готово на высшем уровне. Советую.</p>
-        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/12a/12ac1169fbb50beee4158e0cc68ac779/snimok_ekrana_2026_07_26_v_02_14_27_1x_1x_1x.png" alt="" loading="lazy"></div><div><b>ДоДо пицца</b><span>Компания</span></div></div>
-      </div>
-      <div class="rev reveal">
-        <div class="stars"></div>
-        <p>В прошлом году делали мой салон красоты. Когда расширилась и взяла помещение побольше — снова позвала их, уже с переделкой всех коммуникаций под салон. Справились.</p>
-        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/4ab/4ab25e3154289955294dd97c5d6890a4/snimok_ekrana_2026_07_26_v_02_18_04_1x.png" alt="" loading="lazy"></div><div><b>BS Time</b><span>Компания</span></div></div>
-      </div>
-      <div class="rev reveal">
-        <div class="stars"></div>
-        <p>Ребята закончили работы, и это просто чудо: всё работает на высшем уровне, ещё и пару световых экранов подключили по акции. Спасибо за работу, рекомендую.</p>
-        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/43e/43e54c5040b03678c839cd7d346a51f3/snimok_ekrana_2026_07_26_v_02_20_00_1x_1x.png" alt="" loading="lazy"></div><div><b>Loyal-Shop</b><span>Компания</span></div></div>
-      </div>
-      <div class="rev reveal">
-        <div class="stars"></div>
-        <p>Заменили приходящего сисадмина на полноценную поддержку. Навели порядок в серверной, обновили инфраструктуру — теперь клиника не встаёт из-за ИТ.</p>
-        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/a37/a373db19e8100d40087335877137a877/snimok_ekrana_2026_07_26_v_02_22_41_1x_1x.png" alt="" loading="lazy"></div><div><b>Стоматологическая клиника на Арбате</b><span>Клиент с 2024 года</span></div></div>
-      </div>
-      <div class="rev reveal">
-        <div class="stars"></div>
-        <p>Переехали офисом на 40 человек за выходные — в понедельник все сели и работали. Отдельное спасибо за то, что заранее описали риски и план отката.</p>
-        <div class="rev-author"><div class="avatar"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/4a5/4a5a0035c4015f40e2527317c68f2f94/snimok_ekrana_2026_07_26_v_02_13_05_1x.png" alt="" loading="lazy"></div><div><b>Логистическая компания</b><span>Комплексный проект</span></div></div>
-      </div>
-    </div>
+    <div class="reviews" data-cms-list="reviews.items"></div>
   </div>
 </section>
 
@@ -712,32 +581,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       <span class="eyebrow">FAQ</span>
       <h2 data-cms="faq.title">Частые вопросы</h2>
     </div>
-    <div class="faq">
-      <div class="q reveal">
-        <button class="q-head">Какие задачи решает ИТ-аутсорсинг?<span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
-        <div class="q-body"><p>Поддержка пользователей и рабочих мест, администрирование серверов и сетей, антивирусная защита, резервное копирование, закупка и настройка оборудования, телефония. По сути — всё, чем занимался бы штатный ИТ-отдел.</p></div>
-      </div>
-      <div class="q reveal">
-        <button class="q-head">Кому это подходит?<span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
-        <div class="q-body"><p>Компаниям от 5 до 200 рабочих мест, где ИТ важны, но содержать полноценный отдел нерентабельно: офисы, розница, склады, медицинские центры, производство, управляющие компании.</p></div>
-      </div>
-      <div class="q reveal">
-        <button class="q-head">Чем аутсорсинг лучше штатного специалиста?<span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
-        <div class="q-body"><p>Вместо одного человека работает команда с разными компетенциями — сетевик, системный администратор, инженер по видеонаблюдению. Нет простоев из-за отпуска или болезни, а ответственность закреплена договором и SLA.</p></div>
-      </div>
-      <div class="q reveal">
-        <button class="q-head">Как быстро вы можете начать?<span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
-        <div class="q-body"><p>Бесплатный аудит проводим в течение 1–2 рабочих дней после заявки. Договор и подключение мониторинга — ещё 1–3 дня. В срочных случаях подхватываем поддержку сразу после аудита.</p></div>
-      </div>
-      <div class="q reveal">
-        <button class="q-head">Как проходит монтаж СКС?<span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
-        <div class="q-body"><p>Выезд и замеры → проект с трассами и спецификацией → согласование сметы → монтаж кабельных трасс и розеток → кроссировка в шкафу, маркировка → тестирование каждой линии и передача исполнительной документации.</p></div>
-      </div>
-      <div class="q reveal">
-        <button class="q-head">От чего зависит стоимость СКУД?<span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
-        <div class="q-body"><p>От числа точек прохода и типа оборудования (замок, турникет, шлагбаум), способа идентификации (карта, брелок, биометрия), необходимости учёта рабочего времени и интеграции с 1С, а также от сложности прокладки кабеля на объекте.</p></div>
-      </div>
-    </div>
+    <div class="faq" data-cms-list="faq.items"></div>
   </div>
 </section>
 
@@ -915,150 +759,186 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   </a>
 </div>
 
-<!-- CMS: подстановка редактируемого контента из content.json.
-     Прогрессивно: если файл недоступен или сломан — на странице остаётся
-     текст по умолчанию из разметки. Правится через admin.html. -->
-<script>
-(function(){
-  'use strict';
-  fetch('content.json', {cache:'no-store'})
-    .then(function(r){ return r.ok ? r.json() : null; })
-    .then(function(data){
-      if(!data) return;
-      document.querySelectorAll('[data-cms]').forEach(function(el){
-        var v = data[el.getAttribute('data-cms')];
-        if(v == null) return;
-        if(el.hasAttribute('data-cms-html')) el.innerHTML = v; else el.textContent = v;
-      });
-      document.querySelectorAll('[data-cms-href]').forEach(function(el){
-        var v = data[el.getAttribute('data-cms-href')];
-        if(v != null) el.setAttribute('href', v);
-      });
-    })
-    .catch(function(){ /* оставляем дефолтный текст из HTML */ });
-})();
-</script>
-
+<!-- CMS: контент лендинга в content.json.
+     Скалярные поля (data-cms) имеют дефолт прямо в разметке — если JSON не
+     загрузился, остаётся он. Повторяющиеся блоки (data-cms-list) рендерятся
+     из данных. Правится визуально через admin.html. -->
 <script>
 (function(){
   'use strict';
 
-  // header
-  var header = document.getElementById('header');
-  function onScroll(){ header.classList.toggle('scrolled', window.scrollY > 20); }
-  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+  function resolve(data, key){
+    if(data == null) return undefined;
+    if(Object.prototype.hasOwnProperty.call(data, key)) return data[key];
+    var cur = data, parts = key.split('.');
+    for(var i=0;i<parts.length;i++){ if(cur==null) return undefined; cur = cur[parts[i]]; }
+    return cur;
+  }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escAttr(s){ return esc(s).replace(/"/g,'&quot;'); }
 
-  // burger
-  var burger = document.getElementById('burger'), links = document.getElementById('navLinks');
-  burger.addEventListener('click', function(){
-    burger.classList.toggle('open'); links.classList.toggle('open');
-  });
-  links.addEventListener('click', function(e){
-    if(e.target.tagName === 'A'){ burger.classList.remove('open'); links.classList.remove('open'); }
-  });
-
-  // reveal on scroll
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(en){
-      if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
-    });
-  }, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
-  document.querySelectorAll('.reveal').forEach(function(el, i){
-    el.style.transitionDelay = (i % 4) * 70 + 'ms';
-    io.observe(el);
-  });
-
-  // animated counters
-  var counted = new IntersectionObserver(function(entries){
-    entries.forEach(function(en){
-      if(!en.isIntersecting) return;
-      var el = en.target, target = +el.dataset.count, suffix = el.dataset.suffix || '', t0 = null;
-      function step(ts){
-        if(!t0) t0 = ts;
-        var p = Math.min((ts - t0) / 1100, 1);
-        el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + suffix;
-        if(p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-      counted.unobserve(el);
-    });
-  }, {threshold:.5});
-  document.querySelectorAll('[data-count]').forEach(function(el){ counted.observe(el); });
-
-  // stars
   var starSvg = '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
-  document.querySelectorAll('.stars').forEach(function(s){ s.innerHTML = starSvg.repeat(5); });
 
-  // marquee duplicate for seamless loop
-  var mq = document.getElementById('marquee');
-  mq.innerHTML += mq.innerHTML;
+  var TPL = {
+    'hero.chips': function(item, pth){
+      return '<span class="chip" data-cms-item="'+pth+'" data-cms="'+pth+'">'+esc(item)+'</span>';
+    },
+    'services.items': function(it, pth){
+      var lis = (it.list||[]).map(function(t,j){ return '<li data-cms="'+pth+'.list.'+j+'">'+esc(t)+'</li>'; }).join('');
+      return '<article class="svc reveal" data-cms-item="'+pth+'">'+
+        '<div class="svc-icon"><svg viewBox="0 0 24 24">'+(it.icon||'')+'</svg></div>'+
+        '<h3 data-cms="'+pth+'.title">'+esc(it.title)+'</h3>'+
+        '<p data-cms="'+pth+'.desc">'+esc(it.desc)+'</p>'+
+        '<ul data-cms-list="'+pth+'.list">'+lis+'</ul>'+
+      '</article>';
+    },
+    'cases.items': function(it, pth){
+      var tags = (it.tags||[]).map(function(t,j){ return '<span data-cms="'+pth+'.tags.'+j+'">'+esc(t)+'</span>'; }).join('');
+      return '<article class="case reveal" data-cms-item="'+pth+'">'+
+        '<div class="case-ico"><i><svg viewBox="0 0 24 24">'+(it.icon||'')+'</svg></i></div>'+
+        '<div class="case-body">'+
+          '<h3 data-cms="'+pth+'.title">'+esc(it.title)+'</h3>'+
+          '<p data-cms="'+pth+'.desc">'+esc(it.desc)+'</p>'+
+          '<div class="case-tags" data-cms-list="'+pth+'.tags">'+tags+'</div>'+
+        '</div>'+
+      '</article>';
+    },
+    'reviews.items': function(it, pth){
+      return '<div class="rev reveal" data-cms-item="'+pth+'">'+
+        '<div class="stars">'+starSvg.repeat(5)+'</div>'+
+        '<p data-cms="'+pth+'.text">'+esc(it.text)+'</p>'+
+        '<div class="rev-author"><div class="avatar"><img src="'+escAttr(it.avatar)+'" data-cms-src="'+pth+'.avatar" alt="" loading="lazy"></div>'+
+        '<div><b data-cms="'+pth+'.name">'+esc(it.name)+'</b><span data-cms="'+pth+'.role">'+esc(it.role)+'</span></div></div>'+
+      '</div>';
+    },
+    'faq.items': function(it, pth){
+      return '<div class="q reveal" data-cms-item="'+pth+'">'+
+        '<button class="q-head"><span data-cms="'+pth+'.q">'+esc(it.q)+'</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>'+
+        '<div class="q-body"><p data-cms="'+pth+'.a">'+esc(it.a)+'</p></div>'+
+      '</div>';
+    }
+  };
 
-  // faq
-  document.querySelectorAll('.q-head').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var q = btn.parentElement, body = q.querySelector('.q-body'), isOpen = q.classList.contains('open');
-      document.querySelectorAll('.q.open').forEach(function(o){
-        o.classList.remove('open'); o.querySelector('.q-body').style.maxHeight = null;
+  function render(data){
+    if(!data) return;
+    Object.keys(TPL).forEach(function(key){
+      var arr = resolve(data, key) || [];
+      document.querySelectorAll('[data-cms-list="'+key+'"]').forEach(function(cont){
+        cont.innerHTML = arr.map(function(it,i){ return TPL[key](it, key+'.'+i); }).join('');
       });
+    });
+    document.querySelectorAll('[data-cms]').forEach(function(el){
+      var v = resolve(data, el.getAttribute('data-cms'));
+      if(v == null) return;
+      if(el.hasAttribute('data-cms-html')) el.innerHTML = v; else el.textContent = v;
+    });
+    document.querySelectorAll('[data-cms-href]').forEach(function(el){
+      var v = resolve(data, el.getAttribute('data-cms-href'));
+      if(v != null) el.setAttribute('href', v);
+    });
+    document.querySelectorAll('[data-cms-src]').forEach(function(el){
+      var v = resolve(data, el.getAttribute('data-cms-src'));
+      if(v != null) el.setAttribute('src', v);
+    });
+  }
+
+  function initSite(){
+    var header = document.getElementById('header');
+    function onScroll(){ header.classList.toggle('scrolled', window.scrollY > 20); }
+    onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+    var burger = document.getElementById('burger'), links = document.getElementById('navLinks');
+    burger.addEventListener('click', function(){ burger.classList.toggle('open'); links.classList.toggle('open'); });
+    links.addEventListener('click', function(e){ if(e.target.tagName === 'A'){ burger.classList.remove('open'); links.classList.remove('open'); } });
+
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.reveal').forEach(function(el, i){ el.style.transitionDelay = (i % 4) * 70 + 'ms'; io.observe(el); });
+
+    var counted = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(!en.isIntersecting) return;
+        var el = en.target, target = +el.dataset.count, suffix = el.dataset.suffix || '', t0 = null;
+        function step(ts){ if(!t0) t0 = ts; var p = Math.min((ts - t0) / 1100, 1); el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + suffix; if(p < 1) requestAnimationFrame(step); }
+        requestAnimationFrame(step); counted.unobserve(el);
+      });
+    }, {threshold:.5});
+    document.querySelectorAll('[data-count]').forEach(function(el){ counted.observe(el); });
+
+    var mq = document.getElementById('marquee'); if(mq) mq.innerHTML += mq.innerHTML;
+
+    document.addEventListener('click', function(e){
+      var btn = e.target.closest ? e.target.closest('.q-head') : null; if(!btn) return;
+      var q = btn.parentElement, body = q.querySelector('.q-body'), isOpen = q.classList.contains('open');
+      document.querySelectorAll('.q.open').forEach(function(o){ o.classList.remove('open'); o.querySelector('.q-body').style.maxHeight = null; });
       if(!isOpen){ q.classList.add('open'); body.style.maxHeight = body.scrollHeight + 'px'; }
     });
-  });
 
-  // calculator
-  var pc = document.getElementById('pc'), srv = document.getElementById('srv'),
-      tel = document.getElementById('tel'), org = document.getElementById('org'), cctv = document.getElementById('cctv'),
-      priceEl = document.getElementById('price');
-
-  function fmt(n){ return n.toLocaleString('ru-RU'); }
-  function calc(){
-    var nPc = +pc.value, nSrv = +srv.value;
-    document.getElementById('pcVal').textContent = nPc;
-    document.getElementById('srvVal').textContent = nSrv;
-
-    var total = 9500;                       // базовый пакет
-    total += nPc * 1100;                    // рабочие места
-    if(nPc > 30) total -= (nPc - 30) * 250; // опт для больших парков
-    total += nSrv * 4200;                   // серверы
-    if(tel.checked)  total += 3500;
-    if(org.checked)  total += 2400;
-    if(cctv.checked) total += 3900;
-
-    priceEl.textContent = 'от ' + fmt(Math.round(total / 100) * 100) + ' ₽';
-  }
-  [pc, srv].forEach(function(el){ el.addEventListener('input', calc); });
-  [tel, org, cctv].forEach(function(el){ el.addEventListener('change', calc); });
-  calc();
-
-  // phone mask (light)
-  var phone = document.querySelector('input[type=tel]');
-  phone.addEventListener('input', function(){
-    var d = phone.value.replace(/\D/g, '').slice(0, 11);
-    if(!d){ phone.value = ''; return; }
-    if(d[0] === '8') d = '7' + d.slice(1);
-    var out = '+7';
-    if(d.length > 1) out += ' (' + d.slice(1, 4);
-    if(d.length >= 5) out += ') ' + d.slice(4, 7);
-    if(d.length >= 8) out += '-' + d.slice(7, 9);
-    if(d.length >= 10) out += '-' + d.slice(9, 11);
-    phone.value = out;
-  });
-
-  // form
-  var form = document.getElementById('leadForm'), msg = document.getElementById('formMsg');
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    var name = form.name.value.trim(), ph = form.phone.value.trim();
-    if(!name || ph.replace(/\D/g,'').length < 11){
-      [form.name, form.phone].forEach(function(f){
-        if(!f.value.trim()) f.style.borderColor = '#f87171';
-      });
-      return;
+    var pc = document.getElementById('pc'), srv = document.getElementById('srv'),
+        tel = document.getElementById('tel'), org = document.getElementById('org'), cctv = document.getElementById('cctv'),
+        priceEl = document.getElementById('price');
+    function fmt(n){ return n.toLocaleString('ru-RU'); }
+    function calc(){
+      var nPc = +pc.value, nSrv = +srv.value;
+      document.getElementById('pcVal').textContent = nPc;
+      document.getElementById('srvVal').textContent = nSrv;
+      var total = 9500;
+      total += nPc * 1100;
+      if(nPc > 30) total -= (nPc - 30) * 250;
+      total += nSrv * 4200;
+      if(tel.checked)  total += 3500;
+      if(org.checked)  total += 2400;
+      if(cctv.checked) total += 3900;
+      priceEl.textContent = 'от ' + fmt(Math.round(total / 100) * 100) + ' ₽';
     }
-    msg.classList.add('show');
-    form.querySelector('button[type=submit]').textContent = 'Отправлено';
-    form.reset();
-  });
-  form.addEventListener('input', function(e){ e.target.style.borderColor = ''; });
+    [pc, srv].forEach(function(el){ el.addEventListener('input', calc); });
+    [tel, org, cctv].forEach(function(el){ el.addEventListener('change', calc); });
+    calc();
+
+    var phone = document.querySelector('input[type=tel]');
+    phone.addEventListener('input', function(){
+      var d = phone.value.replace(/\D/g, '').slice(0, 11);
+      if(!d){ phone.value = ''; return; }
+      if(d[0] === '8') d = '7' + d.slice(1);
+      var out = '+7';
+      if(d.length > 1) out += ' (' + d.slice(1, 4);
+      if(d.length >= 5) out += ') ' + d.slice(4, 7);
+      if(d.length >= 8) out += '-' + d.slice(7, 9);
+      if(d.length >= 10) out += '-' + d.slice(9, 11);
+      phone.value = out;
+    });
+
+    var form = document.getElementById('leadForm'), msg = document.getElementById('formMsg');
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = form.name.value.trim(), ph = form.phone.value.trim();
+      if(!name || ph.replace(/\D/g,'').length < 11){
+        [form.name, form.phone].forEach(function(f){ if(!f.value.trim()) f.style.borderColor = '#f87171'; });
+        return;
+      }
+      msg.classList.add('show');
+      form.querySelector('button[type=submit]').textContent = 'Отправлено';
+      form.reset();
+    });
+    form.addEventListener('input', function(e){ e.target.style.borderColor = ''; });
+  }
+
+  window.CMS = {
+    data: null,
+    resolve: resolve,
+    render: function(){ render(window.CMS.data); },
+    revealAll: function(){ document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); }); }
+  };
+
+  function boot(){
+    fetch('content.json', {cache:'no-store'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(data){ window.CMS.data = data; if(data) render(data); })
+      .catch(function(){ /* дефолтные тексты остаются из HTML */ })
+      .then(function(){ initSite(); window.__cmsReady = true; document.dispatchEvent(new Event('cms:ready')); });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>
 </body>
