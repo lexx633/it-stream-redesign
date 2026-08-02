@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ИТ-аутсорсинг — IT-Stream</title>
+<meta name="description" content="Все коммуникации под ключ для офисов, магазинов и торговых центров: серверы, сети, Wi-Fi, оргтехника и ИТ-аутсорсинг. Поддержка 24/7, работа по договору.">
+<meta name="theme-color" content="#070b16">
+<meta property="og:title" content="Телекоммуникации под ключ — IT-Stream">
+<meta property="og:description" content="Обеспечиваем коммерческие помещения всеми коммуникациями под ключ. ИТ-аутсорсинг, серверы, сети, безопасность.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%230ea5e9'/><path d='M28 68 L46 32 L54 32 L72 68 L62 68 L50 44 L38 68 Z' fill='white'/></svg>">
+<style>
+:root{
+  --bg:#070b16;
+  --bg-2:#0b1120;
+  --surface:rgba(255,255,255,.04);
+  --surface-2:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.09);
+  --text:#eef2ff;
+  --muted:#93a2c0;
+  --accent:#22d3ee;
+  --accent-2:#6366f1;
+  --accent-3:#a855f7;
+  --ok:#34d399;
+  --radius:20px;
+  --container:1180px;
+  --shadow:0 24px 60px -20px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:auto;scroll-padding-top:90px}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button,input,textarea,select{font:inherit;color:inherit}
+::selection{background:var(--accent);color:#04121a}
+
+/* ---------- decorative background ---------- */
+.bg-fx{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.35}
+.blob.b1{width:620px;height:620px;background:#0ea5e9;top:-220px;left:-160px;animation:float1 22s ease-in-out infinite}
+.blob.b2{width:560px;height:560px;background:#6366f1;top:280px;right:-200px;animation:float2 26s ease-in-out infinite}
+.blob.b3{width:520px;height:520px;background:#a855f7;bottom:-180px;left:35%;opacity:.22;animation:float1 30s ease-in-out infinite reverse}
+@keyframes float1{50%{transform:translate(80px,60px) scale(1.12)}}
+@keyframes float2{50%{transform:translate(-70px,90px) scale(1.08)}}
+.grid-fx{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 30%,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 30%,transparent 75%);
+}
+
+/* ---------- layout ---------- */
+.container{width:100%;max-width:var(--container);margin:0 auto;padding:0 24px}
+section{padding:96px 0;position:relative}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--accent);background:rgba(34,211,238,.09);
+  border:1px solid rgba(34,211,238,.25);padding:7px 14px;border-radius:999px;margin-bottom:18px;
+}
+.eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+h1,h2,h3{line-height:1.15;letter-spacing:-.02em;font-weight:700}
+h2{font-size:clamp(28px,4vw,44px);margin-bottom:16px}
+.section-lead{color:var(--muted);max-width:640px;font-size:17px}
+.section-head{margin-bottom:52px}
+.grad{background:linear-gradient(100deg,var(--accent),var(--accent-2) 55%,var(--accent-3));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- внутренний page-header (компактный, как раздел на битриксе) ---------- */
+.page-head{padding:94px 0 30px;position:relative;border-bottom:1px solid var(--line);text-align:center}
+.breadcrumb{display:flex;flex-wrap:wrap;gap:9px;align-items:center;justify-content:center;font-size:13px;color:var(--muted);margin-bottom:16px}
+.breadcrumb a{color:var(--muted);transition:.2s}
+.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb .sep{opacity:.45}
+.breadcrumb .cur{color:var(--text)}
+.page-head .eyebrow{margin:0 auto}
+.page-head h1{font-size:clamp(26px,3vw,40px);font-weight:800;margin:14px auto 10px;max-width:22ch;line-height:1.14}
+.page-head .lead{font-size:clamp(14px,1.4vw,17px);color:var(--muted);max-width:620px;margin:0 auto}
+
+/* ---------- header ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:100;transition:.35s}
+header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;gap:28px;height:76px}
+.logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:19px;letter-spacing:-.02em;flex-shrink:0}
+.logo-mark{
+  width:38px;height:38px;border-radius:11px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  display:grid;place-items:center;font-size:19px;font-weight:800;color:#04121a;
+  box-shadow:0 8px 24px -6px rgba(34,211,238,.6);
+}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:15px;font-weight:500}
+.nav-links a{color:var(--muted);transition:.2s;position:relative}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:.25s;border-radius:2px}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+.nav-phone{font-weight:700;font-size:15px;white-space:nowrap}
+.nav-phone span{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.04em}
+.burger{display:none;width:44px;height:44px;border:1px solid var(--line);background:var(--surface);border-radius:12px;cursor:pointer;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+.burger i{display:block;width:18px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+.burger.open i:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open i:nth-child(2){opacity:0}
+.burger.open i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px 26px;border-radius:14px;font-weight:600;font-size:15px;
+  border:1px solid transparent;cursor:pointer;transition:.25s;white-space:nowrap;
+}
+.btn-primary{background:linear-gradient(120deg,var(--accent),var(--accent-2));color:#04121a;box-shadow:0 14px 34px -12px rgba(56,189,248,.8)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 20px 44px -12px rgba(56,189,248,.95)}
+.btn-ghost{background:var(--surface);border-color:var(--line);color:var(--text);backdrop-filter:blur(10px)}
+.btn-ghost:hover{background:var(--surface-2);border-color:rgba(34,211,238,.45);transform:translateY(-2px)}
+.btn-sm{padding:11px 20px;font-size:14px;border-radius:12px}
+
+/* ---------- hero ---------- */
+.hero{padding:150px 0 90px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(34px,5.2vw,60px);font-weight:800;margin-bottom:22px}
+.hero h1 .nb{white-space:nowrap}
+.hero p.lead{font-size:clamp(16px,1.6vw,19px);color:var(--muted);max-width:560px;margin-bottom:30px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:36px}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{
+  font-size:13.5px;padding:8px 14px;border-radius:999px;background:var(--surface);
+  border:1px solid var(--line);color:#cbd5e1;transition:.25s;cursor:default;
+}
+.chip:hover{border-color:rgba(34,211,238,.5);color:#fff;transform:translateY(-2px)}
+
+/* hero card */
+.hero-card{
+  background:linear-gradient(160deg,rgba(255,255,255,.075),rgba(255,255,255,.02));
+  border:1px solid var(--line);border-radius:26px;padding:28px;backdrop-filter:blur(20px);
+  box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.hero-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(34,211,238,.85),transparent)}
+.hc-title{font-weight:700;font-size:17px;margin-bottom:4px}
+.hc-sub{font-size:13.5px;color:var(--muted);margin-bottom:20px}
+.status-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14.5px}
+.status-row:last-of-type{border-bottom:0}
+.status-row .l{color:var(--muted);display:flex;align-items:center;gap:9px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:pulse 2.4s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+.status-row .v{font-weight:600;font-variant-numeric:tabular-nums}
+.hc-foot{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:70px}
+.stat{padding:24px;border-radius:18px;background:var(--surface);border:1px solid var(--line);backdrop-filter:blur(10px);transition:.3s}
+.stat:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.35);background:var(--surface-2)}
+.stat b{display:block;font-size:clamp(28px,3.4vw,38px);font-weight:800;line-height:1;margin-bottom:8px;
+  background:linear-gradient(120deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{font-size:14px;color:var(--muted)}
+
+/* ---------- marquee ---------- */
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;overflow:hidden;background:rgba(255,255,255,.015)}
+.marquee-track{display:flex;gap:56px;width:max-content;animation:scroll 38s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+@keyframes scroll{to{transform:translateX(-50%)}}
+.marquee-track span{font-size:16px;font-weight:600;color:rgba(255,255,255,.3);white-space:nowrap;transition:.3s;letter-spacing:.01em}
+.marquee-track span:hover{color:rgba(255,255,255,.75)}
+
+/* ---------- services ---------- */
+.services{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.svc{
+  padding:30px;border-radius:var(--radius);border:1px solid var(--line);
+  background:linear-gradient(165deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
+  position:relative;overflow:hidden;transition:.35s;
+}
+.svc::after{content:"";position:absolute;inset:0;border-radius:var(--radius);padding:1px;opacity:0;transition:.35s;
+  background:linear-gradient(140deg,var(--accent),transparent 45%,var(--accent-2));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.svc:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.svc:hover::after{opacity:1}
+.svc-icon{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;margin-bottom:18px;
+  background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(99,102,241,.18));border:1px solid rgba(34,211,238,.28)}
+.svc-icon svg{width:26px;height:26px;stroke:var(--accent);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.svc h3{font-size:20px;margin-bottom:10px}
+.svc > p{color:var(--muted);font-size:14.5px;margin-bottom:16px}
+.svc ul{list-style:none;display:flex;flex-wrap:wrap;gap:7px}
+.svc ul li{font-size:12.5px;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);color:#b8c5dd}
+/* 4-колоночный вариант (только #services): центр + вертикальный список с разделителями, как на bitrix */
+.services .svc{padding:28px 20px;text-align:center}
+.services .svc-icon{margin-left:auto;margin-right:auto}
+.services .svc h3{font-size:16px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:0}
+.services .svc h3::after{content:"";display:block;width:40px;height:2px;background:var(--accent);margin:14px auto 4px}
+.services .svc ul{display:block}
+.services .svc ul li{display:block;background:none;border:none;border-bottom:1px solid var(--line);border-radius:0;padding:10px 0;font-size:12.5px;text-transform:uppercase;letter-spacing:.2px;color:#b8c5dd;line-height:1.35}
+.services .svc ul li:last-child{border-bottom:none}
+
+/* ---------- benefits ---------- */
+.benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.ben{padding:28px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line);transition:.3s;position:relative}
+.ben:hover{background:var(--surface-2);transform:translateY(-5px);border-color:rgba(99,102,241,.4)}
+.ben-num{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.1em;margin-bottom:14px}
+.ben h3{font-size:18px;margin-bottom:9px}
+.ben p{font-size:14px;color:var(--muted)}
+
+/* ---------- pricing ---------- */
+.price{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+.price-card{padding:32px;border-radius:var(--radius);border:1px solid var(--line);
+  background:linear-gradient(165deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
+  position:relative;transition:.35s;display:flex;flex-direction:column}
+.price-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:rgba(34,211,238,.35)}
+.price-card.feat{border-color:rgba(34,211,238,.5);background:linear-gradient(160deg,rgba(99,102,241,.14),rgba(34,211,238,.06))}
+.price-badge{position:absolute;top:-12px;right:24px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;
+  background:linear-gradient(120deg,var(--accent),var(--accent-2));color:#04121a}
+.price-card h3{font-size:19px;margin-bottom:6px}
+.price-card .cap{font-size:13.5px;color:var(--muted);margin-bottom:18px;min-height:40px}
+.price-val{font-size:30px;font-weight:800;margin-bottom:2px;
+  background:linear-gradient(120deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+.price-per{font-size:13px;color:var(--muted);margin-bottom:22px}
+.price-card ul{list-style:none;display:grid;gap:11px;margin-bottom:26px;flex:1}
+.price-card ul li{display:flex;gap:10px;font-size:14px;color:#cbd5e1}
+.price-card ul li svg{flex-shrink:0;width:18px;height:18px;stroke:var(--ok);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;margin-top:2px}
+
+/* ---------- reviews ---------- */
+.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.rev{padding:26px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line);transition:.3s;display:flex;flex-direction:column}
+.rev:hover{background:var(--surface-2);transform:translateY(-4px)}
+.stars{display:flex;gap:3px;margin-bottom:14px}
+.stars svg{width:16px;height:16px;fill:#fbbf24}
+.rev p{font-size:14.5px;color:#cbd5e1;flex:1;margin-bottom:18px}
+.rev-quote{font-family:Georgia,'Times New Roman',serif;font-size:52px;line-height:.6;color:var(--accent);height:26px;margin-bottom:10px}
+.rev-brand{display:flex;align-items:center;gap:12px;margin-top:auto}
+.rev-logo{width:44px;height:44px;border-radius:11px;overflow:hidden;flex-shrink:0;background:#fff;border:1px solid var(--line)}
+.rev-logo img{width:100%;height:100%;object-fit:cover;display:block}
+.rev-name{font-size:15px;font-weight:700;color:var(--text);line-height:1.2}
+
+/* ---------- contacts ---------- */
+.contacts{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
+.contact-list{display:grid;gap:14px}
+.ci{display:flex;gap:16px;padding:20px;border-radius:16px;background:var(--surface);border:1px solid var(--line);transition:.25s}
+.ci:hover{background:var(--surface-2);border-color:rgba(34,211,238,.35)}
+.ci-icon{width:44px;height:44px;border-radius:13px;flex-shrink:0;display:grid;place-items:center;
+  background:linear-gradient(135deg,rgba(34,211,238,.16),rgba(99,102,241,.16));border:1px solid rgba(34,211,238,.25)}
+.ci-icon svg{width:21px;height:21px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ci b{display:block;font-size:16px;margin-bottom:3px}
+.ci span{font-size:13.5px;color:var(--muted);display:block}
+.ci a{font-size:16px;font-weight:600;transition:.2s}
+.ci a:hover{color:var(--accent)}
+
+form.lead-form{padding:32px;border-radius:24px;border:1px solid var(--line);
+  background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));backdrop-filter:blur(20px)}
+form.lead-form h3{font-size:22px;margin-bottom:8px}
+form.lead-form > p{font-size:14.5px;color:var(--muted);margin-bottom:24px}
+.field{margin-bottom:16px}
+.field input,.field textarea,.field select{
+  width:100%;padding:14px 16px;border-radius:13px;background:rgba(7,11,22,.5);
+  border:1px solid var(--line);transition:.25s;font-size:15px;
+}
+.field textarea{resize:vertical;min-height:96px;font-family:inherit}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(34,211,238,.14)}
+.field input::placeholder,.field textarea::placeholder{color:#64748b}
+.field select option{background:#0b1120;color:var(--text)}
+.agree{display:flex;gap:11px;align-items:flex-start;font-size:12.5px;color:var(--muted);margin:18px 0 20px;cursor:pointer}
+.agree input{margin-top:2px;accent-color:var(--accent);width:16px;height:16px;flex-shrink:0}
+.form-msg{margin-top:16px;padding:14px 16px;border-radius:13px;background:rgba(52,211,153,.12);
+  border:1px solid rgba(52,211,153,.35);font-size:14px;color:#a7f3d0;display:none}
+.form-msg.show{display:block;animation:fadeUp .4s ease}
+
+/* ---------- cta band ---------- */
+.cta-band{
+  border-radius:28px;padding:52px;text-align:center;position:relative;overflow:hidden;
+  background:linear-gradient(120deg,rgba(34,211,238,.16),rgba(99,102,241,.16),rgba(168,85,247,.12));
+  border:1px solid rgba(34,211,238,.25);
+}
+.cta-band h2{margin-bottom:12px}
+.cta-band p{color:var(--muted);max-width:560px;margin:0 auto 28px;font-size:16.5px}
+.cta-band .hero-cta{justify-content:center;margin-bottom:0}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11,22,.65)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.foot-col h4{font-size:14px;font-weight:700;margin-bottom:16px;letter-spacing:.04em;text-transform:uppercase;color:#cbd5e1}
+.foot-col ul{list-style:none;display:grid;gap:10px}
+.foot-col a{font-size:14.5px;color:var(--muted);transition:.2s}
+.foot-col a:hover{color:var(--accent)}
+.foot-about p{font-size:14.5px;color:var(--muted);margin:16px 0}
+.foot-bottom{border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;font-size:13.5px;color:#64748b}
+
+/* ---------- fab ---------- */
+.fab{position:fixed;right:24px;bottom:24px;z-index:90;display:flex;flex-direction:column;gap:12px}
+.fab a{width:54px;height:54px;border-radius:17px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 12px 30px -8px rgba(34,211,238,.7);transition:.3s}
+.fab a:hover{transform:translateY(-4px) scale(1.05)}
+.fab svg{width:25px;height:25px;stroke:#04121a;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+.reveal.in{opacity:1;transform:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- responsive ---------- */
+@media(max-width:1024px){
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .services,.reviews,.price{grid-template-columns:repeat(2,1fr)}
+  .benefits{grid-template-columns:repeat(2,1fr)}
+  .contacts{grid-template-columns:1fr;gap:32px}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:32px}
+}
+@media(max-width:900px){
+  .nav-links{
+    position:fixed;top:76px;left:0;right:0;flex-direction:column;gap:0;
+    background:rgba(7,11,22,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--line);
+    padding:12px 24px 24px;transform:translateY(-140%);transition:.4s cubic-bezier(.4,0,.2,1);margin:0;
+  }
+  .nav-links.open{transform:translateY(0)}
+  .nav-links a{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:16px}
+  .nav-phone{display:none}
+  .burger{display:flex;margin-left:auto}
+}
+@media(max-width:760px){
+  section{padding:70px 0}
+  .hero{padding:120px 0 60px}
+  .stats{grid-template-columns:repeat(2,1fr);gap:14px;margin-top:48px}
+  .services,.reviews,.benefits,.price{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr}
+  .cta-band,form.lead-form{padding:26px}
+  .container{padding:0 18px}
+  .fab{right:16px;bottom:16px}
+  .fab a{width:50px;height:50px}
+}
+@media(max-width:440px){
+  .hero h1{font-size:31px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-fx"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grid-fx"></div>
+
+<header id="header">
+  <div class="container nav">
+    <a href="/" class="logo"><span class="logo-mark">Λ</span> <span>IT-Stream</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="/#services">ИТ-аутсорсинг</a>
+      <a href="#price">Тарифы</a>
+      <a href="#scope">Возможности</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <a href="tel:88003012660" class="nav-phone"><span>8 (800) 301-26-60</span><span>звонок бесплатный</span></a>
+    <a href="#contacts" class="btn btn-primary btn-sm" style="flex-shrink:0">Узнать стоимость</a>
+    <button class="burger" id="burger" aria-label="Меню"><i></i><i></i><i></i></button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- PAGE HEADER (внутренняя страница) -->
+<section class="page-head">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Хлебные крошки">
+      <a href="/">Главная</a><span class="sep">/</span>
+      <a href="/#services">Услуги</a><span class="sep">/</span>
+      <span class="cur">ИТ-аутсорсинг</span>
+    </nav>
+    <span class="eyebrow">Абонентское ИТ-обслуживание</span>
+    <h1>ИТ-аутсорсинг</h1>
+    <p class="lead">Поддержка серверов, пользователей, сетей, программ и&nbsp;оборудования — от розетки в стене до сервера в дата-центре.</p>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Поддержка серверов, пользователей, сетей, программ и&nbsp;оборудования</span>
+      <h2>Всё оборудование<br>и сети под одним договором</h2>
+      <p class="section-lead">Мы отточили систему и работаем с большим числом подрядчиков и поставщиков — это выводит сервис на более высокий уровень.</p>
+    </div>
+
+    <div class="services">
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h3>Компьютеры</h3>
+        <ul>
+          <li>Подбор и приобретение ИТ-оборудования</li>
+          <li>Обслуживание и контроль состояния систем</li>
+          <li>Устранение последствий сбоев</li>
+          <li>Актуализация ОС и ПО</li>
+          <li>Поддержка пользователей</li>
+        </ul>
+      </article>
+
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg></div>
+        <h3>Локальные и Wi-Fi сети</h3>
+        <ul>
+          <li>Создание единой сетевой инфраструктуры</li>
+          <li>Анализ показателей производительности сети</li>
+          <li>Настройка политики доступа к интернету</li>
+          <li>Регулирование трафика с интернет-провайдером</li>
+          <li>Монтаж, интеграция и конфигурирование IP-оборудования</li>
+        </ul>
+      </article>
+
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/></svg></div>
+        <h3>Серверы</h3>
+        <ul>
+          <li>Обслуживание серверного оборудования</li>
+          <li>Настройка прав доступа и расширение функционала</li>
+          <li>Настройка резервного копирования</li>
+          <li>Обеспечение защиты данных от киберугроз</li>
+          <li>Реализация защищённого удалённого доступа</li>
+        </ul>
+      </article>
+
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg></div>
+        <h3>Оргтехника</h3>
+        <ul>
+          <li>Анализ потребностей и подбор подходящей техники</li>
+          <li>Устранение неисправностей и регламентное техобслуживание</li>
+          <li>Подключение, инсталляция и настройка принтеров</li>
+          <li>Настройка МФУ и периферийного оборудования</li>
+          <li>Установка новых расходных материалов</li>
+        </ul>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA: экспресс диагностика (дословно с bitrix) -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2>Закажите экспресс диагностику — аудит <span class="grad">IT&nbsp;систем</span> — бесплатно!</h2>
+      <p>Проверим состояние инфраструктуры, найдём слабые места и риски, дадим понятный план — без обязательств.</p>
+      <div class="hero-cta">
+        <a href="#contacts" class="btn btn-primary">Заказать</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHEN (8 сценариев) -->
+<section id="when">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Практические решения для бизнеса</span>
+      <h2>В каких ситуациях<br>ИТ-аутсорсинг необходим</h2>
+      <p class="section-lead">Восемь типовых ситуаций, в которых внешняя ИТ-команда снимает риски и экономит бюджет.</p>
+    </div>
+    <div class="benefits">
+      <div class="ben reveal"><div class="ben-num">01</div><h3>Нет своего ИТ-специалиста или он один</h3><p>Если вся инфраструктура держится на одном человеке, бизнес уязвим: его отпуск, болезнь или увольнение парализуют работу. Аутсорсинг убирает эту зависимость.</p></div>
+      <div class="ben reveal"><div class="ben-num">02</div><h3>Нужно сократить и сделать предсказуемыми ИТ-расходы</h3><p>Вместо зарплат, налогов и отпусков штатных сотрудников компания платит фиксированную сумму за услуги. Бюджет становится прозрачным.</p></div>
+      <div class="ben reveal"><div class="ben-num">03</div><h3>Требуется круглосуточная поддержка</h3><p>Для торговых точек, колл-центров и производств с непрерывным циклом важно, чтобы проблемы решались сразу — ночью и в выходные.</p></div>
+      <div class="ben reveal"><div class="ben-num">04</div><h3>Планируется миграция или обновление</h3><p>Переход на новое ПО, переезд в облако, импортозамещение, внедрение CRM или трекера задач — это проекты, где внешняя команда снижает риски.</p></div>
+      <div class="ben reveal"><div class="ben-num">05</div><h3>Ушёл сисадмин и забрал доступы</h3><p>Если «ушёл сисадмин и забрал все пароли», сервер упал, данные зашифрованы вирусом или офис переезжает — аутсорсер выступает как ИТ-реанимация.</p></div>
+      <div class="ben reveal"><div class="ben-num">06</div><h3>Нужно быстро развернуть ИТ-инфраструктуру</h3><p>Например, при открытии новой точки, запуске интернет-магазина или переходе на удалёнку. Аутсорсер даёт готовые процессы и типовые настройки.</p></div>
+      <div class="ben reveal"><div class="ben-num">07</div><h3>Происходит рост или масштабирование</h3><p>При увеличении числа сотрудников, точек или филиалов типовые ИТ-процессы проще масштабировать через аутсорсера.</p></div>
+      <div class="ben reveal"><div class="ben-num">08</div><h3>Компании с удалёнными сотрудниками</h3><p>Нужен безопасный доступ к корпоративным системам, контроль лицензий, настройка VPN, защита ноутбуков.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="price">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Абонентское обслуживание</span>
+      <h2>Тарифы, которые<br>закрывают задачи</h2>
+      <p class="section-lead">Фиксированная стоимость в месяц без «сюрпризов» в счёте и доплат за каждый выезд.</p>
+    </div>
+
+    <div class="price">
+      <div class="price-card reveal">
+        <h3>ИТ под контролем: базовые настройки</h3>
+        <div class="cap">Когда «ничего не понятно», но бизнес должен работать</div>
+        <div class="price-val">от 25 000 ₽</div>
+        <div class="price-per">в месяц</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Инвентаризация</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Карта рисков</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Проверка бэкапов и восстановления</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Настройка 2FA</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Чистка доступов</li>
+        </ul>
+        <a href="#contacts" class="btn btn-ghost" style="width:100%">Заказать</a>
+      </div>
+
+      <div class="price-card feat reveal">
+        <span class="price-badge">Популярный</span>
+        <h3>ИТ-аутсорсинг с «0» погружением</h3>
+        <div class="cap">Когда хочется снять с себя ИТ-рутину</div>
+        <div class="price-val">от 45 000 ₽</div>
+        <div class="price-per">в месяц</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Регулярный мониторинг</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Обработка инцидентов</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Управление доступами</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Бэкапы и проверки</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Патчи и обновления</li>
+        </ul>
+        <a href="#contacts" class="btn btn-primary" style="width:100%">Заказать</a>
+      </div>
+
+      <div class="price-card reveal">
+        <h3>Быстрый старт за 5 дней</h3>
+        <div class="cap">Нет времени, а нужна стабильность и безопасность</div>
+        <div class="price-val">от 65 000 ₽</div>
+        <div class="price-per">в месяц · поддержка 365</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Аудит ИТ-инфраструктуры</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Первая линия (Service Desk)</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Администрирование серверов</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Виртуализация и облако</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Защита от внешних угроз</li>
+        </ul>
+        <a href="#contacts" class="btn btn-ghost" style="width:100%">Заказать</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCOPE (возможности) -->
+<section id="scope">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">ИТ-аутсорсинг</span>
+      <h2>Возможности для бизнеса</h2>
+      <p class="section-lead">Полный контур ИТ и телекома — от рабочих мест до безопасности и бизнес-приложений.</p>
+    </div>
+
+    <div class="services">
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
+        <h3>Поддержка пользователей и рабочих мест</h3>
+        <p>Первая линия поддержки (Service Desk): приём заявок, классификация, решение типовых проблем («не входит», «не печатает»).</p>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/></svg></div>
+        <h3>Администрирование серверов и инфраструктуры</h3>
+        <p>Windows/Linux, физические и виртуальные: обновления, патчи, мониторинг, оптимизация производительности.</p>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg></div>
+        <h3>Сети и телекоммуникации</h3>
+        <p>Структурированные кабельные системы, Wi-Fi, VLAN, сегментация сети, отказоустойчивость. Настройка сетевого оборудования.</p>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Информационная безопасность и защита данных</h3>
+        <p>Защита от внешних угроз: межсетевые экраны, антивирусы, EDR/XDR, защита от DDoS, фильтрация почты и трафика.</p>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg></div>
+        <h3>Офисная техника и периферия</h3>
+        <p>Подключение и настройка принтеров, МФУ, сканеров, проекторов: драйверы, сетевые очереди печати, учёт расходников.</p>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <h3>Бизнес-приложения и интеграции</h3>
+        <p>Поддержка и администрирование 1С: обновления, резервное копирование баз, настройка отчётов, разграничение прав.</p>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg></div>
+        <h3>Проектные и миграционные работы</h3>
+        <p>Аудит ИТ-инфраструктуры: инвентаризация оборудования и ПО, выявление уязвимостей и узких мест, рекомендации.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Отзывы</span>
+      <h2>Вот, что говорят о нас</h2>
+    </div>
+    <div class="reviews">
+      <div class="rev reveal">
+        <div class="rev-quote">“</div>
+        <p>Буквально вчера ребята закончили работы — это просто чудо, всё как надо и работает на высшем уровне. Подключили ещё пару световых экранов по акции, приятный бонус! Спасибо за хорошую работу, рекомендую всем.</p>
+        <div class="rev-brand"><span class="rev-logo"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/43e/43e54c5040b03678c839cd7d346a51f3/snimok_ekrana_2026_07_26_v_02_20_00_1x_1x.png" alt="Loyal-Shop" loading="lazy"></span><span class="rev-name">Loyal-Shop</span></div>
+      </div>
+      <div class="rev reveal">
+        <div class="rev-quote">“</div>
+        <p>Обращались для оснащения клиники — коммуникации, сеть и рабочие места сделали аккуратно и в срок. При расширении на второе помещение снова доверили им переделку под наши задачи, всё отработали чётко.</p>
+        <div class="rev-brand"><span class="rev-logo"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/a37/a373db19e8100d40087335877137a877/snimok_ekrana_2026_07_26_v_02_22_41_1x_1x.png" alt="Стоматологическая клиника на Арбате" loading="lazy"></span><span class="rev-name">Стоматологическая клиника на&nbsp;Арбате</span></div>
+      </div>
+      <div class="rev reveal">
+        <div class="rev-quote">“</div>
+        <p>Офигенный сервис, круто что всё в одном месте! Передал подготовку помещения и установку коммуникаций ребятам, принял всё в рабочем состоянии — осталось только мебель установить! Рекомендую всем, кто хочет начать бизнес в подготовленном помещении.</p>
+        <div class="rev-brand"><span class="rev-logo"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/4a5/4a5a0035c4015f40e2527317c68f2f94/snimok_ekrana_2026_07_26_v_02_13_05_1x.png" alt="Sky Time" loading="lazy"></span><span class="rev-name">Sky Time</span></div>
+      </div>
+      <div class="rev reveal">
+        <div class="rev-quote">“</div>
+        <p>Обратился по рекомендации друзей — попросил срочно установить все коммуникации в арендованное помещение под кафе. У ребят не было срочных параллельных заказов, пара дней — и всё готово на высшем уровне! Советую, обращайтесь.</p>
+        <div class="rev-brand"><span class="rev-logo"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/12a/12ac1169fbb50beee4158e0cc68ac779/snimok_ekrana_2026_07_26_v_02_14_27_1x_1x_1x.png" alt="ДоДо пицца" loading="lazy"></span><span class="rev-name">ДоДо пицца</span></div>
+      </div>
+      <div class="rev reveal">
+        <div class="rev-quote">“</div>
+        <p>Обращалась для работы с салоном красоты — всё установили как надо. Когда решила расширяться и приобрела второе помещение побольше, снова позвала их: не просто установка, а переделка всех коммуникаций под салон — и они справились!</p>
+        <div class="rev-brand"><span class="rev-logo"><img src="https://cdn-ru.bitrix24.ru/b38590790/landing/4ab/4ab25e3154289955294dd97c5d6890a4/snimok_ekrana_2026_07_26_v_02_18_04_1x.png" alt="BS Time" loading="lazy"></span><span class="rev-name">BS Time</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTS -->
+<section id="contacts">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Заказать</span>
+      <h2>Закажите установку<br>коммуникаций сегодня</h2>
+      <p class="section-lead">Заполните форму — перезвоним в течение 5 минут в рабочее время и назначим встречу в офисе, чтобы обсудить все моменты установки. Остались вопросы — наш сотрудник ответит на любой из них.</p>
+    </div>
+
+    <div class="contacts">
+      <div class="contact-list">
+        <div class="ci reveal">
+          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+          <div>
+            <span>Отдел продаж · Пн–Пт 09:00–20:00</span>
+            <a href="tel:74951233738">8 (495) 123-37-38</a>
+          </div>
+        </div>
+        <div class="ci reveal">
+          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div>
+            <span>Техническая поддержка · круглосуточно</span>
+            <a href="tel:88003012660">8 (800) 301-26-60</a>
+          </div>
+        </div>
+        <div class="ci reveal">
+          <div class="ci-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></div>
+          <div>
+            <span>Почта</span>
+            <a href="mailto:info@it-stream.ru">info@it-stream.ru</a>
+          </div>
+        </div>
+        <div class="ci reveal">
+          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div>
+            <b>Офис</b>
+            <span>109147, г. Москва, ул. Воронцовская, д. 35Б, к. 3</span>
+          </div>
+        </div>
+      </div>
+
+      <form class="lead-form reveal" id="leadForm" novalidate>
+        <h3>Заявка на установку</h3>
+        <p>Перезвоним в течение 5 минут в рабочее время.</p>
+        <div class="field"><input type="text" name="name" placeholder="Ваше имя" required></div>
+        <div class="field"><input type="tel" name="phone" placeholder="Телефон" required></div>
+        <div class="field"><input type="email" name="email" placeholder="E-mail"></div>
+        <div class="field">
+          <select name="service">
+            <option value="">Что нужно установить?</option>
+            <option>Коммуникации под ключ</option>
+            <option>Локальные и Wi-Fi сети (СКС)</option>
+            <option>Серверы</option>
+            <option>ИТ-аутсорсинг (абонентское)</option>
+            <option>Информационная безопасность</option>
+            <option>Оргтехника</option>
+            <option>Другое</option>
+          </select>
+        </div>
+        <div class="field"><textarea name="comment" placeholder="Коротко о помещении и задаче"></textarea></div>
+        <label class="agree"><input type="checkbox" required checked>Согласен на обработку персональных данных в соответствии с политикой конфиденциальности</label>
+        <button type="submit" class="btn btn-primary" style="width:100%">Отправить заявку</button>
+        <div class="form-msg" id="formMsg">Заявка отправлена. Менеджер свяжется с вами в течение 5 минут.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2>Первый месяц обслуживания <span class="grad">−50%</span></h2>
+      <p>Действует для новых клиентов на абонентское ИТ-обслуживание. Аудит инфраструктуры и выезд на объект — бесплатно.</p>
+      <div class="hero-cta">
+        <a href="#contacts" class="btn btn-primary">Получить предложение</a>
+        <a href="tel:88003012660" class="btn btn-ghost">8 (800) 301-26-60</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-col foot-about">
+        <a href="/" class="logo"><span class="logo-mark">Λ</span> <span>IT-Stream</span></a>
+        <p>Компания ИТ-Стрим. Современные технические решения и информационный мониторинг. Обеспечиваем коммуникациями коммерческие помещения под ключ.</p>
+      </div>
+      <div class="foot-col">
+        <h4>ИТ-аутсорсинг</h4>
+        <ul>
+          <li><a href="#price">Абонентское обслуживание</a></li>
+          <li><a href="/#services">Техподдержка</a></li>
+          <li><a href="#scope">Создание ИТ-инфраструктуры</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>ИТ-безопасность</h4>
+        <ul>
+          <li><a href="#scope">Защита данных</a></li>
+          <li><a href="#services">Миграция серверов</a></li>
+          <li><a href="#scope">Защита от фишинга</a></li>
+          <li><a href="#scope">Облачные сервисы</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Контакты</h4>
+        <ul>
+          <li><a href="tel:74951233738">8 (495) 123-37-38</a></li>
+          <li><a href="tel:88003012660">8 (800) 301-26-60</a></li>
+          <li><a href="mailto:info@it-stream.ru">info@it-stream.ru</a></li>
+          <li><a href="#contacts">ул. Воронцовская, д. 35Б, к. 3</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 IT-Stream. Телекоммуникации под ключ.</span>
+      <span>Политика конфиденциальности · Согласие на обработку ПДн</span>
+    </div>
+  </div>
+</footer>
+
+<div class="fab">
+  <a href="tel:88003012660" aria-label="Позвонить">
+    <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
+  </a>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var header = document.getElementById('header');
+  function onScroll(){ header.classList.toggle('scrolled', window.scrollY > 20); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+  var burger = document.getElementById('burger'), links = document.getElementById('navLinks');
+  if(burger && links){
+    burger.addEventListener('click', function(){ burger.classList.toggle('open'); links.classList.toggle('open'); });
+    links.addEventListener('click', function(e){ if(e.target.tagName === 'A'){ burger.classList.remove('open'); links.classList.remove('open'); } });
+  }
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el, i){ el.style.transitionDelay = (i % 4) * 70 + 'ms'; io.observe(el); });
+
+  var counted = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting) return;
+      var el = en.target, target = +el.dataset.count, suffix = el.dataset.suffix || '', t0 = null;
+      function step(ts){ if(!t0) t0 = ts; var p = Math.min((ts - t0) / 1100, 1); el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + suffix; if(p < 1) requestAnimationFrame(step); }
+      requestAnimationFrame(step); counted.unobserve(el);
+    });
+  }, {threshold:.5});
+  document.querySelectorAll('[data-count]').forEach(function(el){ counted.observe(el); });
+
+  var mq = document.getElementById('marquee'); if(mq) mq.innerHTML += mq.innerHTML;
+
+  var phone = document.querySelector('input[type=tel]');
+  if(phone){
+    phone.addEventListener('input', function(){
+      var d = phone.value.replace(/\D/g, '').slice(0, 11);
+      if(!d){ phone.value = ''; return; }
+      if(d[0] === '8') d = '7' + d.slice(1);
+      var out = '+7';
+      if(d.length > 1) out += ' (' + d.slice(1, 4);
+      if(d.length >= 5) out += ') ' + d.slice(4, 7);
+      if(d.length >= 8) out += '-' + d.slice(7, 9);
+      if(d.length >= 10) out += '-' + d.slice(9, 11);
+      phone.value = out;
+    });
+  }
+
+  var form = document.getElementById('leadForm'), msg = document.getElementById('formMsg');
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = form.name.value.trim(), ph = form.phone.value.trim();
+      if(!name || ph.replace(/\D/g,'').length < 11){
+        [form.name, form.phone].forEach(function(f){ if(!f.value.trim()) f.style.borderColor = '#f87171'; });
+        return;
+      }
+      msg.classList.add('show');
+      form.querySelector('button[type=submit]').textContent = 'Отправлено';
+      form.reset();
+    });
+    form.addEventListener('input', function(e){ e.target.style.borderColor = ''; });
+  }
+})();
+</script>
+</body>
+</html>
