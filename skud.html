@@ -238,6 +238,11 @@ form.lead-form > p{font-size:14.5px;color:var(--muted);margin-bottom:24px}
 .lead-modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;line-height:1}
 .lead-modal-close:hover{color:var(--text);border-color:var(--accent)}
 @keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.lead-modal-success{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 8px;gap:10px}
+.lead-modal-success.show{display:flex;animation:fadeUp .4s ease}
+.lead-modal-success-icon{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff}
+.lead-modal-success p{font-size:19px;font-weight:700;color:var(--text);margin:0}
+.lead-modal-success span{color:var(--muted);font-size:14px}
 
 /* ---------- cta band ---------- */
 .cta-band{
@@ -622,14 +627,21 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <div class="lead-modal-overlay" id="leadModalOverlay">
   <form class="lead-form lead-modal" id="leadModalForm" novalidate>
     <button type="button" class="lead-modal-close" id="leadModalClose" aria-label="Закрыть">×</button>
-    <h3>Заявка на СКУД</h3>
-    <p>Перезвоним в течение 5 минут в рабочее время.</p>
-    <div class="field"><input type="text" name="name" placeholder="Ваше имя" required></div>
-    <div class="field"><input type="tel" name="phone" placeholder="Телефон" required></div>
-    <div class="field"><textarea name="comment" placeholder="Коротко об объекте и задаче"></textarea></div>
-    <label class="agree"><input type="checkbox" required checked>Согласен на обработку персональных данных в соответствии с политикой конфиденциальности</label>
-    <button type="submit" class="btn btn-primary" style="width:100%">Отправить заявку</button>
-    <div class="form-msg" id="leadModalMsg">Заявка отправлена. Менеджер свяжется с вами в течение 5 минут.</div>
+    <div id="leadModalFields">
+      <h3>Заявка на СКУД</h3>
+      <p>Перезвоним в течение 5 минут в рабочее время.</p>
+      <div class="field"><input type="text" name="name" placeholder="Ваше имя"></div>
+      <div class="field"><input type="tel" name="phone" placeholder="Телефон *" required></div>
+      <div class="field"><textarea name="comment" placeholder="Коротко об объекте и задаче"></textarea></div>
+      <label class="agree"><input type="checkbox" required checked>Согласен на обработку персональных данных в соответствии с политикой конфиденциальности</label>
+      <button type="submit" class="btn btn-primary" style="width:100%">Отправить заявку</button>
+      <div class="form-msg" id="leadModalMsg">Не удалось отправить. Позвоните нам: 8 (800) 301-26-60</div>
+    </div>
+    <div class="lead-modal-success" id="leadModalSuccess">
+      <div class="lead-modal-success-icon">✓</div>
+      <p>Заявка отправлена!</p>
+      <span>Менеджер свяжется с вами в ближайшее время.</span>
+    </div>
   </form>
 </div>
 
@@ -685,9 +697,26 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   var modalForm = document.getElementById('leadModalForm');
   var modalMsg = document.getElementById('leadModalMsg');
   var modalClose = document.getElementById('leadModalClose');
+  var modalFields = document.getElementById('leadModalFields');
+  var modalSuccess = document.getElementById('leadModalSuccess');
   if(modalOverlay && modalForm){
+    var closeTimer = null;
+    function resetModalView(){
+      modalFields.style.display = '';
+      modalSuccess.classList.remove('show');
+      modalMsg.classList.remove('show');
+      var btn = modalForm.querySelector('button[type=submit]');
+      btn.disabled = false;
+      btn.textContent = 'Отправить заявку';
+      modalForm.reset();
+    }
     function openModal(){ modalOverlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
-    function closeModal(){ modalOverlay.classList.remove('show'); document.body.style.overflow = ''; }
+    function closeModal(){
+      modalOverlay.classList.remove('show');
+      document.body.style.overflow = '';
+      if(closeTimer){ clearTimeout(closeTimer); closeTimer = null; }
+      setTimeout(resetModalView, 300);
+    }
     document.querySelectorAll('a.btn[href="#contacts"]').forEach(function(btn){
       btn.addEventListener('click', function(e){ e.preventDefault(); openModal(); });
     });
@@ -696,15 +725,33 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && modalOverlay.classList.contains('show')) closeModal(); });
     modalForm.addEventListener('submit', function(e){
       e.preventDefault();
-      var name = modalForm.name.value.trim(), ph = modalForm.phone.value.trim();
-      if(!name || ph.replace(/\D/g,'').length < 11){
-        [modalForm.name, modalForm.phone].forEach(function(f){ if(!f.value.trim()) f.style.borderColor = '#f87171'; });
+      var ph = modalForm.phone.value.trim();
+      modalMsg.classList.remove('show');
+      if(ph.replace(/\D/g,'').length < 11){
+        modalForm.phone.style.borderColor = '#f87171';
         return;
       }
-      modalMsg.classList.add('show');
-      modalForm.querySelector('button[type=submit]').textContent = 'Отправлено';
-      modalForm.reset();
-      setTimeout(closeModal, 1800);
+      var btn = modalForm.querySelector('button[type=submit]');
+      btn.disabled = true;
+      btn.textContent = 'Отправка...';
+      var data = new FormData();
+      data.append('name', modalForm.name.value.trim());
+      data.append('phone', ph);
+      data.append('comment', modalForm.comment.value.trim());
+      data.append('page', document.title);
+      data.append('url', location.href);
+      fetch('/send-lead.php', {method:'POST', body:data})
+        .then(function(r){ if(!r.ok) throw new Error('bad'); })
+        .then(function(){
+          modalFields.style.display = 'none';
+          modalSuccess.classList.add('show');
+          closeTimer = setTimeout(closeModal, 3000);
+        })
+        .catch(function(){
+          btn.disabled = false;
+          btn.textContent = 'Отправить заявку';
+          modalMsg.classList.add('show');
+        });
     });
     modalForm.addEventListener('input', function(e){ e.target.style.borderColor = ''; });
   }
