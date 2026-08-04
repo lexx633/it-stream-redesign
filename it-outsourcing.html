@@ -73,15 +73,16 @@ h2{font-size:clamp(28px,4vw,44px);margin-bottom:16px}
 .grad{background:linear-gradient(100deg,var(--accent),var(--accent-2) 55%,var(--accent-3));-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* ---------- внутренний page-header (компактный, как раздел на битриксе) ---------- */
-.page-head{padding:94px 0 30px;position:relative;border-bottom:1px solid var(--line);text-align:center}
-.breadcrumb{display:flex;flex-wrap:wrap;gap:9px;align-items:center;justify-content:center;font-size:13px;color:var(--muted);margin-bottom:16px}
+.page-head{padding:94px 0 15px;position:relative;text-align:left}
+#services{padding-top:48px}
+.breadcrumb{display:flex;flex-wrap:wrap;gap:9px;align-items:center;justify-content:flex-start;font-size:13px;color:var(--muted);margin-bottom:16px}
 .breadcrumb a{color:var(--muted);transition:.2s}
 .breadcrumb a:hover{color:var(--accent)}
 .breadcrumb .sep{opacity:.45}
 .breadcrumb .cur{color:var(--text)}
-.page-head .eyebrow{margin:0 auto}
-.page-head h1{font-size:clamp(26px,3vw,40px);font-weight:800;margin:14px auto 10px;max-width:22ch;line-height:1.14}
-.page-head .lead{font-size:clamp(14px,1.4vw,17px);color:var(--muted);max-width:620px;margin:0 auto}
+.page-head .eyebrow{margin:0}
+.page-head h1{font-size:clamp(26px,3vw,40px);font-weight:800;margin:14px 0 10px;max-width:22ch;line-height:1.14}
+.page-head .lead{font-size:clamp(14px,1.4vw,17px);color:var(--muted);max-width:620px;margin:0}
 
 /* ---------- header ---------- */
 header{position:fixed;top:0;left:0;right:0;z-index:100;transition:.35s}
@@ -99,6 +100,22 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 .nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:.25s;border-radius:2px}
 .nav-links a:hover{color:var(--text)}
 .nav-links a:hover::after{width:100%}
+/* выпадающее меню «Услуги» */
+.nav-item{position:relative;display:flex;align-items:center}
+.nav-item::before{content:"";position:absolute;top:100%;left:0;right:0;height:16px}
+.nav-top{display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--muted);transition:.2s}
+.nav-item:hover .nav-top{color:var(--text)}
+.nav-top .caret{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:.25s}
+.nav-item:hover .caret{transform:rotate(180deg)}
+.dropdown{position:absolute;top:calc(100% + 14px);left:-16px;min-width:236px;background:rgba(10,15,28,.98);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:2px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.25s;box-shadow:0 24px 60px rgba(0,0,0,.55)}
+.nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+.dropdown a{padding:10px 12px;border-radius:9px;font-size:14px;color:var(--muted);white-space:nowrap;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dropdown a::after{display:none}
+.dropdown a:hover{background:var(--surface-2);color:var(--text)}
+.dropdown a.cur{color:var(--accent);background:rgba(34,211,238,.1)}
+.dropdown a.soon{opacity:.5;cursor:default;pointer-events:none}
+.dropdown .num{color:var(--accent);font-weight:700;margin-right:2px}
+.dropdown .tag-soon{font-size:10px;font-weight:600;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--muted)}
 .nav-phone{font-weight:700;font-size:15px;white-space:nowrap}
 .nav-phone span{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.04em}
 .burger{display:none;width:44px;height:44px;border:1px solid var(--line);background:var(--surface);border-radius:12px;cursor:pointer;flex-direction:column;gap:5px;align-items:center;justify-content:center}
@@ -314,6 +331,11 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   }
   .nav-links.open{transform:translateY(0)}
   .nav-links a{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:16px}
+  .nav-item{flex-direction:column;align-items:stretch;width:100%}
+  .nav-item::before{display:none}
+  .nav-top{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:16px;justify-content:space-between}
+  .dropdown{position:static;opacity:1;visibility:visible;transform:none;background:none;border:none;box-shadow:none;padding:6px 0 6px 16px;margin:0;min-width:0;backdrop-filter:none}
+  .dropdown a{font-size:15px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05)}
   .nav-phone{display:none}
   .burger{display:flex;margin-left:auto}
 }
@@ -347,7 +369,20 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container nav">
     <a href="/" class="logo"><span class="logo-mark">Λ</span> <span>IT-Stream</span></a>
     <nav class="nav-links" id="navLinks">
-      <a href="/#services">ИТ-аутсорсинг</a>
+      <div class="nav-item">
+        <span class="nav-top">Услуги
+          <svg class="caret" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+        <div class="dropdown">
+          <a href="/it-outsourcing" class="cur"><span><span class="num">1.</span>ИТ-аутсорсинг</span></a>
+          <a href="#" class="soon"><span><span class="num">2.</span>ИТ-безопасность</span><span class="tag-soon">скоро</span></a>
+          <a href="#" class="soon"><span><span class="num">3.</span>Серверы и облако</span><span class="tag-soon">скоро</span></a>
+          <a href="#" class="soon"><span><span class="num">4.</span>Сети и телеком</span><span class="tag-soon">скоро</span></a>
+          <a href="/skud"><span><span class="num">5.</span>СКУД</span></a>
+          <a href="/sks"><span><span class="num">6.</span>СКС</span></a>
+          <a href="#" class="soon"><span><span class="num">7.</span>Видеонаблюдение</span><span class="tag-soon">скоро</span></a>
+        </div>
+      </div>
       <a href="#price">Тарифы</a>
       <a href="#scope">Возможности</a>
       <a href="#reviews">Отзывы</a>
@@ -378,12 +413,6 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <!-- SERVICES -->
 <section id="services">
   <div class="container">
-    <div class="section-head reveal">
-      <span class="eyebrow">Поддержка серверов, пользователей, сетей, программ и&nbsp;оборудования</span>
-      <h2>Всё оборудование<br>и сети под одним договором</h2>
-      <p class="section-lead">Мы отточили систему и работаем с большим числом подрядчиков и поставщиков — это выводит сервис на более высокий уровень.</p>
-    </div>
-
     <div class="services">
       <article class="svc reveal">
         <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
@@ -705,37 +734,41 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     <div class="foot-grid">
       <div class="foot-col foot-about">
         <a href="/" class="logo"><span class="logo-mark">Λ</span> <span>IT-Stream</span></a>
-        <p>Компания ИТ-Стрим. Современные технические решения и информационный мониторинг. Обеспечиваем коммуникациями коммерческие помещения под ключ.</p>
+        <p>ИТ-компания для вашего бизнеса. 15 лет обслуживаем инфраструктуру организаций в Москве и области.</p>
       </div>
       <div class="foot-col">
-        <h4>ИТ-аутсорсинг</h4>
+        <h4>Услуги</h4>
         <ul>
-          <li><a href="#price">Абонентское обслуживание</a></li>
-          <li><a href="/#services">Техподдержка</a></li>
-          <li><a href="#scope">Создание ИТ-инфраструктуры</a></li>
+          <li><a href="/it-outsourcing">ИТ-аутсорсинг</a></li>
+          <li><a href="/#services">ИТ-безопасность</a></li>
+          <li><a href="/#services">Серверы и облако</a></li>
+          <li><a href="/skud">СКУД</a></li>
+          <li><a href="/sks">СКС</a></li>
         </ul>
       </div>
       <div class="foot-col">
-        <h4>ИТ-безопасность</h4>
+        <h4>Компания</h4>
         <ul>
-          <li><a href="#scope">Защита данных</a></li>
-          <li><a href="#services">Миграция серверов</a></li>
-          <li><a href="#scope">Защита от фишинга</a></li>
-          <li><a href="#scope">Облачные сервисы</a></li>
+          <li><a href="/#why">О нас</a></li>
+          <li><a href="/#cases">Портфолио</a></li>
+          <li><a href="/#reviews">Отзывы</a></li>
+          <li><a href="/#promo">Акции</a></li>
+          <li><a href="/#price">Цены</a></li>
         </ul>
       </div>
       <div class="foot-col">
         <h4>Контакты</h4>
         <ul>
-          <li><a href="tel:74951233738">8 (495) 123-37-38</a></li>
           <li><a href="tel:88003012660">8 (800) 301-26-60</a></li>
+          <li><a href="tel:74951233757">8 (495) 123-37-57</a></li>
           <li><a href="mailto:info@it-stream.ru">info@it-stream.ru</a></li>
           <li><a href="#contacts">ул. Воронцовская, д. 35Б, к. 3</a></li>
+          <li><a href="#contacts">ул. Енисейская, д. 7, с. 4, оф. 18</a></li>
         </ul>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 IT-Stream. Телекоммуникации под ключ.</span>
+      <span>© 2026 IT-Stream. Комплексное ИТ-обслуживание бизнеса.</span>
       <span>Политика конфиденциальности · Согласие на обработку ПДн</span>
     </div>
   </div>
