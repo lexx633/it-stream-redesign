@@ -205,6 +205,12 @@ form.lead-form > p{font-size:14.5px;color:var(--muted);margin-bottom:24px}
 .form-msg{margin-top:16px;padding:14px 16px;border-radius:13px;background:rgba(52,211,153,.12);
   border:1px solid rgba(52,211,153,.35);font-size:14px;color:#a7f3d0;display:none}
 .form-msg.show{display:block;animation:fadeUp .4s ease}
+.lead-modal-overlay{position:fixed;inset:0;background:rgba(3,7,18,.72);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.lead-modal-overlay.show{display:flex}
+.lead-modal{position:relative;max-width:420px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.55);animation:modalIn .3s ease}
+.lead-modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;line-height:1}
+.lead-modal-close:hover{color:var(--text);border-color:var(--accent)}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 /* ---------- cta band ---------- */
 .cta-band{
@@ -267,7 +273,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   section{padding:70px 0}
   .services,.benefits,.process,.services.services-3{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr}
-  .cta-band,form.lead-form{padding:26px}
+  .cta-band,form.lead-form,.lead-modal{padding:26px}
   .container{padding:0 18px}
   .fab{right:16px;bottom:16px}
   .fab a{width:50px;height:50px}
@@ -467,7 +473,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div class="field"><input type="email" name="email" placeholder="E-mail"></div>
         <div class="field">
           <select name="service">
-            <option value="">Что нужно?</option>
+            <option value="">Интересует...</option>
             <option>Проектирование СКС</option>
             <option>Монтаж СКС / ВОЛС</option>
             <option>Серверные шкафы</option>
@@ -550,6 +556,20 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   </a>
 </div>
 
+<div class="lead-modal-overlay" id="leadModalOverlay">
+  <form class="lead-form lead-modal" id="leadModalForm" novalidate>
+    <button type="button" class="lead-modal-close" id="leadModalClose" aria-label="Закрыть">×</button>
+    <h3>Заявка на СКС</h3>
+    <p>Перезвоним в течение 5 минут в рабочее время.</p>
+    <div class="field"><input type="text" name="name" placeholder="Ваше имя" required></div>
+    <div class="field"><input type="tel" name="phone" placeholder="Телефон" required></div>
+    <div class="field"><textarea name="comment" placeholder="Коротко об объекте и задаче"></textarea></div>
+    <label class="agree"><input type="checkbox" required checked>Согласен на обработку персональных данных в соответствии с политикой конфиденциальности</label>
+    <button type="submit" class="btn btn-primary" style="width:100%">Отправить заявку</button>
+    <div class="form-msg" id="leadModalMsg">Заявка отправлена. Менеджер свяжется с вами в течение 5 минут.</div>
+  </form>
+</div>
+
 <script>
 (function(){
   'use strict';
@@ -568,8 +588,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   }, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
   document.querySelectorAll('.reveal').forEach(function(el, i){ el.style.transitionDelay = (i % 4) * 70 + 'ms'; io.observe(el); });
 
-  var phone = document.querySelector('input[type=tel]');
-  if(phone){
+  document.querySelectorAll('input[type=tel]').forEach(function(phone){
     phone.addEventListener('input', function(){
       var d = phone.value.replace(/\D/g, '').slice(0, 11);
       if(!d){ phone.value = ''; return; }
@@ -581,7 +600,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       if(d.length >= 10) out += '-' + d.slice(9, 11);
       phone.value = out;
     });
-  }
+  });
 
   var form = document.getElementById('leadForm'), msg = document.getElementById('formMsg');
   if(form){
@@ -597,6 +616,34 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       form.reset();
     });
     form.addEventListener('input', function(e){ e.target.style.borderColor = ''; });
+  }
+
+  var modalOverlay = document.getElementById('leadModalOverlay');
+  var modalForm = document.getElementById('leadModalForm');
+  var modalMsg = document.getElementById('leadModalMsg');
+  var modalClose = document.getElementById('leadModalClose');
+  if(modalOverlay && modalForm){
+    function openModal(){ modalOverlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
+    function closeModal(){ modalOverlay.classList.remove('show'); document.body.style.overflow = ''; }
+    document.querySelectorAll('a.btn[href="#contacts"]').forEach(function(btn){
+      btn.addEventListener('click', function(e){ e.preventDefault(); openModal(); });
+    });
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', function(e){ if(e.target === modalOverlay) closeModal(); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && modalOverlay.classList.contains('show')) closeModal(); });
+    modalForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = modalForm.name.value.trim(), ph = modalForm.phone.value.trim();
+      if(!name || ph.replace(/\D/g,'').length < 11){
+        [modalForm.name, modalForm.phone].forEach(function(f){ if(!f.value.trim()) f.style.borderColor = '#f87171'; });
+        return;
+      }
+      modalMsg.classList.add('show');
+      modalForm.querySelector('button[type=submit]').textContent = 'Отправлено';
+      modalForm.reset();
+      setTimeout(closeModal, 1800);
+    });
+    modalForm.addEventListener('input', function(e){ e.target.style.borderColor = ''; });
   }
 })();
 </script>
