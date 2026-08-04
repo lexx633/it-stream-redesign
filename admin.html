@@ -48,13 +48,6 @@
   .settings .key{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#6b7686}
   .settings .note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
   .row{display:flex;gap:8px}.row>div{flex:1}
-
-  /* легенда снизу */
-  .legend{position:fixed;left:14px;bottom:14px;z-index:18;font-size:12px;color:var(--muted);
-    background:rgba(23,27,34,.9);border:1px solid var(--line);border-radius:10px;padding:8px 12px;
-    max-width:min(520px,92vw);line-height:1.6}
-  .legend b{color:var(--text)}
-  .legend .sw{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px}
 </style>
 </head>
 <body>
@@ -85,13 +78,6 @@
 </div>
 
 <div class="stage"><iframe id="frame" src="index.html?_edit=1"></iframe></div>
-
-<div class="legend">
-  <span class="sw" style="background:#5b8cff33;outline:1px solid #5b8cff"></span><b>Наведите</b> — подсветка поля ·
-  <b>клик</b> — правка текста · <b>×</b> удалить блок · <b>＋ добавить</b> в конце списка ·
-  клик по аватарке — ссылка · по иконке — выбор из набора · по звёздам — рейтинг ·
-  <b>Переменные…</b> — телефон/почта/адрес в одном месте.
-</div>
 
 <script>
 (function(){
