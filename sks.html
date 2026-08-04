@@ -138,6 +138,7 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 
 /* ---------- services ---------- */
 .services{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.services.services-3{grid-template-columns:repeat(3,1fr)}
 .svc{
   padding:30px;border-radius:var(--radius);border:1px solid var(--line);
   background:linear-gradient(165deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
@@ -241,7 +242,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 
 /* ---------- responsive ---------- */
 @media(max-width:1024px){
-  .services{grid-template-columns:repeat(2,1fr)}
+  .services,.services.services-3{grid-template-columns:repeat(2,1fr)}
   .benefits,.process{grid-template-columns:repeat(2,1fr)}
   .contacts{grid-template-columns:1fr;gap:32px}
   .foot-grid{grid-template-columns:1fr 1fr;gap:32px}
@@ -264,7 +265,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 }
 @media(max-width:760px){
   section{padding:70px 0}
-  .services,.benefits,.process{grid-template-columns:1fr}
+  .services,.benefits,.process,.services.services-3{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr}
   .cta-band,form.lead-form{padding:26px}
   .container{padding:0 18px}
@@ -331,7 +332,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <!-- SERVICES: проектирование + монтаж в одном месте -->
 <section id="services">
   <div class="container">
-    <div class="services" style="grid-template-columns:repeat(3,1fr)">
+    <div class="services services-3">
       <article class="svc reveal">
         <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
         <h3>Проектирование</h3>
