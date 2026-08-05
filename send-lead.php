@@ -27,6 +27,10 @@ $objectType = clean_line($_POST['object_type'] ?? '');
 $area       = clean_line($_POST['area'] ?? '');
 $cameras    = clean_line($_POST['cameras'] ?? '');
 $city       = clean_line($_POST['city'] ?? '');
+// необязательные поля калькулятора «Рассчитать стоимость защиты» (/security)
+$company  = clean_line($_POST['company'] ?? '');
+$teamSize = clean_line($_POST['team_size'] ?? '');
+$task     = clean_line($_POST['task'] ?? '');
 
 $digits = preg_replace('/\D/', '', $phone);
 if (strlen($digits) < 10) fail(400, 'phone required');
@@ -35,7 +39,7 @@ if (strlen($digits) < 10) fail(400, 'phone required');
 $LOG_DIR = dirname(dirname(__DIR__)) . '/data';
 if (is_dir($LOG_DIR) && is_writable($LOG_DIR)) {
   $logLine = date('Y-m-d H:i:s') . " | " . ($name !== '' ? $name : '-') . " | $phone | "
-    . str_replace("\n", ' ', $comment) . " | $page | $url | $source | $objectType | $area | $cameras | $city\n";
+    . str_replace("\n", ' ', $comment) . " | $page | $url | $source | $objectType | $area | $cameras | $city | $company | $teamSize | $task\n";
   @file_put_contents($LOG_DIR . '/leads.log', $logLine, FILE_APPEND | LOCK_EX);
 }
 
@@ -53,6 +57,11 @@ if ($objectType !== '' || $area !== '' || $cameras !== '' || $city !== '') {
   $body .= "Площадь: " . ($area !== '' ? $area : '-') . "\n";
   $body .= "Камер (ориентировочно): " . ($cameras !== '' ? $cameras : '-') . "\n";
   $body .= "Город: " . ($city !== '' ? $city : '-') . "\n";
+}
+if ($company !== '' || $teamSize !== '' || $task !== '') {
+  $body .= "Компания: " . ($company !== '' ? $company : '-') . "\n";
+  $body .= "Размер команды: " . ($teamSize !== '' ? $teamSize : '-') . "\n";
+  $body .= "Основная задача: " . ($task !== '' ? $task : '-') . "\n";
 }
 $body .= "Дата: " . date('Y-m-d H:i:s') . "\n";
 

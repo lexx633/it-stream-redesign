@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Видеонаблюдение для бизнеса — проектирование, монтаж, обслуживание — IT-Stream</title>
-<meta name="description" content="Видеонаблюдение для бизнеса под ключ: аудит, проектирование, поставка оборудования, монтаж и обслуживание по SLA. Склады, офисы, производство, стройка, розница, УК, коттеджные посёлки.">
+<title>ИТ-безопасность для бизнеса — аудит, защита данных, мониторинг 24/7 — IT-Stream</title>
+<meta name="description" content="Комплексная ИТ-безопасность для бизнеса: аудит, защита от шифровальщиков, MFA, безопасный удалённый доступ, мониторинг 24/7. Малый и средний бизнес, стройка, автосервисы, УК, коттеджные посёлки.">
 <meta name="theme-color" content="#070b16">
-<meta property="og:title" content="Видеонаблюдение для бизнеса — IT-Stream">
-<meta property="og:description" content="Полный цикл: от проектирования до обслуживания. Управляемая система безопасности с понятным отчётом и быстрым доступом к архиву.">
+<meta property="og:title" content="ИТ-безопасность для бизнеса — IT-Stream">
+<meta property="og:description" content="Защита бизнеса от кибератак, утечек и шифровальщиков. Аудит, защита данных, мониторинг 24/7.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -174,6 +174,12 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 .svc ul{list-style:none;display:grid;gap:9px}
 .svc ul li{font-size:13.5px;color:#cbd5e1;padding-left:20px;position:relative}
 .svc ul li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.svc p.solution{font-size:13px;color:var(--accent);font-weight:600;margin-top:10px}
+.choose-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.choose-grid .ci{align-items:center}
+.choose-grid .ci span{display:block;font-size:13px;color:var(--muted);margin-bottom:2px}
+.choose-grid .ci b{display:block;font-size:16px}
+@media(max-width:760px){.choose-grid{grid-template-columns:1fr}}
 
 /* ---------- benefits ---------- */
 .benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
@@ -227,52 +233,6 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 .case-modal ul li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
 .case-modal ul li b{color:var(--text)}
 .case-modal .case-result{margin-top:22px;padding:16px 18px;border-radius:14px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);font-size:14px;color:#a7f3d0;line-height:1.6}
-
-/* ---------- process (шаги «стрелками») ---------- */
-/* border+clip-path вместе не обводят диагональные грани обычной CSS-границей —
-   поэтому обводка сделана вторым слоем: внешний блок = цвет рамки, залитый тем же
-   clip-path целиком; внутренний .step-arrow-in отступает на 1.5px и несёт заливку
-   поверх того же контура — получается ровная линия по всему периметру стрелки,
-   включая срез и носик, а не только по верхнему/нижнему краю */
-.steps-flow{display:flex;flex-wrap:wrap}
-.step-arrow{
-  flex:1;min-width:150px;position:relative;
-  margin-right:-16px;padding:1.5px;
-  background:rgba(34,211,238,.35);
-  clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%, 16px 50%);
-}
-.step-arrow-in{
-  height:100%;padding:16px 22px 16px 34px;
-  /* непрозрачная база (--bg-2) + фирменный градиент (индиго→циан, как у .price-card.feat)
-     поверх — доля градиента растёт от шага к шагу: шаг 1 нейтральный тёмный (как обычная
-     карточка), шаг 6 — насыщенный сине-голубой (как акцентная карточка «Стандарт») */
-  background:
-    linear-gradient(160deg,rgba(99,102,241,var(--tc1,0)),rgba(34,211,238,var(--tc2,0))),
-    linear-gradient(165deg,rgba(255,255,255,.055),rgba(255,255,255,.015)),
-    var(--bg-2);
-  clip-path:polygon(0 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 0 100%, 15px 50%);
-  font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:10px;
-}
-.step-arrow:nth-child(1){--tc1:0;   --tc2:0;   z-index:6}
-.step-arrow:nth-child(2){--tc1:.07; --tc2:.03; z-index:5}
-.step-arrow:nth-child(3){--tc1:.14; --tc2:.06; z-index:4}
-.step-arrow:nth-child(4){--tc1:.21; --tc2:.09; z-index:3}
-.step-arrow:nth-child(5){--tc1:.28; --tc2:.12; z-index:2}
-.step-arrow:nth-child(6){--tc1:.36; --tc2:.16; z-index:1}
-.step-arrow:first-child,.step-arrow:first-child .step-arrow-in{clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%)}
-.step-arrow:first-child .step-arrow-in{clip-path:polygon(0 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 0 100%);padding-left:22px}
-.step-arrow:last-child{margin-right:0}
-.step-arrow:hover{background:rgba(34,211,238,.7)}
-.step-arrow-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#04121a;font-weight:800;font-size:13px;display:grid;place-items:center;flex-shrink:0}
-.steps-desc{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:20px}
-.steps-desc p{font-size:13px;color:var(--muted);padding:0 6px}
-@media(max-width:1024px){
-  .steps-flow{flex-direction:column}
-  .step-arrow,.step-arrow:first-child{clip-path:none;margin-right:0;margin-bottom:8px;border-radius:12px}
-  .step-arrow-in,.step-arrow:first-child .step-arrow-in{clip-path:none;padding:14px 18px}
-  .steps-desc{grid-template-columns:1fr;gap:0;margin-top:0}
-  .steps-desc p{padding:6px 6px 14px}
-}
 
 /* ---------- pricing ---------- */
 .price{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
@@ -440,12 +400,12 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         </span>
         <div class="dropdown">
           <a href="/it-outsourcing"><span><span class="num">1.</span>ИТ-аутсорсинг</span></a>
-          <a href="/security"><span><span class="num">2.</span>ИТ-безопасность</span></a>
+          <a href="/security" class="cur"><span><span class="num">2.</span>ИТ-безопасность</span></a>
           <a href="#" class="soon"><span><span class="num">3.</span>Серверы и облако</span><span class="tag-soon">скоро</span></a>
           <a href="#" class="soon"><span><span class="num">4.</span>Сети и телеком</span><span class="tag-soon">скоро</span></a>
           <a href="/skud"><span><span class="num">5.</span>СКУД</span></a>
           <a href="/sks"><span><span class="num">6.</span>СКС</span></a>
-          <a href="/surveillance" class="cur"><span><span class="num">7.</span>Видеонаблюдение</span></a>
+          <a href="/surveillance"><span><span class="num">7.</span>Видеонаблюдение</span></a>
         </div>
       </div>
       <a href="/#why">Преимущества</a>
@@ -469,33 +429,29 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <nav class="breadcrumb" aria-label="Хлебные крошки">
           <a href="/">Главная</a><span class="sep">/</span>
           <a href="/#services">Услуги</a><span class="sep">/</span>
-          <span class="cur">Видеонаблюдение</span>
+          <span class="cur">ИТ-безопасность</span>
         </nav>
-        <span class="eyebrow">Контроль, безопасность, прозрачность процессов</span>
-        <h1>Видеонаблюдение для бизнеса</h1>
-        <p class="lead">Полный цикл: от проектирования до обслуживания. Под ключ, с гарантией и SLA — вы получаете не просто камеры, а управляемую систему безопасности с понятным отчётом и быстрым доступом к архиву.</p>
+        <span class="eyebrow">Аудит · защита данных · мониторинг 24/7</span>
+        <h1>Защита бизнеса от кибератак, утечек и шифровальщиков</h1>
+        <p class="lead">Комплексная ИТ-безопасность: аудит, защита данных, мониторинг 24/7. Работаем с малым и средним бизнесом, стройкой, автосервисами, УК, коттеджными посёлками.</p>
         <div class="hero-cta">
-          <a href="#contacts" class="btn btn-ghost">Получить бесплатный аудит объекта</a>
+          <a href="#contacts" class="btn btn-ghost">Получить аудит безопасности</a>
         </div>
       </div>
       <form class="lead-form reveal" id="calcLeadForm" novalidate>
-        <h3>Рассчитать стоимость проекта</h3>
-        <p>Укажите параметры объекта — пришлём предварительный расчёт.</p>
+        <h3>Рассчитать стоимость защиты</h3>
+        <p>Опишите компанию и задачу — предложим план и посчитаем стоимость.</p>
+        <div class="field"><input type="text" name="company" placeholder="Компания"></div>
         <div class="field">
-          <select name="object_type">
-            <option value="">Тип объекта</option>
-            <option>Офис</option>
-            <option>Склад</option>
-            <option>Производство</option>
-            <option>Розница / общепит</option>
-            <option>Стройплощадка</option>
-            <option>Коттеджный посёлок / СНТ</option>
-            <option>Другое</option>
+          <select name="team_size">
+            <option value="">Размер команды</option>
+            <option>До 10 человек</option>
+            <option>10–30 человек</option>
+            <option>30–100 человек</option>
+            <option>Более 100 человек</option>
           </select>
         </div>
-        <div class="field"><input type="text" name="area" placeholder="Площадь, м²"></div>
-        <div class="field"><input type="text" name="cameras" placeholder="Камер, ориентировочно"></div>
-        <div class="field"><input type="text" name="city" placeholder="Город"></div>
+        <div class="field"><input type="text" name="task" placeholder="Основная задача (кратко)"></div>
         <div class="field"><input type="tel" name="phone" placeholder="Телефон" required></div>
         <button type="submit" class="btn btn-primary" style="width:100%">Рассчитать стоимость</button>
         <div class="form-msg" id="calcFormMsg">Заявка отправлена. Пришлём расчёт в течение рабочего дня.</div>
@@ -504,49 +460,54 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   </div>
 </section>
 
-<!-- SERVICES: пакет «под ключ» в трёх этапах -->
+<!-- SERVICES: наши услуги -->
 <section id="services">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Что входит в услугу</span>
-      <h2>Пакет «под ключ»</h2>
-      <p class="section-lead">Аудит, проект, оборудование, монтаж, настройка и обслуживание — одна команда и один договор на весь цикл.</p>
+      <span class="eyebrow">Что делаем</span>
+      <h2>Наши услуги</h2>
+      <p class="section-lead">Закрываем ИТ-безопасность целиком или точечно — под конкретную задачу и бюджет.</p>
     </div>
-    <div class="services services-3">
+    <div class="services">
       <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M9 12l2 2 4-4"/></svg></div>
-        <h3>Аудит и проектирование</h3>
-        <p>Выезд или онлайн, замеры и расчёт архива — прежде чем считать смету.</p>
-        <ul>
-          <li>Замеры, анализ освещения и покрытия сети</li>
-          <li>Схема расстановки камер, углы обзора</li>
-          <li>Подбор камер под задачи: день/ночь, ИК, антивандальные</li>
-          <li>Проект, спецификация, предварительная смета</li>
-        </ul>
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <h3>Аудит ИТ-безопасности</h3>
+        <p>Проверка политик, доступов, уязвимостей, соответствия требованиям. Формат: отчёт + план действий. Расчёт — по количеству устройств/пользователей/офисов.</p>
       </article>
-
       <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect height="14" rx="2" width="15" x="1" y="5"/></svg></div>
-        <h3>Поставка и монтаж</h3>
-        <p>Подбираем оборудование под бюджет, ставим и сдаём систему в работу.</p>
-        <ul>
-          <li>Подбор оборудования, проверка совместимости</li>
-          <li>Монтаж камер, коммутаторов, регистраторов/серверов</li>
-          <li>Интеграция с СКУД и тревожными датчиками</li>
-          <li>Настройка архива, ролей и мобильного приложения</li>
-        </ul>
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Защита от шифровальщиков и бэкапы</h3>
+        <p>Бэкапы, изоляция копий, план восстановления. Результат: RPO/RTO, восстановление за часы, а не дни.</p>
       </article>
-
       <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a6 6 0 0112 0v2"/><rect x="15" y="10" width="7" height="9" rx="1"/><path d="M17 14h3"/></svg></div>
-        <h3>Обслуживание и поддержка</h3>
-        <p>Держим систему в рабочем состоянии по SLA, без сюрпризов в счёте.</p>
-        <ul>
-          <li>Плановые проверки и чистка оборудования</li>
-          <li>Обновление ПО, замена HDD</li>
-          <li>Реагирование на инциденты по SLA</li>
-          <li>Предсказуемые расходы и отчётность</li>
-        </ul>
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h12M6 12h8"/></svg></div>
+        <h3>Защита конечных точек</h3>
+        <p>Антивирусы, контроль запуска программ, защита ноутбуков и ПК на стройке/в офисе.</p>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></div>
+        <h3>Безопасная почта и защита от фишинга</h3>
+        <p>Фильтрация спама, песочница, MFA — прежде чем письмо дойдёт до сотрудника.</p>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <h3>Контроль доступа и MFA</h3>
+        <p>Двухфакторная аутентификация, разграничение прав, журналы событий.</p>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0114 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1"/></svg></div>
+        <h3>Безопасный удалённый доступ</h3>
+        <p>VPN/Zero Trust, контроль сессий, запрет передачи файлов.</p>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h3>Обучение сотрудников основам ИБ</h3>
+        <p>Короткие модули, тесты, сценарии фишинга — без отрыва от работы.</p>
+      </article>
+      <article class="svc reveal">
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Мониторинг и реагирование (SOC/MDR)</h3>
+        <p>Мониторинг событий 24/7, расследование инцидентов, регулярные отчёты.</p>
       </article>
     </div>
   </div>
@@ -556,10 +517,10 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section style="padding-top:0">
   <div class="container">
     <div class="cta-band reveal">
-      <h2>Бесплатный аудит объекта <span class="grad">перед сметой</span></h2>
-      <p>Оценим объект, предложим план размещения камер и оборудование под бюджет — без обязательств.</p>
+      <h2>Экспресс-оценка рисков <span class="grad">бесплатно</span></h2>
+      <p>Расскажем, где самые опасные места в вашей ИТ-инфраструктуре и как их закрыть — без обязательств.</p>
       <div class="hero-cta">
-        <a href="#contacts" class="btn btn-primary">Получить бесплатный аудит</a>
+        <a href="#contacts" class="btn btn-primary">Получить экспресс-оценку</a>
       </div>
     </div>
   </div>
@@ -570,67 +531,75 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Зачем это бизнесу</span>
-      <h2>Преимущества в духе ИТ-аутсорсинга</h2>
-      <p class="section-lead">Не просто монтаж камер — управляемая система с понятным SLA и одной точкой контакта.</p>
+      <h2>Почему собственники и директора доверяют нам</h2>
+      <p class="section-lead">Мы защищаем реальные процессы бизнеса: данные, платежи, отгрузки, документооборот, работу сотрудников и подрядчиков.</p>
     </div>
     <div class="benefits">
-      <div class="ben reveal"><div class="ben-num">01</div><h3>SLA и предсказуемость</h3><p>Фиксированные сроки реакции на заявки и регламент обслуживания — без «когда получится».</p></div>
-      <div class="ben reveal"><div class="ben-num">02</div><h3>Единый подрядчик</h3><p>Проектирование, монтаж и обслуживание — одна команда, одна точка контакта.</p></div>
-      <div class="ben reveal"><div class="ben-num">03</div><h3>Прозрачная стоимость</h3><p>Смета до начала работ, без скрытых платежей, абонентское обслуживание по тарифу.</p></div>
-      <div class="ben reveal"><div class="ben-num">04</div><h3>Гарантия и опыт</h3><p>Замена оборудования по гарантии, продление поддержки. Типовые решения для складов, офисов, стройки и розницы.</p></div>
+      <div class="ben reveal"><div class="ben-num">01</div><h3>Риски — в деньгах и времени</h3><p>Считаем стоимость восстановления данных, исключаем потерю сделок и штрафов — не абстрактные угрозы, а конкретные цифры.</p></div>
+      <div class="ben reveal"><div class="ben-num">02</div><h3>Понятные метрики</h3><p>Бэкапы (RPO), за сколько часов восстановим работу (RTO), в какие сроки реагируем на инциденты (SLA).</p></div>
+      <div class="ben reveal"><div class="ben-num">03</div><h3>Защита критичных процессов</h3><p>Не «всё подряд» — строим защиту так, чтобы ключевые процессы оставались работоспособными даже при атаке.</p></div>
+      <div class="ben reveal"><div class="ben-num">04</div><h3>Контроль подрядчиков</h3><p>Гостевые сети, временные учётные записи с ограниченным доступом, журналы действий для внешних исполнителей и удалённых команд.</p></div>
     </div>
   </div>
 </section>
 
-<!-- SPHERES: для кого и какие задачи решает -->
-<section id="spheres" style="padding-top:0">
+<!-- THREATS: основные угрозы и что мы делаем -->
+<section id="threats" style="padding-top:0">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Для кого</span>
-      <h2>Для любого типа объекта</h2>
-      <p class="section-lead">Управляемая система безопасности под задачи конкретного бизнеса.</p>
+      <span class="eyebrow">Угрозы</span>
+      <h2>Основные угрозы и что мы делаем</h2>
+      <p class="section-lead">За каждой угрозой — конкретное решение, а не общие слова про «безопасность».</p>
     </div>
     <div class="services">
       <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/></svg></div>
-        <h3>Склады и логистика</h3>
-        <p>Контроль отгрузок, предотвращение хищений, фиксация времени въезда/выезда транспорта.</p>
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <h3>Шифровальщики (ransomware)</h3>
+        <p>Блокируют файлы, требуют выкуп, простой стройки/офиса.</p>
+        <p class="solution">Решение: резервное копирование, защита конечных точек, изоляция критических данных.</p>
       </article>
       <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-        <h3>Офисы и БЦ</h3>
-        <p>Безопасность сотрудников, контроль доступа, фиксация инцидентов, архив для расследований.</p>
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></div>
+        <h3>Утечка персональных данных</h3>
+        <p>Штрафы, репутационные риски, жалобы клиентов.</p>
+        <p class="solution">Решение: политики доступа, шифрование, контроль прав, аудит доступов.</p>
       </article>
       <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M22 8.5V5.5A2.5 2.5 0 0019.5 3h-15A2.5 2.5 0 002 5.5v13A2.5 2.5 0 004.5 21h6"/><path d="M2 9h20"/><path d="M16 16l3 3 5-5"/></svg></div>
-        <h3>Производство и цеха</h3>
-        <p>Контроль периметра, техники безопасности, технологических участков.</p>
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+        <h3>Фишинг и компрометация почты</h3>
+        <p>Кража денег, подделка платёжек, потеря контроля над аккаунтами.</p>
+        <p class="solution">Решение: защита почты, обучение сотрудников, MFA, мониторинг аномалий.</p>
       </article>
       <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="1" y="5" width="15" height="13" rx="2.5"/><path d="M23 8l-6.5 4.5L23 17V8z"/></svg></div>
-        <h3>Розница и общепит</h3>
-        <p>Кассовая зона, склад, вход/выход, контроль персонала, снижение потерь.</p>
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0114 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1"/></svg></div>
+        <h3>Слабый удалённый доступ</h3>
+        <p>Взлом через RDP/VPN, утечка данных из дома.</p>
+        <p class="solution">Решение: безопасный удалённый доступ, сегментация сети, контроль сессий.</p>
       </article>
       <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div>
-        <h3>Стройплощадки</h3>
-        <p>Контроль материалов, техники, соблюдение графика, охрана площадки, фиксация этапов работ.</p>
+        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <h3>Устаревшее ПО и «тёмные» устройства</h3>
+        <p>Уязвимости, неучтённые ноутбуки/серверы.</p>
+        <p class="solution">Решение: инвентаризация парка, патчинг, контроль подключений.</p>
       </article>
-      <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg></div>
-        <h3>Сеть филиалов</h3>
-        <p>Единый центр мониторинга, доступ с телефона, централизованное управление удалёнными объектами.</p>
-      </article>
-      <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-        <h3>УК: ЖКХ и МКД</h3>
-        <p>Контроль входных групп и подъездов, дворовых территорий, мусоросборников, парковок, фиксация событий.</p>
-      </article>
-      <article class="svc reveal">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg></div>
-        <h3>Коттеджные посёлки и СНТ</h3>
-        <p>Периметр и въездные группы, контроль гостевого и служебного транспорта, охрана общественных зон, мониторинг ночью, быстрый доступ к записям для охраны и администрации.</p>
-      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CHOOSE: как выбрать защиту -->
+<section id="choose" style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Как выбрать</span>
+      <h2>Как выбрать защиту?</h2>
+    </div>
+    <div class="choose-grid">
+      <div class="ci reveal"><div class="ci-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><div><span>Нужно быстро «прощупать» почву</span><b>Экспресс-аудит</b></div></div>
+      <div class="ci reveal"><div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div><span>Нужен глубокий разбор всей инфраструктуры</span><b>Комплексный аудит ИБ</b></div></div>
+      <div class="ci reveal"><div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div><div><span>Цель — найти конкретные технические слабые места</span><b>Сканирование уязвимостей</b></div></div>
+      <div class="ci reveal"><div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 11-13h-7l1-7z"/></svg></div><div><span>Важно понять, насколько реальны риски</span><b>Пентест</b></div></div>
+      <div class="ci reveal"><div class="ci-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg></div><div><span>Есть жёсткие регуляторные требования</span><b>Аудит соответствия</b></div></div>
+      <div class="ci reveal"><div class="ci-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><span>Нет ресурсов на постоянную поддержку безопасности</span><b>ИБ как сервис</b></div></div>
     </div>
   </div>
 </section>
@@ -644,67 +613,41 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     </div>
     <div class="cases">
       <div class="case reveal">
-        <div class="case-ico"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/></svg></div>
+        <div class="case-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></div>
         <div>
-          <h3>Склад 1200 м²: контроль отгрузок и потерь</h3>
-          <p>18 IP-камер, архив 30 дней, интеграция с СКУД. Спорные ситуации при приёмке снизились на 50%, потери ТМЦ — на 30%.</p>
-          <div class="case-tags"><span>Видеонаблюдение</span><span>Склад</span></div>
-          <button type="button" class="case-more" data-case="storage">Подробнее</button>
+          <h3>Блокировка фишинговой атаки до перевода денег</h3>
+          <p>Письмо якобы от контрагента с просьбой сменить реквизиты перехвачено защитой почты и отправлено в карантин. Платёж не ушёл мошенникам.</p>
+          <div class="case-tags"><span>ИТ-безопасность</span><span>Фишинг</span></div>
+          <button type="button" class="case-more" data-case="phishing">Подробнее</button>
         </div>
       </div>
       <div class="case reveal">
-        <div class="case-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <div class="case-ico"><svg viewBox="0 0 24 24"><path d="M12 20a8 8 0 100-16 8 8 0 000 16z"/><path d="M12 8v4l3 2"/></svg></div>
         <div>
-          <h3>Офис 5 этажей: доступ для руководителей с телефона</h3>
-          <p>24 камеры, разграничение прав, привязка фрагментов к заявкам службы безопасности. Разбор инцидента — 1–2 часа вместо 1–2 дней.</p>
-          <div class="case-tags"><span>Видеонаблюдение</span><span>Офис</span></div>
-          <button type="button" class="case-more" data-case="office">Подробнее</button>
+          <h3>Восстановление данных после шифровальщика за 4 часа</h3>
+          <p>Файлы зашифрованы вечером, утром — плановые отгрузки. Данные восстановлены из бэкапа за 4 часа, простоя бизнес не заметил.</p>
+          <div class="case-tags"><span>ИТ-безопасность</span><span>Бэкапы</span></div>
+          <button type="button" class="case-more" data-case="ransomware">Подробнее</button>
         </div>
       </div>
       <div class="case reveal">
-        <div class="case-ico"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div>
+        <div class="case-ico"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
         <div>
-          <h3>Стройплощадка 1,2 Га: доказательная база при спорах</h3>
-          <p>8 уличных камер с ИК-подсветкой, детекция движения ночью, фиксация «до/после» по этапам работ. Ночные инциденты снизились на 50–60%.</p>
-          <div class="case-tags"><span>Видеонаблюдение</span><span>Стройка</span></div>
-          <button type="button" class="case-more" data-case="construction">Подробнее</button>
+          <h3>Остановка утечки персональных данных через права доступа</h3>
+          <p>Доступ к базе клиентов был «на всех», файлы копировали на личные устройства. Несанкционированные доступы снижены до нуля.</p>
+          <div class="case-tags"><span>ИТ-безопасность</span><span>ПДн</span></div>
+          <button type="button" class="case-more" data-case="leak">Подробнее</button>
         </div>
       </div>
       <div class="case reveal">
-        <div class="case-ico"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div class="case-ico"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0114 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1"/></svg></div>
         <div>
-          <h3>Коттеджный посёлок на 120 домов: контроль периметра</h3>
-          <p>16 периметральных камер, распознавание госномеров на КПП, архив 45 дней. Учёт гостевого транспорта стал прозрачным.</p>
-          <div class="case-tags"><span>Видеонаблюдение</span><span>Периметр</span></div>
-          <button type="button" class="case-more" data-case="village">Подробнее</button>
+          <h3>Безопасный удалённый доступ без риска взлома</h3>
+          <p>Прямой RDP к серверам с открытыми портами и попытками подбора паролей. Порты закрыты, атаки прекратились, удалёнка сохранена.</p>
+          <div class="case-tags"><span>ИТ-безопасность</span><span>Удалённый доступ</span></div>
+          <button type="button" class="case-more" data-case="remote">Подробнее</button>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- PROCESS: как мы работаем, пошагово -->
-<section id="process">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="eyebrow">Как мы работаем</span>
-      <h2>Пошагово — от заявки до сдачи</h2>
-    </div>
-    <div class="steps-flow">
-      <div class="step-arrow reveal"><div class="step-arrow-in"><span class="step-arrow-num">1</span>Заявка и вводные</div></div>
-      <div class="step-arrow reveal"><div class="step-arrow-in"><span class="step-arrow-num">2</span>Бесплатный аудит</div></div>
-      <div class="step-arrow reveal"><div class="step-arrow-in"><span class="step-arrow-num">3</span>Проект и смета</div></div>
-      <div class="step-arrow reveal"><div class="step-arrow-in"><span class="step-arrow-num">4</span>Договор и старт</div></div>
-      <div class="step-arrow reveal"><div class="step-arrow-in"><span class="step-arrow-num">5</span>Реализация</div></div>
-      <div class="step-arrow reveal"><div class="step-arrow-in"><span class="step-arrow-num">6</span>Сдача и поддержка</div></div>
-    </div>
-    <div class="steps-desc">
-      <p>Вы описываете задачу, объект, бюджет, сроки.</p>
-      <p>Выезд/онлайн, замеры, фото, сбор требований.</p>
-      <p>Схема, спецификация, стоимость, сроки.</p>
-      <p>Фиксируем SLA, график работ, этапы.</p>
-      <p>Монтаж, настройка, обучение.</p>
-      <p>Акт, инструкции, передача в обслуживание.</p>
     </div>
   </div>
 </section>
@@ -713,21 +656,20 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section id="price">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Цены и варианты пакетов</span>
-      <h2>Три готовых пакета —<br>или расчёт под задачу</h2>
-      <p class="section-lead">Стоимость зависит от площади, числа камер, срока хранения архива и интеграций. Точный расчёт — после бесплатного аудита.</p>
+      <span class="eyebrow">Цены и варианты</span>
+      <h2>Пакет + расчёт<br>под задачу</h2>
+      <p class="section-lead">Стоимость считаем по количеству пользователей/устройств/офисов — чтобы было понятно, из чего складывается цена.</p>
     </div>
     <div class="price">
       <div class="price-card reveal">
-        <h3>Базовый</h3>
-        <div class="cap">Для небольшого офиса или магазина</div>
+        <h3>Старт</h3>
+        <div class="cap">Для малого бизнеса и стартапов</div>
         <div class="price-val">по запросу</div>
-        <div class="price-per">после аудита объекта</div>
+        <div class="price-per">по числу пользователей</div>
         <ul>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Аудит объекта</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>4–6 камер</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Регистратор и монтаж</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>1 месяц обслуживания</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Экспресс-аудит</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>MFA (двухфакторная аутентификация)</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Базовая защита почты</li>
         </ul>
         <a href="#contacts" class="btn btn-ghost" style="width:100%">Заказать</a>
       </div>
@@ -735,30 +677,27 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       <div class="price-card feat reveal">
         <span class="price-badge">Популярный</span>
         <h3>Стандарт</h3>
-        <div class="cap">Для склада или производства</div>
+        <div class="cap">Для офисов и подрядчиков</div>
         <div class="price-val">по запросу</div>
-        <div class="price-per">после аудита объекта</div>
+        <div class="price-per">по числу пользователей</div>
         <ul>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Аудит объекта</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>8–12 камер</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Сетевой регистратор/сервер</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Интеграция с тревожными датчиками</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>3 месяца обслуживания</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Аудит ИТ-безопасности</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Защита конечных точек</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Резервное копирование</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Обучение сотрудников</li>
         </ul>
         <a href="#contacts" class="btn btn-primary" style="width:100%">Заказать</a>
       </div>
 
       <div class="price-card reveal">
-        <h3>Премиум</h3>
-        <div class="cap">Для сети объектов и повышенных требований</div>
+        <h3>Бизнес</h3>
+        <div class="cap">Для компаний с критичными данными</div>
         <div class="price-val">по запросу</div>
-        <div class="price-per">после аудита объекта</div>
+        <div class="price-per">по числу пользователей</div>
         <ul>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Аудит и проектирование</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>12–24 камеры</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Сервер/облако, интеграция с СКУД</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Расширенный SLA</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>6 месяцев обслуживания</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Всё из пакета «Стандарт»</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Мониторинг 24/7 (SOC/MDR)</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Управление инцидентами</li>
         </ul>
         <a href="#contacts" class="btn btn-ghost" style="width:100%">Заказать</a>
       </div>
@@ -775,24 +714,24 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     </div>
     <div class="faq">
       <div class="q reveal">
-        <button class="q-head"><span>Сколько камер нужно?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
-        <div class="q-body"><p>Считаем по зонам риска и углам обзора, не «на глаз» — точное число даёт аудит объекта.</p></div>
+        <button class="q-head"><span>Сколько стоит защита?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="q-body"><p>Считаем от экспресс-аудита и количества устройств/пользователей — точную сумму даёт аудит.</p></div>
       </div>
       <div class="q reveal">
-        <button class="q-head"><span>Где хранятся записи?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
-        <div class="q-body"><p>На локальном сервере или в облаке — по вашему выбору. Срок хранения от 7 до 90 дней под задачу.</p></div>
+        <button class="q-head"><span>Нужно ли останавливать работу?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="q-body"><p>Нет, внедряем поэтапно — без простоя текущих процессов.</p></div>
       </div>
       <div class="q reveal">
-        <button class="q-head"><span>Можно ли смотреть с телефона?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
-        <div class="q-body"><p>Да, через мобильное приложение или браузер — с быстрым поиском по дате и событию.</p></div>
+        <button class="q-head"><span>Что если случится атака?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="q-body"><p>У нас есть план реагирования и восстановления — с зафиксированными в договоре сроками (SLA).</p></div>
       </div>
       <div class="q reveal">
-        <button class="q-head"><span>Что если камера сломается?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
-        <div class="q-body"><p>По SLA заменим или починим в оговоренные сроки — регламент реакции фиксируем в договоре.</p></div>
+        <button class="q-head"><span>Подходит ли для удалённой команды?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="q-body"><p>Да, безопасный удалённый доступ и контроль подрядчиков — наша специализация.</p></div>
       </div>
       <div class="q reveal">
-        <button class="q-head"><span>Нужна ли интеграция с другими системами?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
-        <div class="q-body"><p>Можем интегрировать с СКУД, тревожной сигнализацией и учётными системами (1С), если это нужно для задачи.</p></div>
+        <button class="q-head"><span>Как доказать, что стало безопаснее?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="q-body"><p>Отчёты по инцидентам, журналы событий, понятные метрики (RPO/RTO/SLA).</p></div>
       </div>
     </div>
   </div>
@@ -803,8 +742,8 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Заказать</span>
-      <h2>Закажите аудит<br>и расчёт видеонаблюдения сегодня</h2>
-      <p class="section-lead">Заполните форму — перезвоним в течение 5 минут в рабочее время и назначим выезд на объект. Остались вопросы — ответим на любой из них.</p>
+      <h2>Получите бесплатный<br>экспресс-аудит безопасности</h2>
+      <p class="section-lead">Заполните форму — перезвоним в течение 5 минут в рабочее время и предложим план защиты. Остались вопросы — ответим на любой из них.</p>
     </div>
 
     <div class="contacts">
@@ -840,7 +779,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       </div>
 
       <form class="lead-form reveal" id="leadForm" novalidate>
-        <h3>Заявка на видеонаблюдение</h3>
+        <h3>Заявка на аудит безопасности</h3>
         <p>Перезвоним в течение 5 минут в рабочее время.</p>
         <div class="field"><input type="text" name="name" placeholder="Ваше имя" required></div>
         <div class="field"><input type="tel" name="phone" placeholder="Телефон" required></div>
@@ -848,14 +787,14 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div class="field">
           <select name="service">
             <option value="">Интересует...</option>
-            <option>Аудит объекта</option>
-            <option>Проектирование видеонаблюдения</option>
-            <option>Монтаж и пусконаладка</option>
-            <option>Техническое обслуживание</option>
+            <option>Экспресс-аудит безопасности</option>
+            <option>Комплексный аудит ИБ</option>
+            <option>Защита от шифровальщиков и бэкапы</option>
+            <option>Мониторинг 24/7 (SOC/MDR)</option>
             <option>Другое</option>
           </select>
         </div>
-        <div class="field"><textarea name="comment" placeholder="Коротко об объекте и задаче"></textarea></div>
+        <div class="field"><textarea name="comment" placeholder="Коротко о компании и задаче"></textarea></div>
         <label class="agree"><input type="checkbox" required checked>Согласен на обработку персональных данных в соответствии с политикой конфиденциальности</label>
         <button type="submit" class="btn btn-primary" style="width:100%">Отправить заявку</button>
         <div class="form-msg" id="formMsg">Заявка отправлена. Менеджер свяжется с вами в течение 5 минут.</div>
@@ -869,7 +808,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="cta-band reveal">
       <h2>Первый месяц обслуживания <span class="grad">−50%</span></h2>
-      <p>Действует для новых клиентов на техническое обслуживание видеонаблюдения. Аудит объекта и выезд — бесплатно.</p>
+      <p>Действует для новых клиентов на обслуживание по ИТ-безопасности. Экспресс-аудит рисков — бесплатно.</p>
       <div class="hero-cta">
         <a href="#contacts" class="btn btn-primary">Получить предложение</a>
         <a href="tel:88003012660" class="btn btn-ghost">8 (800) 301-26-60</a>
@@ -936,7 +875,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <form class="lead-form lead-modal" id="leadModalForm" novalidate>
     <button type="button" class="lead-modal-close" id="leadModalClose" aria-label="Закрыть">×</button>
     <div id="leadModalFields">
-      <h3>Заявка на видеонаблюдение</h3>
+      <h3>Заявка на аудит безопасности</h3>
       <p>Перезвоним в течение 5 минут в рабочее время.</p>
       <div class="field"><input type="text" name="name" placeholder="Ваше имя"></div>
       <div class="field"><input type="tel" name="phone" placeholder="Телефон *" required></div>
@@ -971,61 +910,49 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 
   // ---- подробные кейсы (модалка по кнопке «Подробнее») ----
   var CASES = {
-    storage: {
-      tags: ['Склад 1200 м²', 'Логистика'],
-      title: 'Склад 1200 м²: контроль отгрузок, материалов и снижение потерь',
-      task: 'Склад 1200 м², смешанный режим: приёмка, хранение, комплектация, отгрузки. Потери ТМЦ, спорные ситуации при приёмке, ночные инциденты. Архив вели на старом регистраторе: хранение 7 дней, поиск до 2 часов, экспорт — только через ПК. Не было контроля «от двери до ворот»: зоны погрузки, доклевеллеры, рампы и коридоры частично слепые.',
+    phishing: {
+      tags: ['Фишинг', 'Защита почты'],
+      title: 'Блокировка фишинговой атаки до перевода денег',
+      task: 'Сотрудник получил письмо якобы от контрагента с просьбой срочно изменить реквизиты для оплаты. Письмо выглядело убедительно: тот же стиль, похожий адрес почты, вложенный счёт. Сотрудник почти запустил платёж.',
       decision: [
-        '<b>Аудит и зонирование:</b> выделили 7 критических зон: въезд/КПП, зона разгрузки, доклевеллеры/рампы, основной зал хранения, зона комплектации/сортировки, зона отгрузки, парковка/стоянка техники.',
-        '<b>Оборудование:</b> 18 IP-камер — антивандальные уличные на въезде и рампах, купольные в зале, камеры с WDR в зонах с перепадами освещённости, камеры с ИК-подсветкой для ночной съёмки. Фокус на углах обзора, чтобы исключить «слепые зоны» у паллет.',
-        '<b>Хранение архива:</b> сервер с хранением 30 дней (стандарт для логистики), резервное копирование ключевых событий (ночные движения, длительные остановки транспорта).',
-        '<b>Доступ и права:</b> 3 роли — оператор склада (только зал хранения и комплектация), начальник смены (все зоны + экспорт фрагментов), директор по безопасности (все зоны, отчёты, журнал действий).',
-        '<b>Поиск и аналитика:</b> быстрый поиск по дате/времени/зоне, тегирование событий («разгрузка», «ночная активность»), экспорт фрагмента 1–3 минуты в MP4.',
-        '<b>Процессы:</b> регламент фиксации спорных отгрузок — при расхождении делается 2-минутный обход зоны отгрузки с фиксацией паллет и пломб, фрагмент прикладывается к акту расхождений.',
-        '<b>SLA:</b> регламент реакции — не более 4 часов в рабочее время, замена камеры — в течение 24 часов, плановые проверки — раз в месяц.'
+        '<b>Защита почты:</b> система перехватила письмо как подозрительное (несовпадение домена, аномалии в заголовках) и отправила в карантин до попадания в основной ящик.',
+        '<b>Проверка перед платежом:</b> регламент подтверждения смены реквизитов контрагента отдельным каналом связи (звонок, а не ответ на письмо).',
+        '<b>Мониторинг аномалий:</b> отслеживание подозрительной активности в почтовых аккаунтах.'
       ],
-      result: 'Количество спорных ситуаций при приёмке/отгрузке снизилось на 50%. Время разбора инцидента сократилось с 2 часов до 15–20 минут. Потери ТМЦ снизились на 30%. Прозрачность для руководства: еженедельные отчёты по событиям в критических зонах (ночные заезды, длительные стоянки, активность в нерабочее время).'
+      result: 'Вредоносное письмо не попало в основной ящик, платёж не ушёл мошенникам. Экономия — сотни тысяч рублей. Снижение риска финансовых потерь из-за компрометации почты, предсказуемость платежей, доверие со стороны бухгалтерии и руководства.'
     },
-    office: {
-      tags: ['Офис 5 этажей', 'Безопасность'],
-      title: 'Офис 5 этажей: доступ для руководителей с телефона',
-      task: 'Смешанная планировка: open space, кабинеты, переговорки, коридоры, лифтовые холлы, входная группа, парковка. Безопасность и спорные ситуации: утерянные вещи, несанкционированный доступ, конфликты персонала, необходимость расследований. Архив — старый аналоговый регистратор, экспорт только через ПК, смотреть можно было только на 1 рабочем месте.',
+    ransomware: {
+      tags: ['Шифровальщик', 'Бэкапы'],
+      title: 'Восстановление данных после шифровальщика за 4 часа',
+      task: 'На одном из компьютеров в сети запустился шифровальщик: файлы стали недоступны, система показала требование выкупа. Инцидент случился вечером, утром планировались отгрузки и выставление счетов.',
       decision: [
-        '<b>Зонирование и расчёт камер:</b> 24 IP-камеры — входная группа (общий план + крупный план прохода), коридоры и лифтовые холлы (обзорные), кабинеты и переговорки (только общие коридоры перед ними, без съёмки внутри помещений), парковка (общий план, контроль въезда/выезда).',
-        '<b>Тип камер:</b> купольные антивандальные в коридорах, уличные на парковке, камеры с WDR для перепадов освещённости.',
-        '<b>Хранение архива:</b> локальный сервер, хранение 30 дней, автоматическое удаление по расписанию, резервное копирование инцидентов (движение ночью, длительная остановка авто на парковке).',
-        '<b>Доступ с мобильных устройств:</b> приложение для iOS/Android, быстрый поиск по дате, зоне, событию, экспорт фрагментов.',
-        '<b>Разграничение прав:</b> 3 уровня — охранник, администратор системы, руководители подразделений.',
-        '<b>Интеграция и процессы:</b> привязка видеофрагментов к заявкам службы безопасности (номер заявки → фрагмент), регламент действий при инцидентах (фиксация времени, зоны, экспорт, отправка ответственным).'
+        '<b>Резервное копирование:</b> регулярные бэкапы с изоляцией копий от рабочей сети — шифровальщик не смог добраться до архива.',
+        '<b>План восстановления:</b> заранее прописанный порядок действий при инциденте — кого уведомить, что отключить, откуда восстанавливать.',
+        '<b>Закрытие уязвимости:</b> найден и закрыт патчем канал, через который проник шифровальщик.'
       ],
-      result: 'Прозрачность процессов: руководители видят ситуацию на своих этажах онлайн и в архиве. Время разбора инцидента сократилось с 1–2 дней до 1–2 часов. У службы безопасности удобный инструмент для фиксации и передачи материалов. Наличие видимого контроля дисциплинирует персонал и посетителей.'
+      result: 'Данные восстановили из резервной копии за 4 часа, бизнес продолжил работу без простоя. Соблюдение сроков отгрузки, отсутствие репутационных потерь и штрафов, снижение стоимости простоя до минимума.'
     },
-    construction: {
-      tags: ['Стройплощадка 1,2 Га', 'Стройка'],
-      title: 'Стройплощадка 1,2 Га: контроль материалов и техники, доказательная база при спорах',
-      task: 'Строительство дома из газобетона на площадке 1,2 га. Задействована техника, оборудование, хранятся дорогостоящие материалы, ведётся контроль работ подрядчика. Риск хищений, ночные проникновения на площадку, отсутствие объективной фиксации этапов работ — невозможно было доказать факт нарушения или подтвердить выполнение работ.',
+    leak: {
+      tags: ['Утечка ПДн', 'Права доступа'],
+      title: 'Остановка утечки персональных данных через права доступа',
+      task: 'В компании хранились базы контактов и ПДн клиентов. Доступ к папкам был «на всех», сотрудники копировали файлы на личные устройства и отправляли в мессенджерах. Появился риск утечки и штрафов по закону о персональных данных.',
       decision: [
-        '<b>Аудит и зонирование:</b> выделили 5 ключевых зон, остальные участки закрываются общим обзором без дублирования.',
-        '<b>Оборудование:</b> 8 уличных камер с антивандальными корпусами, ИК-подсветкой (дальность 30–40 м), WDR. Для КПП и склада — камеры с более высоким разрешением, для периметра — обзорные с широким углом.',
-        '<b>Хранение архива:</b> локальный сервер, хранение 14 дней. Запись по движению в нерабочее время, постоянная запись на КПП и складе. Резервное копирование ключевых событий.',
-        '<b>Уведомления и мониторинг:</b> детекция движения ночью (19:00–07:00) с отправкой уведомлений на телефоны прораба и руководителя.',
-        '<b>Доступ:</b> с мобильных устройств (iOS/Android), поиск по дате/зоне/событию, экспорт фрагментов 1–3 минуты.',
-        '<b>Процессы и доказательная база:</b> регламент фиксации этапов — короткий обход (2–3 минуты) с пометкой «до/после» перед началом и после окончания работ, для техники — фиксация заезда/выезда и зоны работы.',
-        '<b>Обучение:</b> 30 минут для прораба (поиск, экспорт, работа с уведомлениями), 20 минут для охраны (базовый просмотр, регламент действий при тревоге).'
+        '<b>Политики доступа:</b> права пересмотрены по принципу «минимально необходимого» — доступ только тем, кому он реально нужен по роли.',
+        '<b>Контроль прав и шифрование:</b> папки с ПДн закрыты от общего доступа, чувствительные данные зашифрованы.',
+        '<b>Аудит доступов:</b> журналы событий фиксируют, кто и когда открывал/копировал файлы.'
       ],
-      result: 'Контроль материалов и техники. Количество ночных инцидентов снизилось на 50–60%. Есть видеодоказательства этапов работ, времени работы техники, состояния площадки. Дисциплина подрядчиков выросла — они заранее фиксируют «до/после», чтобы избежать претензий. Акты подкреплены видеоматериалами, что ускоряет приёмку.'
+      result: 'Количество несанкционированных доступов упало до нуля, журналы событий позволяют быстро расследовать инциденты, компания соответствует требованиям по защите ПДн. Снижение юридических рисков и штрафов, повышение доверия клиентов.'
     },
-    village: {
-      tags: ['Коттеджный посёлок', 'Периметр'],
-      title: 'Коттеджный посёлок на 120 домов: контроль периметра, въезда и гостевого транспорта',
-      task: 'Посёлок на 120 домов, периметр ~3,5 км, один КПП. Были случаи проникновения на территорию, сложности с учётом гостевых автомобилей, отсутствие единого архива. Нужно было обеспечить безопасность и понятный контроль для охраны и администрации.',
+    remote: {
+      tags: ['Удалённый доступ', 'RDP/VPN'],
+      title: 'Безопасный удалённый доступ без риска взлома',
+      task: 'Сотрудники и подрядчики работали удалённо, используя прямой RDP к серверам. В сети нашли открытые порты RDP, были попытки подбора паролей. При этом бизнес не мог полностью отказаться от удалённой работы.',
       decision: [
-        'Периметральные камеры с детекцией движения — 16 уличных камер с ИК-подсветкой и антивандальным корпусом.',
-        'На КПП — 2 камеры (общий план + крупный план госномеров), интеграция с журналом пропусков.',
-        'Сервер с хранением 45 дней, резервное копирование ключевых событий.',
-        'Мобильное приложение для старшего смены и управляющего — быстрый поиск по событиям и датам.'
+        '<b>Безопасный удалённый доступ:</b> прямой RDP заменён на VPN/Zero Trust с контролем сессий.',
+        '<b>Сегментация сети:</b> удалённые пользователи не получают прямого доступа ко всей сети — только к нужным ресурсам.',
+        '<b>Контроль сессий:</b> журналы подключений, запрет передачи файлов там, где это не нужно по задаче.'
       ],
-      result: 'Сократилось количество несанкционированных проникновений, учёт гостевого транспорта стал прозрачным. При инцидентах администрация быстро предоставляет записи в полицию. Охрана тратит меньше времени на ручной контроль.'
+      result: 'Открытые порты исчезли, попытки атак больше не фиксируются, удалённые сотрудники продолжают работать стабильно. Сохранение гибкости удалённой работы при снижении риска компрометации серверов.'
     }
   };
 
@@ -1196,13 +1123,12 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       btn.disabled = true; btn.textContent = 'Отправка...';
       var data = new FormData();
       data.append('phone', ph);
-      data.append('object_type', calcForm.object_type.value);
-      data.append('area', calcForm.area.value.trim());
-      data.append('cameras', calcForm.cameras.value.trim());
-      data.append('city', calcForm.city.value.trim());
+      data.append('company', calcForm.company.value.trim());
+      data.append('team_size', calcForm.team_size.value);
+      data.append('task', calcForm.task.value.trim());
       data.append('page', document.title);
       data.append('url', location.href);
-      data.append('source', 'Рассчитать стоимость проекта');
+      data.append('source', 'Рассчитать стоимость защиты');
       fetch('/send-lead.php', {method:'POST', body:data})
         .then(function(r){ if(!r.ok) throw new Error('bad'); })
         .then(function(){

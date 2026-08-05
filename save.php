@@ -11,7 +11,7 @@ header('X-Content-Type-Options: nosniff');
 $PASS_HASH_FILE = dirname(dirname(__DIR__)) . '/data/.it-win-admin.pass';
 $JSON_TARGET = __DIR__ . '/content.json';
 // белый список — только эти файлы можно перезаписать в режиме 2, ничего кроме них
-$ALLOWED_PAGES = array('it-outsourcing.html', 'skud.html', 'sks.html', 'surveillance.html');
+$ALLOWED_PAGES = array('it-outsourcing.html', 'skud.html', 'sks.html', 'surveillance.html', 'security.html');
 
 function fail($code, $msg){
   http_response_code($code);

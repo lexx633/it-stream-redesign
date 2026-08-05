@@ -66,7 +66,7 @@
   "nav.links": [
     { "label": "Услуги", "href": "#services", "children": [
       { "num": "1.", "label": "ИТ-аутсорсинг", "href": "/it-outsourcing" },
-      { "num": "2.", "label": "ИТ-безопасность", "soon": true },
+      { "num": "2.", "label": "ИТ-безопасность", "href": "/security" },
       { "num": "3.", "label": "Серверы и облако", "soon": true },
       { "num": "4.", "label": "Сети и телеком", "soon": true },
       { "num": "5.", "label": "СКУД", "href": "/skud" },
@@ -130,7 +130,7 @@
   ],
   "footer.services": [
     { "label": "IT-аутсорсинг", "href": "/it-outsourcing" },
-    { "label": "Облачные решения", "href": "#services" },
+    { "label": "ИТ-безопасность", "href": "/security" },
     { "label": "Видеонаблюдение", "href": "/surveillance" },
     { "label": "СКУД", "href": "/skud" },
     { "label": "СКС", "href": "/sks" }
