@@ -160,7 +160,7 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
    числу колонок (напр. 5) и «сирота» на отдельной строке смотрится некрасиво */
 .services.services-scroll{
   display:flex;grid-template-columns:none;overflow-x:auto;overflow-y:hidden;
-  gap:18px;padding-bottom:14px;margin-bottom:-14px;
+  gap:18px;padding:4px 4px 26px;
   scroll-snap-type:x proximity;cursor:grab;
   scrollbar-width:thin;scrollbar-color:rgba(34,211,238,.4) transparent;
 }
@@ -169,6 +169,12 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 .services.services-scroll::-webkit-scrollbar-thumb{background:rgba(34,211,238,.4);border-radius:99px}
 .services.services-scroll::-webkit-scrollbar-track{background:transparent}
 .services.services-scroll .svc{flex:0 0 280px;scroll-snap-align:start}
+.scroll-nav{display:flex;gap:10px;flex-shrink:0}
+.scroll-arrow{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);
+  color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;flex-shrink:0}
+.scroll-arrow:hover{border-color:rgba(34,211,238,.5);background:var(--surface-2);color:var(--accent)}
+.scroll-arrow svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.scroll-arrow:disabled{opacity:.35;cursor:default;pointer-events:none}
 .svc{
   padding:30px;border-radius:var(--radius);border:1px solid var(--line);
   background:linear-gradient(165deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
@@ -457,15 +463,17 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       <form class="lead-form reveal" id="calcLeadForm" novalidate>
         <h3>Рассчитать стоимость защиты</h3>
         <p>Опишите компанию и задачу — предложим план и посчитаем стоимость.</p>
-        <div class="field"><input type="text" name="company" placeholder="Компания"></div>
-        <div class="field">
-          <select name="team_size">
-            <option value="">Размер команды</option>
-            <option>До 10 человек</option>
-            <option>10–30 человек</option>
-            <option>30–100 человек</option>
-            <option>Более 100 человек</option>
-          </select>
+        <div class="field-row">
+          <div class="field"><input type="text" name="company" placeholder="Компания"></div>
+          <div class="field">
+            <select name="team_size">
+              <option value="">Размер команды</option>
+              <option>До 10 человек</option>
+              <option>10–30 человек</option>
+              <option>30–100 человек</option>
+              <option>Более 100 человек</option>
+            </select>
+          </div>
         </div>
         <div class="field"><input type="text" name="task" placeholder="Основная задача (кратко)"></div>
         <div class="field"><input type="tel" name="phone" placeholder="Телефон" required></div>
@@ -562,10 +570,16 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <!-- THREATS: основные угрозы и что мы делаем -->
 <section id="threats" style="padding-top:0">
   <div class="container">
-    <div class="section-head reveal">
-      <span class="eyebrow">Угрозы</span>
-      <h2>Основные угрозы и что мы делаем</h2>
-      <p class="section-lead">За каждой угрозой — конкретное решение, а не общие слова про «безопасность».</p>
+    <div class="section-head reveal" style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div>
+        <span class="eyebrow">Угрозы</span>
+        <h2>Основные угрозы и что мы делаем</h2>
+        <p class="section-lead">За каждой угрозой — конкретное решение, а не общие слова про «безопасность».</p>
+      </div>
+      <div class="scroll-nav" data-scroll-nav>
+        <button type="button" class="scroll-arrow" data-scroll-dir="-1" aria-label="Прокрутить влево"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button type="button" class="scroll-arrow" data-scroll-dir="1" aria-label="Прокрутить вправо"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+      </div>
     </div>
     <div class="services services-scroll">
       <article class="svc reveal">
@@ -1007,6 +1021,30 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     });
     // клик по карточке во время drag не должен считаться обычным кликом
     track.addEventListener('click', function(e){ if(moved){ e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+
+    // стрелки-навигация (‹ ›) над блоком — листают на ширину одной карточки
+    var section = track.closest('section');
+    var nav = section ? section.querySelector('[data-scroll-nav]') : null;
+    if(nav){
+      var arrows = nav.querySelectorAll('[data-scroll-dir]');
+      function updateArrows(){
+        var max = track.scrollWidth - track.clientWidth - 2;
+        arrows.forEach(function(btn){
+          var dir = parseInt(btn.getAttribute('data-scroll-dir'), 10);
+          btn.disabled = dir < 0 ? track.scrollLeft <= 0 : track.scrollLeft >= max;
+        });
+      }
+      arrows.forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var dir = parseInt(btn.getAttribute('data-scroll-dir'), 10);
+          var card = track.querySelector('.svc');
+          var step = (card ? card.offsetWidth : 280) + 18;
+          track.scrollBy({left: dir * step, behavior: 'smooth'});
+        });
+      });
+      track.addEventListener('scroll', updateArrows, {passive: true});
+      updateArrows();
+    }
   });
 
   function closeCaseOverlay(ov){ ov.classList.remove('show'); document.body.style.overflow = ''; }
@@ -1189,6 +1227,20 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     });
     calcForm.addEventListener('input', function(e){ e.target.style.borderColor = ''; });
   }
+
+  // ---- общие переменные форм (плейсхолдеры) — из content.json, правятся разом
+  // на всех страницах через панель «Переменные…» в редакторе ----
+  fetch('/content.json?_=' + Date.now(), {cache:'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+    function ph(sel, key){
+      var v = d[key]; if(!v) return;
+      document.querySelectorAll(sel).forEach(function(el){ el.setAttribute('placeholder', v); });
+    }
+    ph('input[name="name"]', 'form.ph_name');
+    ph('input[name="phone"]', 'form.ph_phone');
+    ph('input[name="email"]', 'form.ph_email');
+    var so = d['form.ph_service'];
+    if(so) document.querySelectorAll('select[name="service"] option[value=""]').forEach(function(o){ o.textContent = so; });
+  }).catch(function(){});
 })();
 </script>
 </body>

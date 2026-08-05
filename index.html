@@ -1090,10 +1090,25 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     revealAll: function(){ document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); }); }
   };
 
+  // ---- общие переменные форм (плейсхолдеры) — те же ключи, что читают
+  // остальные страницы сайта; правятся разом на всех через «Переменные…» ----
+  function applyFormPlaceholders(d){
+    if(!d) return;
+    function ph(sel, key){
+      var v = d[key]; if(!v) return;
+      document.querySelectorAll(sel).forEach(function(el){ el.setAttribute('placeholder', v); });
+    }
+    ph('input[name="name"]', 'form.ph_name');
+    ph('input[name="phone"]', 'form.ph_phone');
+    ph('input[name="email"]', 'form.ph_email');
+    var so = d['form.ph_service'];
+    if(so) document.querySelectorAll('select[name="service"] option[value=""]').forEach(function(o){ o.textContent = so; });
+  }
+
   function boot(){
     fetch('content.json', {cache:'no-store'})
       .then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(data){ window.CMS.data = data; if(data) render(data); })
+      .then(function(data){ window.CMS.data = data; if(data){ render(data); applyFormPlaceholders(data); } })
       .catch(function(){ /* дефолтные тексты остаются из HTML */ })
       .then(function(){ initSite(); window.__cmsReady = true; document.dispatchEvent(new Event('cms:ready')); });
   }

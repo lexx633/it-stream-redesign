@@ -205,10 +205,10 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 /* 4-колоночный вариант (только #services): центр + вертикальный список с разделителями, как на bitrix */
 .services .svc{padding:28px 20px;text-align:center}
 .services .svc-icon{margin-left:auto;margin-right:auto}
-.services .svc h3{font-size:16px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:0}
+.services .svc h3{font-size:16px;letter-spacing:.4px;margin-bottom:0}
 .services .svc h3::after{content:"";display:block;width:40px;height:2px;background:var(--accent);margin:14px auto 4px}
 .services .svc ul{display:block}
-.services .svc ul li{display:block;background:none;border:none;border-bottom:1px solid var(--line);border-radius:0;padding:10px 0;font-size:12.5px;text-transform:uppercase;letter-spacing:.2px;color:#b8c5dd;line-height:1.35}
+.services .svc ul li{display:block;background:none;border:none;border-bottom:1px solid var(--line);border-radius:0;padding:10px 0;font-size:12.5px;letter-spacing:.2px;color:#b8c5dd;line-height:1.35}
 .services .svc ul li:last-child{border-bottom:none}
 
 /* ---------- benefits ---------- */
@@ -959,6 +959,20 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     });
     modalForm.addEventListener('input', function(e){ e.target.style.borderColor = ''; });
   }
+
+  // ---- общие переменные форм (плейсхолдеры) — из content.json, правятся разом
+  // на всех страницах через панель «Переменные…» в редакторе ----
+  fetch('/content.json?_=' + Date.now(), {cache:'no-store'}).then(function(r){ return r.json(); }).then(function(d){
+    function ph(sel, key){
+      var v = d[key]; if(!v) return;
+      document.querySelectorAll(sel).forEach(function(el){ el.setAttribute('placeholder', v); });
+    }
+    ph('input[name="name"]', 'form.ph_name');
+    ph('input[name="phone"]', 'form.ph_phone');
+    ph('input[name="email"]', 'form.ph_email');
+    var so = d['form.ph_service'];
+    if(so) document.querySelectorAll('select[name="service"] option[value=""]').forEach(function(o){ o.textContent = so; });
+  }).catch(function(){});
 })();
 </script>
 </body>
