@@ -12,11 +12,33 @@ $PASS_HASH_FILE = dirname(dirname(__DIR__)) . '/data/.it-win-admin.pass';
 $JSON_TARGET = __DIR__ . '/content.json';
 // белый список — только эти файлы можно перезаписать в режиме 2, ничего кроме них
 $ALLOWED_PAGES = array('it-outsourcing.html', 'skud.html', 'sks.html', 'surveillance.html', 'security.html');
+// история версий — снимок ПЕРЕД каждой перезаписью, вне веб-корня (не отдаётся наружу)
+$BACKUP_DIR = dirname(dirname(__DIR__)) . '/data/backups';
+$BACKUP_KEEP = 30; // на файл — старше этого количества версий подчищаем
 
 function fail($code, $msg){
   http_response_code($code);
   echo json_encode(array('ok' => false, 'error' => $msg), JSON_UNESCAPED_UNICODE);
   exit;
+}
+
+// снимок текущего содержимого файла перед перезаписью — save.php раньше просто
+// atomic-перезаписывал (tmp+rename) без истории: живая правка через админку могла
+// без следа затереть предыдущую. Теперь версии копятся рядом с хэшем пароля.
+function backup_before_write($target, $backupDir, $keep){
+  if (!is_file($target)) return; // нечего бэкапить — файла ещё не было
+  if (!is_dir($backupDir)) { @mkdir($backupDir, 0700, true); }
+  if (!is_dir($backupDir) || !is_writable($backupDir)) return; // бэкап best-effort, не блокирует сохранение
+  $base = basename($target);
+  $stamp = date('Ymd-His') . '.' . substr(microtime(true) - floor(microtime(true)), 2, 3);
+  @copy($target, $backupDir . '/' . $base . '.' . $stamp . '.bak');
+
+  // подчистка старых версий этого же файла сверх $keep
+  $existing = glob($backupDir . '/' . $base . '.*.bak');
+  if ($existing === false || count($existing) <= $keep) return;
+  sort($existing); // имя = timestamp по возрастанию
+  $toDelete = array_slice($existing, 0, count($existing) - $keep);
+  foreach ($toDelete as $f) { @unlink($f); }
 }
 
 function atomic_write($target, $contents){
@@ -45,6 +67,7 @@ if (isset($req['page']) || isset($req['html'])) {
   $html = isset($req['html']) ? (string)$req['html'] : '';
   if (strlen($html) < 200 || stripos($html, '<html') === false) fail(400, 'html looks invalid');
   $target = __DIR__ . '/' . $page;
+  backup_before_write($target, $BACKUP_DIR, $BACKUP_KEEP);
   if (!atomic_write($target, $html)) fail(500, 'write failed');
   echo json_encode(array('ok' => true, 'bytes' => strlen($html)), JSON_UNESCAPED_UNICODE);
   exit;
@@ -56,6 +79,7 @@ if (!isset($req['data']) || !is_array($req['data'])) fail(400, 'no data');
 $json = json_encode($req['data'],
   JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . "\n";
 if ($json === false) fail(500, 'json encode failed');
+backup_before_write($JSON_TARGET, $BACKUP_DIR, $BACKUP_KEEP);
 if (!atomic_write($JSON_TARGET, $json)) fail(500, 'write failed');
 
 echo json_encode(array('ok' => true, 'bytes' => strlen($json)), JSON_UNESCAPED_UNICODE);
