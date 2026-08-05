@@ -219,6 +219,9 @@ form.lead-form{padding:32px;border-radius:24px;border:1px solid var(--line);
 form.lead-form h3{font-size:22px;margin-bottom:8px}
 form.lead-form > p{font-size:14.5px;color:var(--muted);margin-bottom:24px}
 .field{margin-bottom:16px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.field-row .field{margin-bottom:0}
+@media(max-width:480px){.field-row{grid-template-columns:1fr;gap:16px}}
 .field input,.field textarea,.field select{
   width:100%;padding:14px 16px;border-radius:13px;background:rgba(7,11,22,.5);
   border:1px solid var(--line);transition:.25s;font-size:15px;
@@ -536,17 +539,21 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       <form class="lead-form reveal" id="leadForm" novalidate>
         <h3>Заявка на СКУД</h3>
         <p>Перезвоним в течение 5 минут в рабочее время.</p>
-        <div class="field"><input type="text" name="name" placeholder="Ваше имя" required></div>
-        <div class="field"><input type="tel" name="phone" placeholder="Телефон" required></div>
-        <div class="field"><input type="email" name="email" placeholder="E-mail"></div>
-        <div class="field">
-          <select name="service">
-            <option value="">Интересует...</option>
-            <option>Проектирование СКУД</option>
-            <option>Монтаж и установка СКУД</option>
-            <option>Техническое обслуживание СКУД</option>
-            <option>Другое</option>
-          </select>
+        <div class="field-row">
+          <div class="field"><input type="text" name="name" placeholder="Ваше имя" required></div>
+          <div class="field">
+            <select name="service">
+              <option value="">Интересует...</option>
+              <option>Проектирование СКУД</option>
+              <option>Монтаж и установка СКУД</option>
+              <option>Техническое обслуживание СКУД</option>
+              <option>Другое</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field"><input type="tel" name="phone" placeholder="Телефон" required></div>
+          <div class="field"><input type="email" name="email" placeholder="E-mail"></div>
         </div>
         <div class="field"><textarea name="comment" placeholder="Коротко об объекте и задаче"></textarea></div>
         <label class="agree"><input type="checkbox" required checked>Согласен на обработку персональных данных в соответствии с политикой конфиденциальности</label>
