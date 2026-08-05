@@ -461,7 +461,14 @@
     'main .eyebrow', 'main .step-num',
     'main .case-tags span',
     'main .contact-list .ci b', 'main .contact-list .ci span',
-    '.foot-about p'
+    '.foot-about p',
+    // текст на кнопках — CTA-ссылки и «Подробнее» у кейсов (не только main:
+    // всплывающие окна физически лежат вне <main>, рядом с footer)
+    'main .btn', '.case-more',
+    // текст внутри попапов (заявка, подробный кейс) — своя разметка, не в main
+    '.lead-modal-overlay h3', '.lead-modal-overlay p', '.lead-modal-overlay .btn',
+    '.case-modal-overlay h3', '.case-modal-overlay h4', '.case-modal-overlay p',
+    '.case-modal-overlay li', '.case-modal-overlay .case-modal-tags span'
   ].join(',');
 
   function enhanceRaw(){
@@ -520,6 +527,18 @@
     idoc.addEventListener('click', function(e){
       var t = e.target;
       if(t.closest && t.closest('.__ed, [data-raw-href]')) return; // свои контролы
+
+      // «безопасные» интерактивные элементы — не уводят со страницы и не шлют
+      // форму (кнопка вне <form>, либо явно type=button, либо CTA-ссылка на
+      // #contacts — её же обработчик сам делает preventDefault), поэтому в
+      // редакторе им не мешаем: попап/аккордеон должны открываться, чтобы
+      // можно было увидеть и поправить текст внутри
+      var btn = t.closest ? t.closest('button') : null;
+      var safeButton = btn && (!btn.closest('form') || btn.type === 'button');
+      var safeCta = t.closest && t.closest('a.btn[href="#contacts"]');
+      var overlayBg = t.classList && (t.classList.contains('lead-modal-overlay') || t.classList.contains('case-modal-overlay'));
+      if(safeButton || safeCta || overlayBg) return;
+
       var a = t.closest ? t.closest('a,button') : null;
       if(!a) return;
       if(a.tagName === 'A'){
