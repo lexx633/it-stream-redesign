@@ -233,24 +233,26 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 .step-arrow{
   flex:1;min-width:150px;position:relative;
   padding:16px 22px 16px 34px;margin-right:-16px;
-  /* два непрозрачных слоя: белый тон поверх фирменного градиента — свет растёт по шагам,
-     но форма остаётся полностью непрозрачной (не просвечивает фон страницы на стыках) */
+  /* тот же «карточный» тон, что у .price-card/.svc (белый тон поверх тёмной базы),
+     непрозрачность растёт от шага к шагу — светлее, но в фирменной тёмной палитре;
+     непрозрачная база (--bg-2) — на стыке стрелок не просвечивает фон страницы */
   background:
-    linear-gradient(rgba(255,255,255,var(--tint,0)),rgba(255,255,255,var(--tint,0))),
-    linear-gradient(135deg,var(--accent),var(--accent-2));
-  border:1px solid rgba(255,255,255,.24);
+    linear-gradient(165deg,rgba(255,255,255,var(--t1,.055)),rgba(255,255,255,var(--t2,.015))),
+    var(--bg-2);
+  border:1px solid var(--line);
   clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%, 16px 50%);
-  font-size:14px;font-weight:600;color:#04121a;display:flex;align-items:center;gap:10px;
+  font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:10px;
 }
-.step-arrow:nth-child(1){--tint:0;   z-index:6}
-.step-arrow:nth-child(2){--tint:.08; z-index:5}
-.step-arrow:nth-child(3){--tint:.16; z-index:4}
-.step-arrow:nth-child(4){--tint:.24; z-index:3}
-.step-arrow:nth-child(5){--tint:.32; z-index:2}
-.step-arrow:nth-child(6){--tint:.40; z-index:1}
+.step-arrow:nth-child(1){--t1:.055; --t2:.015; z-index:6}
+.step-arrow:nth-child(2){--t1:.09;  --t2:.03;  z-index:5}
+.step-arrow:nth-child(3){--t1:.125; --t2:.045; z-index:4}
+.step-arrow:nth-child(4){--t1:.16;  --t2:.06;  z-index:3}
+.step-arrow:nth-child(5){--t1:.195; --t2:.075; z-index:2}
+.step-arrow:nth-child(6){--t1:.23;  --t2:.09;  z-index:1}
 .step-arrow:first-child{clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%);padding-left:22px}
 .step-arrow:last-child{margin-right:0}
-.step-arrow-num{width:26px;height:26px;border-radius:50%;background:#04121a;color:var(--accent);font-weight:800;font-size:13px;display:grid;place-items:center;flex-shrink:0}
+.step-arrow:hover{border-color:rgba(34,211,238,.5)}
+.step-arrow-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#04121a;font-weight:800;font-size:13px;display:grid;place-items:center;flex-shrink:0}
 .steps-desc{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:20px}
 .steps-desc p{font-size:13px;color:var(--muted);padding:0 6px}
 @media(max-width:1024px){
