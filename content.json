@@ -71,7 +71,7 @@
       { "num": "4.", "label": "Сети и телеком", "soon": true },
       { "num": "5.", "label": "СКУД", "href": "/skud" },
       { "num": "6.", "label": "СКС", "href": "/sks" },
-      { "num": "7.", "label": "Видеонаблюдение", "href": "/video" }
+      { "num": "7.", "label": "Видеонаблюдение", "href": "/surveillance" }
     ] },
     { "label": "Преимущества", "href": "#why" },
     { "label": "Расчёт", "href": "#calc" },
@@ -131,7 +131,7 @@
   "footer.services": [
     { "label": "IT-аутсорсинг", "href": "/it-outsourcing" },
     { "label": "Облачные решения", "href": "#services" },
-    { "label": "Видеонаблюдение", "href": "/video" },
+    { "label": "Видеонаблюдение", "href": "/surveillance" },
     { "label": "СКУД", "href": "/skud" },
     { "label": "СКС", "href": "/sks" }
   ],
@@ -181,7 +181,7 @@
       "icon": "<path d=\"M23 7l-7 5 7 5V7z\"></path><rect height=\"14\" rx=\"2\" width=\"15\" x=\"1\" y=\"5\"></rect>",
       "title": "Видеонаблюдение",
       "desc": "Проектирование, монтаж и сервис систем под конкретный объект и задачу.",
-      "href": "/video",
+      "href": "/surveillance",
       "list": [
         "Офис",
         "Магазин",
