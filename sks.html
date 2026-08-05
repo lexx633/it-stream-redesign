@@ -639,6 +639,22 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   var modalSuccess = document.getElementById('leadModalSuccess');
   if(modalOverlay && modalForm){
     var closeTimer = null;
+    var modalSource = '';
+    function textOf(el){
+      if(!el) return '';
+      var clone = el.cloneNode(true);
+      clone.querySelectorAll('br').forEach(function(br){ br.replaceWith(' '); });
+      return (clone.textContent || '').replace(/\s+/g, ' ').trim();
+    }
+    function leadSource(btn){
+      if(!btn) return '';
+      var card = btn.closest('.price-card') || btn.closest('.case');
+      var item = textOf(card ? card.querySelector('h3') : null);
+      var sec = btn.closest('section');
+      var secTitle = textOf(sec ? sec.querySelector('.section-head h2, .cta-band h2, h2') : null);
+      if(secTitle && item) return secTitle + ' — ' + item;
+      return secTitle || item;
+    }
     function resetModalView(){
       modalFields.style.display = '';
       modalSuccess.classList.remove('show');
@@ -648,7 +664,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       btn.textContent = 'Отправить заявку';
       modalForm.reset();
     }
-    function openModal(){ modalOverlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
+    function openModal(trigger){ modalSource = leadSource(trigger); modalOverlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
     function closeModal(){
       modalOverlay.classList.remove('show');
       document.body.style.overflow = '';
@@ -656,7 +672,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       setTimeout(resetModalView, 300);
     }
     document.querySelectorAll('a.btn[href="#contacts"]').forEach(function(btn){
-      btn.addEventListener('click', function(e){ e.preventDefault(); openModal(); });
+      btn.addEventListener('click', function(e){ e.preventDefault(); openModal(btn); });
     });
     modalClose.addEventListener('click', closeModal);
     modalOverlay.addEventListener('click', function(e){ if(e.target === modalOverlay) closeModal(); });
@@ -678,6 +694,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       data.append('comment', modalForm.comment.value.trim());
       data.append('page', document.title);
       data.append('url', location.href);
+      data.append('source', modalSource);
       fetch('/send-lead.php', {method:'POST', body:data})
         .then(function(r){ if(!r.ok) throw new Error('bad'); })
         .then(function(){
