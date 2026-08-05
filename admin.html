@@ -23,6 +23,8 @@
   .bar .title{font-size:15px;font-weight:600;margin-right:6px;white-space:nowrap}
   .bar .hint{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .bar .spacer{flex:1}
+  .bar select{font-family:inherit;font-size:13px;background:var(--panel2);color:var(--text);
+    border:1px solid var(--line);border-radius:8px;padding:7px 10px;cursor:pointer}
   button{font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;
     border:0;border-radius:9px;padding:9px 16px;background:var(--accent);color:#fff}
   button.ghost{background:transparent;border:1px solid var(--line);color:var(--text);font-weight:500}
@@ -34,7 +36,7 @@
   .stage{position:absolute;top:var(--bar-h);left:0;right:0;bottom:0;background:#0a0c10}
   iframe{width:100%;height:100%;border:0;display:block;background:#fff}
 
-  /* панель настроек GitHub */
+  /* панель настроек (пароль) */
   .settings{position:fixed;top:var(--bar-h);right:0;width:360px;max-width:92vw;z-index:19;
     background:var(--panel);border-left:1px solid var(--line);border-bottom:1px solid var(--line);
     border-bottom-left-radius:14px;padding:16px 18px;transform:translateX(105%);transition:transform .25s;
@@ -54,64 +56,99 @@
 
 <div class="bar">
   <span class="title">Редактор IT-Stream</span>
-  <span class="hint" id="hint">Кликните по любому тексту и правьте прямо на странице</span>
+  <select id="pageSel"></select>
+  <span class="hint" id="hint"></span>
   <span class="spacer"></span>
   <span id="msg" class="msg"></span>
   <button class="ghost" id="reload" type="button" title="Отменить несохранённые правки">Сбросить</button>
   <button class="ghost" id="vars" type="button" title="Телефон, почта, адрес, название — в одном месте">Переменные…</button>
-  <button class="ghost" id="gear" type="button">GitHub…</button>
+  <button class="ghost" id="gear" type="button">Пароль…</button>
   <button id="save" type="button" disabled>Сохранить</button>
 </div>
 
 <div class="settings" id="settings">
-  <h2>Публикация в GitHub</h2>
-  <div class="row">
-    <div><label>Владелец</label><input id="gh_owner" value="lexx633"></div>
-    <div><label>Репозиторий</label><input id="gh_repo" value="it-stream-redesign"></div>
-  </div>
-  <label>Ветка</label><input id="gh_branch" value="main">
-  <label>Токен доступа (PAT, scope <span class="key">repo</span> / Contents: write)</label>
-  <input id="gh_token" type="password" placeholder="ghp_… — хранится только в этом браузере">
-  <div class="note">Токен лежит в localStorage этого браузера и уходит только на api.github.com.
-    Создать: GitHub → Settings → Developer settings → Personal access tokens.
-    После «Сохранить» сайт обновится за 1–2 минуты.</div>
+  <h2>Пароль редактора</h2>
+  <label>Пароль</label>
+  <input id="ed_pass" type="password" placeholder="хранится только в этом браузере">
+  <div class="note">Пароль проверяется на сервере (<span class="key">save.php</span>) и хранится
+    в localStorage этого браузера. После «Сохранить» правки сразу попадают на сайт.</div>
 </div>
 
-<div class="stage"><iframe id="frame" src="index.html?_edit=1"></iframe></div>
+<div class="stage"><iframe id="frame"></iframe></div>
 
 <script>
 (function(){
   'use strict';
-  var PATH = 'content.json';
+
+  // ---- страницы, доступные редактору ----
+  // json:true — правка через content.json (структурная модель, добавление/удаление блоков).
+  // json:false — статическая страница, правим текст прямо в HTML, сохраняем документ целиком.
+  var PAGES = {
+    'index':           {file:'index.html',         title:'Главная',       json:true},
+    'it-outsourcing':  {file:'it-outsourcing.html', title:'ИТ-аутсорсинг', json:false},
+    'skud':            {file:'skud.html',           title:'СКУД',          json:false},
+    'sks':             {file:'sks.html',            title:'СКС',           json:false},
+    'video':           {file:'video.html',          title:'Видеонаблюдение', json:false}
+  };
+  var qs = new URLSearchParams(location.search);
+  // /skud/admin — mod_rewrite подставляет ?page=skud только на сервере,
+  // в адресной строке браузера query-строки нет, поэтому дублируем разбор по pathname.
+  var pathMatch = location.pathname.match(/^\/([a-z0-9_-]+)\/admin\/?$/i);
+  var pageKey = qs.get('page') || (pathMatch ? pathMatch[1] : '') || 'index';
+  if(!PAGES[pageKey]) pageKey = 'index';
+  var PAGE = PAGES[pageKey];
+  var isJson = PAGE.json;
+
   var frame = document.getElementById('frame');
   var els = {
-    owner:  document.getElementById('gh_owner'),
-    repo:   document.getElementById('gh_repo'),
-    branch: document.getElementById('gh_branch'),
-    token:  document.getElementById('gh_token'),
+    pass:   document.getElementById('ed_pass'),
     save:   document.getElementById('save'),
     reload: document.getElementById('reload'),
     gear:   document.getElementById('gear'),
+    vars:   document.getElementById('vars'),
     settings:document.getElementById('settings'),
-    msg:    document.getElementById('msg')
+    msg:    document.getElementById('msg'),
+    hint:   document.getElementById('hint'),
+    pageSel:document.getElementById('pageSel')
   };
   var data = null;
 
-  // ---- настройки GitHub в localStorage ----
-  ['owner','repo','branch'].forEach(function(k){ var v = localStorage.getItem('gh_'+k); if(v) els[k].value = v; });
-  els.token.value = localStorage.getItem('gh_pat') || '';
-  function persist(){
-    localStorage.setItem('gh_owner', els.owner.value.trim());
-    localStorage.setItem('gh_repo', els.repo.value.trim());
-    localStorage.setItem('gh_branch', els.branch.value.trim());
-    localStorage.setItem('gh_pat', els.token.value.trim());
+  // ---- переключатель страниц в шапке ----
+  Object.keys(PAGES).forEach(function(k){
+    var o = document.createElement('option');
+    o.value = k; o.textContent = PAGES[k].title;
+    if(k === pageKey) o.selected = true;
+    els.pageSel.appendChild(o);
+  });
+  els.pageSel.addEventListener('change', function(){
+    goToPage(els.pageSel.value);
+  });
+  function goToPage(key){
+    if(key === pageKey) return;
+    if(dirty && !confirm('Есть несохранённые правки. Перейти без сохранения?')) {
+      els.pageSel.value = pageKey; return;
+    }
+    location.href = '/admin.html?page=' + key;
   }
-  ['owner','repo','branch','token'].forEach(function(k){ els[k].addEventListener('change', persist); });
+
+  els.hint.textContent = isJson
+    ? 'Кликните по любому тексту и правьте прямо на странице'
+    : 'Статическая страница — правьте текст прямо на странице, ссылки меню переключают редактор';
+  if(!isJson) els.vars.style.display = 'none';
+  // admin.html физически лежит в корне сайта, но открывается и по «красивому»
+  // адресу /skud/admin — относительные пути в этом случае резолвятся неверно,
+  // поэтому все ссылки на соседние файлы делаем абсолютными от корня.
+  frame.src = '/' + PAGE.file + '?_edit=1';
+
+  // ---- пароль редактора в localStorage ----
+  els.pass.value = localStorage.getItem('itwin_pass') || '';
+  function persist(){ localStorage.setItem('itwin_pass', els.pass.value.trim()); }
+  els.pass.addEventListener('change', persist);
   els.gear.addEventListener('click', function(){ els.settings.classList.toggle('open'); });
 
   function setMsg(t, cls){ els.msg.textContent = t || ''; els.msg.className = 'msg ' + (cls||''); }
 
-  // ---- панель «Переменные»: правим в одном месте — меняется везде ----
+  // ---- панель «Переменные» (только для JSON-режима — главная страница) ----
   var VARS = [
     {p:'vars.company',               t:'Название компании'},
     {p:'vars.logo_mark',             t:'Символ логотипа'},
@@ -157,12 +194,9 @@
       });
     }
   }
-  document.getElementById('vars').addEventListener('click', toggleVarsPanel);
+  els.vars.addEventListener('click', toggleVarsPanel);
 
-  // ---- доступ к значению по пути ("services.items.0.title") ----
-  // Верхние ключи в content.json плоские с точками ("services.items"),
-  // внутри — настоящие массивы/объекты. Ищем самый длинный существующий
-  // плоский префикс, дальше идём по вложенности.
+  // ---- доступ к значению по пути ("services.items.0.title") — только JSON-режим ----
   function splitPath(path){
     var parts = path.split('.');
     for(var n = parts.length; n >= 1; n--){
@@ -206,8 +240,6 @@
   // ================= редактор внутри iframe =================
   var idoc, iwin, ctl, ctlTarget = null;
 
-  function esc(s){ return String(s==null?'':s); }
-
   function reRender(){
     iwin.CMS.data = data;
     iwin.CMS.render();
@@ -215,7 +247,7 @@
     enhance();
   }
 
-  // всплывающая кнопка × над блоком
+  // всплывающая кнопка × над блоком (только JSON-режим — есть списковая модель)
   function ensureCtl(){
     if(ctl) return;
     ctl = idoc.createElement('button');
@@ -255,7 +287,6 @@
   }
   function hideCtl(){ if(ctl){ ctl.style.display = 'none'; } ctlTarget = null; }
 
-  // ближайший удаляемый элемент = прямой потомок контейнера [data-cms-list]
   function deletableFrom(node){
     var el = node;
     while(el && el !== idoc.body){
@@ -288,7 +319,6 @@
     '<path d="M9 12l2 2 4-4"></path><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>',
     '<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path>'
   ];
-  // модальное окно выбора иконки (в документе редактора, не в iframe)
   function openIconPicker(cur, cb){
     var ov = document.createElement('div');
     ov.style.cssText = 'position:fixed;inset:0;z-index:50;background:rgba(6,8,12,.72);'+
@@ -322,8 +352,8 @@
     document.body.appendChild(ov);
   }
 
+  // ================= JSON-режим (главная страница) =================
   function enhance(){
-    // 1) стиль правки — один раз
     if(!idoc.getElementById('__ed_style')){
       var st = idoc.createElement('style');
       st.id = '__ed_style';
@@ -344,7 +374,6 @@
       idoc.head.appendChild(st);
     }
 
-    // 2) текстовые поля → contenteditable
     Array.prototype.forEach.call(idoc.querySelectorAll('[data-cms]'), function(el){
       if(el.__edText) return;
       el.__edText = true;
@@ -356,7 +385,6 @@
       el.addEventListener('keydown', function(e){ if(e.key === 'Enter' && !isHtml && el.tagName !== 'P'){ e.preventDefault(); el.blur(); } });
     });
 
-    // 3) аватарки/картинки → правка ссылки по клику
     Array.prototype.forEach.call(idoc.querySelectorAll('img[data-cms-src]'), function(img){
       if(img.__edImg) return;
       img.__edImg = true;
@@ -369,7 +397,6 @@
       });
     });
 
-    // 4) кнопки «＋ добавить» в конце каждого списка
     Array.prototype.forEach.call(idoc.querySelectorAll('[data-cms-list]'), function(cont){
       if(cont.querySelector(':scope > .__ed-addwrap')) return;
       var listPath = cont.getAttribute('data-cms-list');
@@ -390,7 +417,6 @@
       cont.appendChild(wrap);
     });
 
-    // 5) иконки карточек → выбор из набора по клику
     Array.prototype.forEach.call(idoc.querySelectorAll('[data-cms-icon]'), function(box){
       if(box.__edIcon) return;
       box.__edIcon = true;
@@ -402,7 +428,6 @@
       });
     });
 
-    // 6) звёзды рейтинга → клик задаёт оценку (левая половина звезды = половинка)
     Array.prototype.forEach.call(idoc.querySelectorAll('[data-cms-rating]'), function(box){
       if(box.__edRate) return;
       box.__edRate = true;
@@ -419,7 +444,6 @@
       });
     });
 
-    // 7) FAQ — раскрываем все ответы, чтобы их можно было править
     Array.prototype.forEach.call(idoc.querySelectorAll('.q'), function(q){
       q.classList.add('open');
       var body = q.querySelector('.q-body');
@@ -427,33 +451,107 @@
     });
   }
 
+  // ================= режим правки статических страниц =================
+  // Нет JSON-модели — правим текст прямо в DOM через contenteditable и сохраняем
+  // документ целиком. Селектор общий для всех внутренних страниц (единая разметка).
+  var RAW_SEL = [
+    'main h1', 'main h2', 'main h3', 'main h4',
+    'main p', 'main li',
+    'main .eyebrow', 'main .step-num',
+    'main .case-tags span',
+    'main .contact-list .ci b', 'main .contact-list .ci span',
+    '.foot-about p'
+  ].join(',');
+
+  function enhanceRaw(){
+    if(!idoc.getElementById('__ed_style')){
+      var st = idoc.createElement('style');
+      st.id = '__ed_style';
+      st.textContent =
+        '[data-raw-edit]{outline:1px dashed transparent;outline-offset:2px;transition:outline-color .1s,background .1s;border-radius:3px}'+
+        '[data-raw-edit]:hover{outline-color:#5b8cff;background:rgba(91,140,255,.10);cursor:text}'+
+        '[data-raw-edit]:focus{outline:2px solid #5b8cff;background:rgba(91,140,255,.14)}'+
+        '[data-raw-href]{outline:2px dashed transparent;outline-offset:2px;cursor:pointer}'+
+        '[data-raw-href]:hover{outline-color:#fbbf24;background:rgba(251,191,36,.10)}';
+      idoc.head.appendChild(st);
+    }
+
+    Array.prototype.forEach.call(idoc.querySelectorAll(RAW_SEL), function(el){
+      if(el.__edText) return;
+      el.__edText = true;
+      el.setAttribute('data-raw-edit', '1');
+      el.setAttribute('contenteditable', 'true');
+      el.setAttribute('spellcheck', 'false');
+      el.addEventListener('input', markDirty);
+    });
+
+    // телефон/почта внутри контента — правка ссылки по клику (кроме шапки/подвала)
+    Array.prototype.forEach.call(idoc.querySelectorAll('main a[href^="tel:"],main a[href^="mailto:"]'), function(a){
+      if(a.__edHref) return;
+      a.__edHref = true;
+      a.setAttribute('data-raw-href', '1');
+      a.title = 'Клик — изменить ссылку';
+      a.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        var cur = a.getAttribute('href') || '';
+        var v = iwin.prompt('Ссылка (tel:.../mailto:...):', cur);
+        if(v != null && v.trim()){ a.setAttribute('href', v.trim()); markDirty(); }
+      });
+    });
+  }
+
+  // ---- переход на другую страницу по клику на пункт меню внутри iframe ----
+  function pageKeyFromHref(href){
+    if(!href) return null;
+    href = href.trim();
+    if(href === '/' || href === '') return 'index';
+    var m = href.match(/^\/([a-z0-9_-]+)\/?$/i);
+    if(!m) return null;
+    var k = m[1].toLowerCase();
+    return PAGES[k] ? k : null;
+  }
+
   // ---- ставим редактор поверх загруженного iframe ----
   function installEditor(){
     iwin = frame.contentWindow;
     idoc = frame.contentDocument;
-    // блокируем навигацию/сабмиты/аккордеон в режиме правки
+
     idoc.addEventListener('click', function(e){
       var t = e.target;
-      if(t.closest && t.closest('.__ed')) return;                 // наши контролы
+      if(t.closest && t.closest('.__ed, [data-raw-href]')) return; // свои контролы
       var a = t.closest ? t.closest('a,button') : null;
-      if(a){ e.preventDefault(); e.stopPropagation(); }
+      if(!a) return;
+      if(a.tagName === 'A'){
+        var key = pageKeyFromHref(a.getAttribute('href'));
+        if(key && key !== pageKey){
+          e.preventDefault(); e.stopPropagation();
+          els.pageSel.value = key;
+          goToPage(key);
+          return;
+        }
+      }
+      e.preventDefault(); e.stopPropagation();
     }, true);
     idoc.addEventListener('submit', function(e){ e.preventDefault(); }, true);
-    // всплывающая × при наведении
-    idoc.addEventListener('mouseover', function(e){
-      var item = deletableFrom(e.target);
-      if(item) showCtlFor(item);
-    });
-    idoc.addEventListener('mouseout', function(e){
-      if(!e.relatedTarget || (e.relatedTarget !== ctl && !deletableFrom(e.relatedTarget))) hideCtl();
-    });
-    iwin.addEventListener('scroll', hideCtl, {passive:true});
 
-    // отдаём iframe наш рабочий data и рендерим
-    iwin.CMS.data = data;
-    iwin.CMS.render();
-    iwin.CMS.revealAll();
-    enhance();
+    if(isJson){
+      idoc.addEventListener('mouseover', function(e){
+        var item = deletableFrom(e.target);
+        if(item) showCtlFor(item);
+      });
+      idoc.addEventListener('mouseout', function(e){
+        if(!e.relatedTarget || (e.relatedTarget !== ctl && !deletableFrom(e.relatedTarget))) hideCtl();
+      });
+      iwin.addEventListener('scroll', hideCtl, {passive:true});
+
+      iwin.CMS.data = data;
+      iwin.CMS.render();
+      iwin.CMS.revealAll();
+      enhance();
+    } else {
+      enhanceRaw();
+    }
+
     els.save.disabled = false;
     setMsg('Готово к правке', 'wait');
   }
@@ -462,8 +560,7 @@
   function markDirty(){ if(!dirty){ dirty = true; setMsg('Есть несохранённые правки', 'wait'); } }
 
   function whenFrameReady(cb){
-    // iframe сам грузит content.json асинхронно; ждём, пока его boot() выставит
-    // window.__cmsReady. Опрос надёжнее слушателя события из-за возможной гонки.
+    if(!isJson){ cb(); return; } // статические страницы ничего асинхронно не грузят
     var w = frame.contentWindow;
     if(w && w.CMS && w.__cmsReady){ cb(); return; }
     var iv = setInterval(function(){
@@ -473,55 +570,63 @@
     setTimeout(function(){ clearInterval(iv); }, 8000);
   }
 
-  // ---- загрузка content.json + инициализация после готовности iframe ----
   function boot(){
-    fetch(PATH + '?_=' + Date.now(), {cache:'no-store'})
-      .then(function(r){ if(!r.ok) throw new Error('content.json ' + r.status); return r.json(); })
-      .then(function(j){ data = j; whenFrameReady(installEditor); })
-      .catch(function(e){ setMsg('Не удалось загрузить content.json: ' + e.message, 'err'); });
+    if(isJson){
+      fetch('/content.json?_=' + Date.now(), {cache:'no-store'})
+        .then(function(r){ if(!r.ok) throw new Error('content.json ' + r.status); return r.json(); })
+        .then(function(j){ data = j; whenFrameReady(installEditor); })
+        .catch(function(e){ setMsg('Не удалось загрузить content.json: ' + e.message, 'err'); });
+    } else {
+      whenFrameReady(installEditor);
+    }
   }
   frame.addEventListener('load', boot);
 
-  // ---- сброс несохранённых правок ----
   els.reload.addEventListener('click', function(){
     dirty = false; setMsg('');
     els.save.disabled = true;
-    frame.src = 'index.html?_edit=1&_=' + Date.now();  // перезагрузка iframe → повторный boot
+    frame.src = '/' + PAGE.file + '?_edit=1&_=' + Date.now();
   });
 
-  // ================= сохранение в GitHub =================
-  function b64(str){ return btoa(String.fromCharCode.apply(null, new TextEncoder().encode(str))); }
-  function api(method, extra){
-    var u = 'https://api.github.com/repos/' + els.owner.value.trim() + '/' + els.repo.value.trim() + '/contents/' + PATH;
-    var opts = { method:method, headers:{ 'Authorization':'token ' + els.token.value.trim(), 'Accept':'application/vnd.github+json' } };
-    if(extra) opts.body = JSON.stringify(extra);
-    return fetch(u + (method === 'GET' ? '?ref=' + els.branch.value.trim() + '&_=' + Date.now() : ''), opts);
+  // раздельная копия документа без служебной разметки редактора (contenteditable,
+  // data-raw-edit/-href, инжектированный <style id="__ed_style">) — иначе она
+  // улетает в сохранённый файл и видна всем посетителям страницы.
+  function cleanHtmlForSave(){
+    var clone = idoc.documentElement.cloneNode(true);
+    var st = clone.querySelector('#__ed_style');
+    if(st) st.parentNode.removeChild(st);
+    Array.prototype.forEach.call(clone.querySelectorAll('[data-raw-edit]'), function(el){
+      el.removeAttribute('data-raw-edit');
+      el.removeAttribute('contenteditable');
+      el.removeAttribute('spellcheck');
+    });
+    Array.prototype.forEach.call(clone.querySelectorAll('[data-raw-href]'), function(el){
+      el.removeAttribute('data-raw-href');
+      el.removeAttribute('title');
+    });
+    return '<!DOCTYPE html>\n' + clone.outerHTML;
   }
+
+  // ================= сохранение через save.php =================
   els.save.addEventListener('click', function(){
-    if(!els.token.value.trim()){ setMsg('Укажите токен в GitHub…', 'err'); els.settings.classList.add('open'); els.token.focus(); return; }
+    if(!els.pass.value.trim()){ setMsg('Укажите пароль', 'err'); els.settings.classList.add('open'); els.pass.focus(); return; }
     persist();
     els.save.disabled = true; setMsg('Сохраняю…', 'wait');
-    var body = JSON.stringify(data, null, 2) + '\n';
-    api('GET').then(function(r){
-      if(r.status === 401) throw new Error('токен не принят (401)');
-      if(r.status === 404) return null;
-      if(!r.ok) throw new Error('GET ' + r.status);
-      return r.json();
-    }).then(function(cur){
-      var payload = { message:'admin: обновление контента лендинга', content:b64(body), branch:els.branch.value.trim() };
-      if(cur && cur.sha) payload.sha = cur.sha;
-      return api('PUT', payload);
-    }).then(function(r){
-      return r.json().then(function(j){ return {ok:r.ok, status:r.status, j:j}; });
-    }).then(function(res){
-      if(!res.ok) throw new Error((res.j && res.j.message) || ('PUT ' + res.status));
-      dirty = false;
-      setMsg('Сохранено — сайт обновится за 1–2 мин', 'ok');
-      els.save.disabled = false;
-    }).catch(function(e){
-      setMsg('Ошибка: ' + e.message, 'err');
-      els.save.disabled = false;
-    });
+    var body = isJson
+      ? JSON.stringify({ pass: els.pass.value.trim(), data: data })
+      : JSON.stringify({ pass: els.pass.value.trim(), page: PAGE.file,
+          html: cleanHtmlForSave() });
+    fetch('/save.php', { method: 'POST', body: body })
+      .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, status:r.status, j:j}; }); })
+      .then(function(res){
+        if(!res.ok || !res.j.ok) throw new Error((res.j && res.j.error) || ('HTTP ' + res.status));
+        dirty = false;
+        setMsg('Сохранено', 'ok');
+        els.save.disabled = false;
+      }).catch(function(e){
+        setMsg('Ошибка: ' + e.message, 'err');
+        els.save.disabled = false;
+      });
   });
 
   window.addEventListener('beforeunload', function(e){ if(dirty){ e.preventDefault(); e.returnValue = ''; } });

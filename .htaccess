@@ -1,0 +1,29 @@
+# Чистые адреса без .html на всём сайте.
+# Файлы остаются *.html в корне; в адресной строке — без расширения.
+# Относительные пути (content.json, save.php) резолвятся от корня,
+# т.к. канонический адрес всегда без завершающего слэша.
+RewriteEngine On
+RewriteBase /
+
+# Переезд страницы: старые адреса → новый /it-outsourcing (301)
+RewriteRule ^telecom/?$ /it-outsourcing [R=301,L,NC]
+RewriteRule ^it-autsorsing/?$ /it-outsourcing [R=301,L,NC]
+
+# Редактор конкретной страницы: /skud/admin -> admin.html?page=skud
+# (только если такая страница <page>.html реально существует)
+RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+RewriteRule ^([a-z0-9_-]+)/admin/?$ admin.html?page=$1 [L,QSA,NC]
+
+# Любой хвостовой слэш убираем: /admin/ → /admin, /telecom/ → /telecom
+RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+# Внешний редирект: /page.html → /page (в браузере адрес без расширения).
+# Query-строка (?_edit=1 и пр.) сохраняется автоматически.
+RewriteCond %{THE_REQUEST} \s/+([^.\s?]+)\.html[\s?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# Внутренняя отдача: /page отдаёт page.html без редиректа,
+# если такой файл существует и это не каталог.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.+?)/?$ $1.html [L]
