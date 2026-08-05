@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>СКУД для бизнеса — проектирование, монтаж, обслуживание — IT-Stream</title>
-<meta name="description" content="Проектирование, монтаж и техническое обслуживание СКУД под ключ для бизнеса: офисы, склады, производство, автосервисы, ЖК. Гарантия, обучение персонала, поддержка 24/7.">
+<title>Видеонаблюдение для бизнеса — проектирование, монтаж, обслуживание — IT-Stream</title>
+<meta name="description" content="Видеонаблюдение для бизнеса под ключ: аудит, проектирование, поставка оборудования, монтаж и обслуживание по SLA. Склады, офисы, производство, стройка, розница, УК, коттеджные посёлки.">
 <meta name="theme-color" content="#070b16">
-<meta property="og:title" content="СКУД для бизнеса — IT-Stream">
-<meta property="og:description" content="Контроль доступа и учёт рабочего времени под ключ: проектирование, монтаж, техобслуживание. Одна компания на все этапы.">
+<meta property="og:title" content="Видеонаблюдение для бизнеса — IT-Stream">
+<meta property="og:description" content="Полный цикл: от проектирования до обслуживания. Управляемая система безопасности с понятным отчётом и быстрым доступом к архиву.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -201,6 +201,36 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 .case-tags{display:flex;flex-wrap:wrap;gap:7px}
 .case-tags span{font-size:12px;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);color:#b8c5dd}
 
+/* ---------- pricing ---------- */
+.price{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+.price-card{padding:32px;border-radius:var(--radius);border:1px solid var(--line);
+  background:linear-gradient(165deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
+  position:relative;transition:.35s;display:flex;flex-direction:column}
+.price-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:rgba(34,211,238,.35)}
+.price-card.feat{border-color:rgba(34,211,238,.5);background:linear-gradient(160deg,rgba(99,102,241,.14),rgba(34,211,238,.06))}
+.price-badge{position:absolute;top:-12px;right:24px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;
+  background:linear-gradient(120deg,var(--accent),var(--accent-2));color:#04121a}
+.price-card h3{font-size:19px;margin-bottom:6px}
+.price-card .cap{font-size:13.5px;color:var(--muted);margin-bottom:18px;min-height:40px}
+.price-val{font-size:30px;font-weight:800;margin-bottom:2px;
+  background:linear-gradient(120deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+.price-per{font-size:13px;color:var(--muted);margin-bottom:22px}
+.price-card ul{list-style:none;display:grid;gap:11px;margin-bottom:26px;flex:1}
+.price-card ul li{display:flex;gap:10px;font-size:14px;color:#cbd5e1}
+.price-card ul li svg{flex-shrink:0;width:18px;height:18px;stroke:var(--ok);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;margin-top:2px}
+
+/* ---------- faq ---------- */
+.faq{max-width:860px;margin:0 auto}
+.q{border:1px solid var(--line);border-radius:16px;margin-bottom:12px;background:var(--surface);overflow:hidden;transition:.3s}
+.q-head{width:100%;text-align:left;background:none;border:0;padding:20px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:16px;font-weight:600;transition:.2s}
+.q-head:hover{color:var(--accent)}
+.q-icon{flex-shrink:0;width:28px;height:28px;border-radius:9px;background:rgba(255,255,255,.06);display:grid;place-items:center;transition:.3s}
+.q.open .q-icon{background:linear-gradient(135deg,var(--accent),var(--accent-2));transform:rotate(45deg)}
+.q-icon svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round}
+.q.open .q-icon svg{stroke:#04121a}
+.q-body{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.4,0,.2,1)}
+.q-body p{padding:0 24px 22px;color:var(--muted);font-size:15px}
+
 /* ---------- contacts ---------- */
 .contacts{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
 .contact-list{display:grid;gap:14px}
@@ -280,7 +310,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 /* ---------- responsive ---------- */
 @media(max-width:1024px){
   .hero-grid{grid-template-columns:1fr;gap:40px}
-  .services,.cases,.services.services-3{grid-template-columns:repeat(2,1fr)}
+  .services,.cases,.services.services-3,.price{grid-template-columns:repeat(2,1fr)}
   .benefits{grid-template-columns:repeat(2,1fr)}
   .contacts{grid-template-columns:1fr;gap:32px}
   .foot-grid{grid-template-columns:1fr 1fr;gap:32px}
@@ -304,7 +334,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 @media(max-width:760px){
   section{padding:70px 0}
   .hero{padding:120px 0 60px}
-  .services,.cases,.benefits,.services.services-3{grid-template-columns:1fr}
+  .services,.cases,.benefits,.services.services-3,.price{grid-template-columns:1fr}
   .spheres{gap:9px}
   .foot-grid{grid-template-columns:1fr}
   .cta-band,form.lead-form,.lead-modal{padding:26px}
@@ -340,9 +370,9 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
           <a href="#" class="soon"><span><span class="num">2.</span>ИТ-безопасность</span><span class="tag-soon">скоро</span></a>
           <a href="#" class="soon"><span><span class="num">3.</span>Серверы и облако</span><span class="tag-soon">скоро</span></a>
           <a href="#" class="soon"><span><span class="num">4.</span>Сети и телеком</span><span class="tag-soon">скоро</span></a>
-          <a href="/skud" class="cur"><span><span class="num">5.</span>СКУД</span></a>
+          <a href="/skud"><span><span class="num">5.</span>СКУД</span></a>
           <a href="/sks"><span><span class="num">6.</span>СКС</span></a>
-          <a href="/video"><span><span class="num">7.</span>Видеонаблюдение</span></a>
+          <a href="/video" class="cur"><span><span class="num">7.</span>Видеонаблюдение</span></a>
         </div>
       </div>
       <a href="/#why">Преимущества</a>
@@ -364,51 +394,56 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     <nav class="breadcrumb" aria-label="Хлебные крошки">
       <a href="/">Главная</a><span class="sep">/</span>
       <a href="/#services">Услуги</a><span class="sep">/</span>
-      <span class="cur">СКУД</span>
+      <span class="cur">Видеонаблюдение</span>
     </nav>
-    <span class="eyebrow">Контроль и управление доступом</span>
-    <h1>СКУД для бизнеса</h1>
-    <p class="lead">Ограничиваем доступ на территорию, ведём учёт рабочего времени и защищаем периметр объекта — от&nbsp;проекта до сервисного обслуживания, одной командой.</p>
+    <span class="eyebrow">Контроль, безопасность, прозрачность процессов</span>
+    <h1>Видеонаблюдение для бизнеса</h1>
+    <p class="lead">Полный цикл: от проектирования до обслуживания. Под ключ, с гарантией и SLA — вы получаете не просто камеры, а управляемую систему безопасности с понятным отчётом и быстрым доступом к архиву.</p>
   </div>
 </section>
 
-<!-- SERVICES: три этапа в одном месте (не три отдельные страницы) -->
+<!-- SERVICES: пакет «под ключ» в трёх этапах -->
 <section id="services">
   <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Что входит в услугу</span>
+      <h2>Пакет «под ключ»</h2>
+      <p class="section-lead">Аудит, проект, оборудование, монтаж, настройка и обслуживание — одна команда и один договор на весь цикл.</p>
+    </div>
     <div class="services services-3">
       <article class="svc reveal">
         <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-        <h3>Проектирование</h3>
-        <p>Считаем точки прохода и подбираем оборудование под задачу объекта.</p>
+        <h3>Аудит и проектирование</h3>
+        <p>Выезд или онлайн, замеры и расчёт архива — прежде чем считать смету.</p>
         <ul>
-          <li>Аудит объекта и постановка задачи</li>
-          <li>Расчёт числа точек доступа</li>
-          <li>Подбор оборудования: замки, турникеты, считыватели</li>
-          <li>Схема подключения и проектная документация</li>
+          <li>Замеры, анализ освещения и покрытия сети</li>
+          <li>Схема расстановки камер, углы обзора</li>
+          <li>Подбор камер под задачи: день/ночь, ИК, антивандальные</li>
+          <li>Проект, спецификация, предварительная смета</li>
         </ul>
       </article>
 
       <article class="svc reveal">
         <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg></div>
-        <h3>Монтаж и установка</h3>
-        <p>Ставим оборудование, настраиваем ПО и сдаём систему в работу.</p>
+        <h3>Поставка и монтаж</h3>
+        <p>Подбираем оборудование под бюджет, ставим и сдаём систему в работу.</p>
         <ul>
-          <li>Прокладка кабеля и подготовка мест крепления</li>
-          <li>Установка турникетов, замков, считывателей</li>
-          <li>Настройка ПО, прав доступа и учёта времени</li>
-          <li>Тестирование и обучение персонала</li>
+          <li>Подбор оборудования, проверка совместимости</li>
+          <li>Монтаж камер, коммутаторов, регистраторов/серверов</li>
+          <li>Интеграция с СКУД и тревожными датчиками</li>
+          <li>Настройка архива, ролей и мобильного приложения</li>
         </ul>
       </article>
 
       <article class="svc reveal">
         <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M12 20a8 8 0 100-16 8 8 0 000 16z"/><path d="M12 8v4l3 2"/></svg></div>
-        <h3>Техническое обслуживание</h3>
-        <p>Держим систему в рабочем состоянии по договору, без сюрпризов.</p>
+        <h3>Обслуживание и поддержка</h3>
+        <p>Держим систему в рабочем состоянии по SLA, без сюрпризов в счёте.</p>
         <ul>
-          <li>Диагностика и профилактика оборудования</li>
-          <li>Обновление ПО и баз пользователей</li>
-          <li>Проверка систем оповещения</li>
-          <li>Оперативное устранение неисправностей</li>
+          <li>Плановые проверки и чистка оборудования</li>
+          <li>Обновление ПО, замена HDD</li>
+          <li>Реагирование на инциденты по SLA</li>
+          <li>Предсказуемые расходы и отчётность</li>
         </ul>
       </article>
     </div>
@@ -419,10 +454,10 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
 <section style="padding-top:0">
   <div class="container">
     <div class="cta-band reveal">
-      <h2>Бесплатный аудит точек доступа <span class="grad">на объекте</span></h2>
-      <p>Оценим объект, посчитаем точки прохода и предложим оборудование под бюджет — без обязательств.</p>
+      <h2>Бесплатный аудит объекта <span class="grad">перед сметой</span></h2>
+      <p>Оценим объект, предложим план размещения камер и оборудование под бюджет — без обязательств.</p>
       <div class="hero-cta">
-        <a href="#contacts" class="btn btn-primary">Заказать аудит</a>
+        <a href="#contacts" class="btn btn-primary">Получить бесплатный аудит</a>
       </div>
     </div>
   </div>
@@ -433,33 +468,35 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Зачем это бизнесу</span>
-      <h2>Что даёт СКУД</h2>
-      <p class="section-lead">Не просто «дверь по карте» — контроль территории и данные для управления.</p>
+      <h2>Преимущества в духе ИТ-аутсорсинга</h2>
+      <p class="section-lead">Не просто монтаж камер — управляемая система с понятным SLA и одной точкой контакта.</p>
     </div>
     <div class="benefits">
-      <div class="ben reveal"><div class="ben-num">01</div><h3>Безопасность</h3><p>Ограничиваем доступ к отдельным зонам объекта и снижаем риск несанкционированного проникновения.</p></div>
-      <div class="ben reveal"><div class="ben-num">02</div><h3>Учёт рабочего времени</h3><p>Точки прохода одновременно фиксируют приход и уход сотрудников — без отдельной системы.</p></div>
-      <div class="ben reveal"><div class="ben-num">03</div><h3>Гибкость</h3><p>Карты, брелоки, биометрия — система настраивается под конкретные задачи и масштаб бизнеса.</p></div>
-      <div class="ben reveal"><div class="ben-num">04</div><h3>Интеграция</h3><p>Объединяем с видеонаблюдением и пожарной сигнализацией для комплексной защиты объекта.</p></div>
+      <div class="ben reveal"><div class="ben-num">01</div><h3>SLA и предсказуемость</h3><p>Фиксированные сроки реакции на заявки и регламент обслуживания — без «когда получится».</p></div>
+      <div class="ben reveal"><div class="ben-num">02</div><h3>Единый подрядчик</h3><p>Проектирование, монтаж и обслуживание — одна команда, одна точка контакта.</p></div>
+      <div class="ben reveal"><div class="ben-num">03</div><h3>Прозрачная стоимость</h3><p>Смета до начала работ, без скрытых платежей, абонентское обслуживание по тарифу.</p></div>
+      <div class="ben reveal"><div class="ben-num">04</div><h3>Гарантия и опыт</h3><p>Замена оборудования по гарантии, продление поддержки. Типовые решения для складов, офисов, стройки и розницы.</p></div>
     </div>
   </div>
 </section>
 
-<!-- SPHERES: сферы применения (вместо отдельных страниц «офис» / «школа») -->
+<!-- SPHERES: для кого и какие задачи решает -->
 <section id="spheres" style="padding-top:0">
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Для кого</span>
       <h2>Для любого типа объекта</h2>
-      <p class="section-lead">Одно и то же решение адаптируем под разные сферы бизнеса.</p>
+      <p class="section-lead">Управляемая система безопасности под задачи конкретного бизнеса.</p>
     </div>
     <div class="spheres">
-      <span class="sphere reveal"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Офисы и бизнес-центры</span>
-      <span class="sphere reveal"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/></svg>Склады и производство</span>
-      <span class="sphere reveal"><svg viewBox="0 0 24 24"><rect x="1" y="5" width="15" height="13" rx="2.5"/><path d="M23 8l-6.5 4.5L23 17V8z"/></svg>Автосервисы и стоянки</span>
-      <span class="sphere reveal"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>ЖК и управляющие компании</span>
-      <span class="sphere reveal"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Банки и финансовые организации</span>
-      <span class="sphere reveal"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Учебные и медицинские учреждения</span>
+      <span class="sphere reveal"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/></svg>Склады и логистика</span>
+      <span class="sphere reveal"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Офисы и БЦ</span>
+      <span class="sphere reveal"><svg viewBox="0 0 24 24"><path d="M22 8.5V5.5A2.5 2.5 0 0019.5 3h-15A2.5 2.5 0 002 5.5v13A2.5 2.5 0 004.5 21h6"/><path d="M2 9h20"/><path d="M16 16l3 3 5-5"/></svg>Производство и цеха</span>
+      <span class="sphere reveal"><svg viewBox="0 0 24 24"><rect x="1" y="5" width="15" height="13" rx="2.5"/><path d="M23 8l-6.5 4.5L23 17V8z"/></svg>Розница и общепит</span>
+      <span class="sphere reveal"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>Стройплощадки</span>
+      <span class="sphere reveal"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>Сеть филиалов</span>
+      <span class="sphere reveal"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>УК: ЖКХ и МКД</span>
+      <span class="sphere reveal"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>Коттеджные посёлки и СНТ</span>
     </div>
   </div>
 </section>
@@ -473,20 +510,125 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     </div>
     <div class="cases">
       <div class="case reveal">
-        <div class="case-ico"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="19" height="14" rx="2.5"/><path d="M6 15h5"/></svg></div>
+        <div class="case-ico"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/></svg></div>
         <div>
-          <h3>Установка СКУД в автосервисе</h3>
-          <p>Контроль и безопасность на всей территории сервиса, полная ясность в текущем моменте.</p>
-          <div class="case-tags"><span>СКУД</span><span>Безопасность</span></div>
+          <h3>Склад 1200 м²: контроль отгрузок и потерь</h3>
+          <p>18 IP-камер, архив 30 дней, интеграция с СКУД. Спорные ситуации при приёмке снизились на 50%, потери ТМЦ — на 30%.</p>
+          <div class="case-tags"><span>Видеонаблюдение</span><span>Склад</span></div>
         </div>
       </div>
       <div class="case reveal">
-        <div class="case-ico"><svg viewBox="0 0 24 24"><path d="M3 8.5V5.5A2.5 2.5 0 015.5 3h3M15.5 3h3A2.5 2.5 0 0121 5.5v3M21 15.5v3a2.5 2.5 0 01-2.5 2.5h-3M8.5 21h-3A2.5 2.5 0 013 18.5v-3"/><circle cx="12" cy="11" r="2.2"/></svg></div>
+        <div class="case-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
         <div>
-          <h3>ЖК бизнес-класса: замена старой СКУД</h3>
-          <p>Демонтаж устаревшего оборудования, установка Face ID и распознавания автомобильных номеров.</p>
-          <div class="case-tags"><span>СКУД</span><span>Face ID</span></div>
+          <h3>Офис 5 этажей: доступ для руководителей с телефона</h3>
+          <p>24 камеры, разграничение прав, привязка фрагментов к заявкам службы безопасности. Разбор инцидента — 1–2 часа вместо 1–2 дней.</p>
+          <div class="case-tags"><span>Видеонаблюдение</span><span>Офис</span></div>
         </div>
+      </div>
+      <div class="case reveal">
+        <div class="case-ico"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div>
+        <div>
+          <h3>Стройплощадка 1,2 Га: доказательная база при спорах</h3>
+          <p>8 уличных камер с ИК-подсветкой, детекция движения ночью, фиксация «до/после» по этапам работ. Ночные инциденты снизились на 50–60%.</p>
+          <div class="case-tags"><span>Видеонаблюдение</span><span>Стройка</span></div>
+        </div>
+      </div>
+      <div class="case reveal">
+        <div class="case-ico"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div>
+          <h3>Коттеджный посёлок на 120 домов: контроль периметра</h3>
+          <p>16 периметральных камер, распознавание госномеров на КПП, архив 45 дней. Учёт гостевого транспорта стал прозрачным.</p>
+          <div class="case-tags"><span>Видеонаблюдение</span><span>Периметр</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="price">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Цены и варианты пакетов</span>
+      <h2>Три готовых пакета —<br>или расчёт под задачу</h2>
+      <p class="section-lead">Стоимость зависит от площади, числа камер, срока хранения архива и интеграций. Точный расчёт — после бесплатного аудита.</p>
+    </div>
+    <div class="price">
+      <div class="price-card reveal">
+        <h3>Базовый</h3>
+        <div class="cap">Для небольшого офиса или магазина</div>
+        <div class="price-val">по запросу</div>
+        <div class="price-per">после аудита объекта</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Аудит объекта</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>4–6 камер</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Регистратор и монтаж</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>1 месяц обслуживания</li>
+        </ul>
+        <a href="#contacts" class="btn btn-ghost" style="width:100%">Заказать</a>
+      </div>
+
+      <div class="price-card feat reveal">
+        <span class="price-badge">Популярный</span>
+        <h3>Стандарт</h3>
+        <div class="cap">Для склада или производства</div>
+        <div class="price-val">по запросу</div>
+        <div class="price-per">после аудита объекта</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Аудит объекта</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>8–12 камер</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Сетевой регистратор/сервер</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Интеграция с тревожными датчиками</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>3 месяца обслуживания</li>
+        </ul>
+        <a href="#contacts" class="btn btn-primary" style="width:100%">Заказать</a>
+      </div>
+
+      <div class="price-card reveal">
+        <h3>Премиум</h3>
+        <div class="cap">Для сети объектов и повышенных требований</div>
+        <div class="price-val">по запросу</div>
+        <div class="price-per">после аудита объекта</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Аудит и проектирование</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>12–24 камеры</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Сервер/облако, интеграция с СКУД</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Расширенный SLA</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>6 месяцев обслуживания</li>
+        </ul>
+        <a href="#contacts" class="btn btn-ghost" style="width:100%">Заказать</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Частые вопросы</span>
+      <h2>FAQ</h2>
+    </div>
+    <div class="faq">
+      <div class="q reveal">
+        <button class="q-head"><span>Сколько камер нужно?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="q-body"><p>Считаем по зонам риска и углам обзора, не «на глаз» — точное число даёт аудит объекта.</p></div>
+      </div>
+      <div class="q reveal">
+        <button class="q-head"><span>Где хранятся записи?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="q-body"><p>На локальном сервере или в облаке — по вашему выбору. Срок хранения от 7 до 90 дней под задачу.</p></div>
+      </div>
+      <div class="q reveal">
+        <button class="q-head"><span>Можно ли смотреть с телефона?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="q-body"><p>Да, через мобильное приложение или браузер — с быстрым поиском по дате и событию.</p></div>
+      </div>
+      <div class="q reveal">
+        <button class="q-head"><span>Что если камера сломается?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="q-body"><p>По SLA заменим или починим в оговоренные сроки — регламент реакции фиксируем в договоре.</p></div>
+      </div>
+      <div class="q reveal">
+        <button class="q-head"><span>Нужна ли интеграция с другими системами?</span><span class="q-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></button>
+        <div class="q-body"><p>Можем интегрировать с СКУД, тревожной сигнализацией и учётными системами (1С), если это нужно для задачи.</p></div>
       </div>
     </div>
   </div>
@@ -497,7 +639,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Заказать</span>
-      <h2>Закажите аудит<br>и расчёт СКУД сегодня</h2>
+      <h2>Закажите аудит<br>и расчёт видеонаблюдения сегодня</h2>
       <p class="section-lead">Заполните форму — перезвоним в течение 5 минут в рабочее время и назначим выезд на объект. Остались вопросы — ответим на любой из них.</p>
     </div>
 
@@ -534,7 +676,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       </div>
 
       <form class="lead-form reveal" id="leadForm" novalidate>
-        <h3>Заявка на СКУД</h3>
+        <h3>Заявка на видеонаблюдение</h3>
         <p>Перезвоним в течение 5 минут в рабочее время.</p>
         <div class="field"><input type="text" name="name" placeholder="Ваше имя" required></div>
         <div class="field"><input type="tel" name="phone" placeholder="Телефон" required></div>
@@ -542,9 +684,10 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div class="field">
           <select name="service">
             <option value="">Интересует...</option>
-            <option>Проектирование СКУД</option>
-            <option>Монтаж и установка СКУД</option>
-            <option>Техническое обслуживание СКУД</option>
+            <option>Аудит объекта</option>
+            <option>Проектирование видеонаблюдения</option>
+            <option>Монтаж и пусконаладка</option>
+            <option>Техническое обслуживание</option>
             <option>Другое</option>
           </select>
         </div>
@@ -562,7 +705,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <div class="container">
     <div class="cta-band reveal">
       <h2>Первый месяц обслуживания <span class="grad">−50%</span></h2>
-      <p>Действует для новых клиентов на техническое обслуживание СКУД. Аудит объекта и выезд — бесплатно.</p>
+      <p>Действует для новых клиентов на техническое обслуживание видеонаблюдения. Аудит объекта и выезд — бесплатно.</p>
       <div class="hero-cta">
         <a href="#contacts" class="btn btn-primary">Получить предложение</a>
         <a href="tel:88003012660" class="btn btn-ghost">8 (800) 301-26-60</a>
@@ -629,7 +772,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   <form class="lead-form lead-modal" id="leadModalForm" novalidate>
     <button type="button" class="lead-modal-close" id="leadModalClose" aria-label="Закрыть">×</button>
     <div id="leadModalFields">
-      <h3>Заявка на СКУД</h3>
+      <h3>Заявка на видеонаблюдение</h3>
       <p>Перезвоним в течение 5 минут в рабочее время.</p>
       <div class="field"><input type="text" name="name" placeholder="Ваше имя"></div>
       <div class="field"><input type="tel" name="phone" placeholder="Телефон *" required></div>
@@ -652,6 +795,13 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   var header = document.getElementById('header');
   function onScroll(){ header.classList.toggle('scrolled', window.scrollY > 20); }
   onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+  document.querySelector('.faq') && document.querySelector('.faq').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.q-head') : null; if(!btn) return;
+    var q = btn.parentElement, body = q.querySelector('.q-body'), isOpen = q.classList.contains('open');
+    document.querySelectorAll('.q.open').forEach(function(o){ o.classList.remove('open'); o.querySelector('.q-body').style.maxHeight = null; });
+    if(!isOpen){ q.classList.add('open'); body.style.maxHeight = body.scrollHeight + 'px'; }
+  });
 
   var burger = document.getElementById('burger'), links = document.getElementById('navLinks');
   if(burger && links){
