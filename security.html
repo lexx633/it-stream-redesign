@@ -156,6 +156,19 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 /* ---------- services ---------- */
 .services{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .services.services-3{grid-template-columns:repeat(3,1fr)}
+/* горизонтальный скролл вместо сетки — нужен там, где число карточек не кратно
+   числу колонок (напр. 5) и «сирота» на отдельной строке смотрится некрасиво */
+.services.services-scroll{
+  display:flex;grid-template-columns:none;overflow-x:auto;overflow-y:hidden;
+  gap:18px;padding-bottom:14px;margin-bottom:-14px;
+  scroll-snap-type:x proximity;cursor:grab;
+  scrollbar-width:thin;scrollbar-color:rgba(34,211,238,.4) transparent;
+}
+.services.services-scroll.dragging{cursor:grabbing;scroll-snap-type:none}
+.services.services-scroll::-webkit-scrollbar{height:6px}
+.services.services-scroll::-webkit-scrollbar-thumb{background:rgba(34,211,238,.4);border-radius:99px}
+.services.services-scroll::-webkit-scrollbar-track{background:transparent}
+.services.services-scroll .svc{flex:0 0 280px;scroll-snap-align:start}
 .svc{
   padding:30px;border-radius:var(--radius);border:1px solid var(--line);
   background:linear-gradient(165deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
@@ -551,7 +564,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       <h2>Основные угрозы и что мы делаем</h2>
       <p class="section-lead">За каждой угрозой — конкретное решение, а не общие слова про «безопасность».</p>
     </div>
-    <div class="services">
+    <div class="services services-scroll">
       <article class="svc reveal">
         <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
         <h3>Шифровальщики (ransomware)</h3>
@@ -971,6 +984,24 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
   // ---- подробные кейсы: статичная разметка (по одной модалке на кейс) —
   // текст живёт прямо в HTML, поэтому редактируется и сохраняется как обычный
   // текст страницы, без JS-шаблона поверх ----
+  // ---- горизонтальный скролл карточек мышью (drag), не только колёсиком/тачпадом ----
+  document.querySelectorAll('.services-scroll').forEach(function(track){
+    var isDown = false, startX = 0, startScroll = 0, moved = false;
+    track.addEventListener('mousedown', function(e){
+      isDown = true; moved = false; track.classList.add('dragging');
+      startX = e.pageX; startScroll = track.scrollLeft;
+    });
+    window.addEventListener('mouseup', function(){ isDown = false; track.classList.remove('dragging'); });
+    window.addEventListener('mousemove', function(e){
+      if(!isDown) return;
+      var dx = e.pageX - startX;
+      if(Math.abs(dx) > 3) moved = true;
+      track.scrollLeft = startScroll - dx;
+    });
+    // клик по карточке во время drag не должен считаться обычным кликом
+    track.addEventListener('click', function(e){ if(moved){ e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+  });
+
   function closeCaseOverlay(ov){ ov.classList.remove('show'); document.body.style.overflow = ''; }
   document.querySelectorAll('.case-more').forEach(function(btn){
     btn.addEventListener('click', function(){
