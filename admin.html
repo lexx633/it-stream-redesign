@@ -66,18 +66,6 @@
   .settings .note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
   .row{display:flex;gap:8px}.row>div{flex:1}
 
-  /* панель «Переменные» — во всю ширину, выпадает сверху, несколько колонок, скролл */
-  .vars-panel{left:0;right:0;width:auto;max-width:none;
-    border-left:0;border-right:0;border-bottom-left-radius:0;border-bottom-right-radius:0;
-    max-height:calc(100vh - var(--bar-h));overflow-y:auto;
-    transform:translateY(-110%)}
-  .vars-panel .vars-grid{display:flex;flex-wrap:wrap;align-items:flex-start;gap:0 40px}
-  .vars-panel .vars-group{flex:1 1 240px;max-width:300px;padding-bottom:8px}
-  .vars-panel .vars-group h3{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);
-    margin:18px 0 4px;padding-bottom:6px;border-bottom:1px solid var(--line)}
-  .vars-panel .vars-group:first-child h3{margin-top:0}
-  .vars-panel .vars-grid label{margin:12px 0 5px}
-
   /* панель «Страницы» — дерево слева (поиск + группы «Страницы»/«Блог» + пункт
      «Переменные»), содержимое справа (для «Переменные» — тот же vars-grid,
      что раньше был отдельной панелью; для реальной страницы клик сразу
@@ -107,8 +95,12 @@
   .pages-empty-note{padding:8px 10px 4px;font-size:12px;color:var(--muted)}
   .pages-content{flex:1;padding:20px 24px;overflow-y:auto;max-height:calc(100vh - var(--bar-h))}
   .pages-empty{color:var(--muted);font-size:13px;margin:0}
-  .pages-content .vars-grid{display:flex;flex-wrap:wrap;align-items:flex-start;gap:0 40px}
-  .pages-content .vars-group{flex:1 1 240px;max-width:300px;padding-bottom:8px}
+  /* CSS-колонки, не flex-wrap: короткая группа сразу отдаёт место следующей
+     (masonry-подобная упаковка), а не ждёт самую высокую соседку в «строке» —
+     на flex-wrap между «Название и бренд» и «Плейсхолдеры форм» оставалась
+     пустая полоса высотой во всю «Контакты» */
+  .pages-content .vars-grid{column-width:260px;column-gap:40px}
+  .pages-content .vars-group{break-inside:avoid;padding-bottom:8px}
   .pages-content .vars-group h3{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);
     margin:18px 0 4px;padding-bottom:6px;border-bottom:1px solid var(--line)}
   .pages-content .vars-group:first-child h3{margin-top:0}
