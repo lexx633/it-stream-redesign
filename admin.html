@@ -50,6 +50,14 @@
   .settings .key{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#6b7686}
   .settings .note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
   .row{display:flex;gap:8px}.row>div{flex:1}
+
+  /* панель «Переменные» — во всю ширину, выпадает сверху, несколько колонок, скролл */
+  .vars-panel{left:0;right:0;width:auto;max-width:none;
+    border-left:0;border-right:0;border-bottom-left-radius:0;border-bottom-right-radius:0;
+    max-height:calc(100vh - var(--bar-h));overflow-y:auto;
+    transform:translateY(-110%)}
+  .vars-panel .vars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0 28px}
+  .vars-panel .vars-grid label{margin:12px 0 5px}
 </style>
 </head>
 <body>
@@ -160,9 +168,8 @@
     {p:'contacts.phone_sales_href',  t:'  ↳ ссылка (tel:)'},
     {p:'contacts.email',             t:'E-mail'},
     {p:'contacts.email_href',        t:'  ↳ ссылка (mailto:)'},
-    {p:'vars.address1',              t:'Адрес 1'},
-    {p:'vars.address2',              t:'Адрес 2'},
-    {p:'vars.office_label',          t:'Подпись адресов'},
+    {p:'vars.address1',              t:'Адрес'},
+    {p:'vars.office_label',          t:'Подпись адреса'},
     {p:'form.ph_name',               t:'Плейсхолдер поля «Имя» (все формы)'},
     {p:'form.ph_phone',              t:'Плейсхолдер поля «Телефон» (все формы)'},
     {p:'form.ph_email',              t:'Плейсхолдер поля «E-mail» (все формы)'},
@@ -171,10 +178,11 @@
   var varsPanel = null;
   function buildVarsPanel(){
     varsPanel = document.createElement('div');
-    varsPanel.className = 'settings';
+    varsPanel.className = 'settings vars-panel';
     varsPanel.id = 'varsPanel';
-    var h = '<h2>Переменные — правим в одном месте</h2>';
-    VARS.forEach(function(v){ h += '<label>'+v.t+'</label><input data-vp="'+v.p+'" type="text">'; });
+    var h = '<h2>Переменные — правим в одном месте</h2><div class="vars-grid">';
+    VARS.forEach(function(v){ h += '<div class="field"><label>'+v.t+'</label><input data-vp="'+v.p+'" type="text"></div>'; });
+    h += '</div>';
     h += '<div class="note">Эти значения повторяются по всей странице (телефоны в шапке, контактах '+
          'и подвале; название — в логотипе и подвале). Правка здесь меняет их сразу везде.</div>';
     varsPanel.innerHTML = h;
