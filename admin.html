@@ -36,7 +36,22 @@
   .stage{position:absolute;top:var(--bar-h);left:0;right:0;bottom:0;background:#0a0c10}
   iframe{width:100%;height:100%;border:0;display:block;background:#fff}
 
-  /* панель настроек (пароль) */
+  /* экран входа — перекрывает всё, пока пароль не подтверждён сервером */
+  .login-gate{position:fixed;inset:0;z-index:100;background:var(--bg);
+    display:flex;align-items:center;justify-content:center;padding:20px}
+  .login-gate.hidden{display:none}
+  .login-box{width:100%;max-width:340px;background:var(--panel);border:1px solid var(--line);
+    border-radius:16px;padding:28px 26px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+  .login-box h2{margin:0 0 18px;font-size:17px;font-weight:700}
+  .login-box label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
+  .login-box input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+    color:var(--text);padding:10px 12px;font-size:14px}
+  .login-box input:focus{outline:none;border-color:var(--accent)}
+  .login-box button{width:100%;margin-top:14px}
+  .login-box .note{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.5;text-align:center}
+  .login-msg{font-size:12.5px;color:var(--err);min-height:1.4em;margin-top:8px}
+
+  /* панель настроек — используется только «Переменными» (vars-panel), сам пароль тут больше не живёт */
   .settings{position:fixed;top:var(--bar-h);right:0;width:360px;max-width:92vw;z-index:19;
     background:var(--panel);border-left:1px solid var(--line);border-bottom:1px solid var(--line);
     border-bottom-left-radius:14px;padding:16px 18px;transform:translateX(105%);transition:transform .25s;
@@ -87,19 +102,21 @@
   <span id="msg" class="msg"></span>
   <button class="ghost" id="reload" type="button" title="Отменить несохранённые правки">Сбросить</button>
   <button class="ghost" id="vars" type="button" title="Телефон, почта, адрес, название — в одном месте">Переменные…</button>
-  <button class="ghost" id="gear" type="button">Пароль…</button>
   <button id="save" type="button" disabled>Сохранить</button>
-</div>
-
-<div class="settings" id="settings">
-  <h2>Пароль редактора</h2>
-  <label>Пароль</label>
-  <input id="ed_pass" type="password" placeholder="хранится только в этом браузере">
-  <div class="note">Пароль проверяется на сервере (<span class="key">save.php</span>) и хранится
-    в localStorage этого браузера. После «Сохранить» правки сразу попадают на сайт.</div>
+  <button class="ghost" id="logout" type="button" title="Забыть пароль в этом браузере">Выйти</button>
 </div>
 
 <div class="stage"><iframe id="frame"></iframe></div>
+
+<div class="login-gate" id="loginGate">
+  <form class="login-box" id="loginForm">
+    <h2>Вход в редактор</h2>
+    <label>Пароль</label>
+    <input id="loginPass" type="password" placeholder="пароль редактора" autocomplete="current-password" autofocus>
+    <div class="login-msg" id="loginMsg"></div>
+    <button type="submit">Войти</button>
+  </form>
+</div>
 
 <script>
 (function(){
@@ -127,17 +144,20 @@
 
   var frame = document.getElementById('frame');
   var els = {
-    pass:   document.getElementById('ed_pass'),
     save:   document.getElementById('save'),
     reload: document.getElementById('reload'),
-    gear:   document.getElementById('gear'),
+    logout: document.getElementById('logout'),
     vars:   document.getElementById('vars'),
-    settings:document.getElementById('settings'),
     msg:    document.getElementById('msg'),
     hint:   document.getElementById('hint'),
-    pageSel:document.getElementById('pageSel')
+    pageSel:document.getElementById('pageSel'),
+    loginGate: document.getElementById('loginGate'),
+    loginForm: document.getElementById('loginForm'),
+    loginPass: document.getElementById('loginPass'),
+    loginMsg:  document.getElementById('loginMsg')
   };
   var data = null;
+  var ADMIN_PASS = ''; // подтверждённый сервером пароль текущей сессии — см. экран входа ниже
 
   // ---- переключатель страниц в шапке ----
   Object.keys(PAGES).forEach(function(k){
@@ -165,13 +185,60 @@
   // поэтому все ссылки на соседние файлы делаем абсолютными от корня.
   frame.src = '/' + PAGE.file + '?_edit=1';
 
-  // ---- пароль редактора в localStorage ----
-  els.pass.value = localStorage.getItem('itwin_pass') || '';
-  function persist(){ localStorage.setItem('itwin_pass', els.pass.value.trim()); }
-  els.pass.addEventListener('change', persist);
-  els.gear.addEventListener('click', function(){ els.settings.classList.toggle('open'); });
-
   function setMsg(t, cls){ els.msg.textContent = t || ''; els.msg.className = 'msg ' + (cls||''); }
+
+  // ---- экран входа: пароль проверяется на сервере ДО того, как показать редактор ----
+  // list-uploads.php ничего не меняет — им же удобно тихо проверить сохранённый пароль
+  // при заходе, не отправляя реальных данных.
+  function verifyPassword(pass, cb){
+    fetch('/list-uploads.php', { method:'POST', body: JSON.stringify({pass: pass}) })
+      .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+      .then(function(res){ cb(!!(res.ok && res.j && res.j.ok)); })
+      .catch(function(){ cb(false); });
+  }
+  function showLoginGate(msg){
+    els.loginGate.classList.remove('hidden');
+    els.loginMsg.textContent = msg || '';
+    els.loginPass.value = '';
+    els.loginPass.focus();
+  }
+  function hideLoginGate(){ els.loginGate.classList.add('hidden'); }
+
+  els.loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var pass = els.loginPass.value.trim();
+    if(!pass){ els.loginMsg.textContent = 'Введите пароль'; return; }
+    els.loginMsg.textContent = '';
+    verifyPassword(pass, function(ok){
+      if(ok){
+        ADMIN_PASS = pass;
+        localStorage.setItem('itwin_pass', pass);
+        hideLoginGate();
+      } else {
+        els.loginMsg.textContent = 'Неверный пароль';
+        els.loginPass.value = ''; els.loginPass.focus();
+      }
+    });
+  });
+  els.logout.addEventListener('click', function(){
+    localStorage.removeItem('itwin_pass');
+    ADMIN_PASS = '';
+    showLoginGate();
+  });
+
+  var savedPass = localStorage.getItem('itwin_pass') || '';
+  if(savedPass){
+    // сохранённому паролю доверяем сразу — без экрана входа при каждом переходе
+    // между страницами (тут полный reload, см. goToPage). Проверяем в фоне молча;
+    // гейт покажется только если пароль вдруг оказался неверным (сменили на сервере).
+    ADMIN_PASS = savedPass;
+    hideLoginGate();
+    verifyPassword(savedPass, function(ok){
+      if(!ok){ ADMIN_PASS = ''; localStorage.removeItem('itwin_pass'); showLoginGate(); }
+    });
+  } else {
+    showLoginGate();
+  }
 
   // ---- панель «Переменные» — общие для всех страниц (главная + подстраницы) ----
   // href:true — служебная ссылка при своём телефоне, в сортировке уходит под основные поля колонки.
@@ -244,7 +311,6 @@
   }
   function toggleVarsPanel(){
     if(!varsPanel) buildVarsPanel();
-    els.settings.classList.remove('open');
     var open = varsPanel.classList.toggle('open');
     if(open && data){
       Array.prototype.forEach.call(varsPanel.querySelectorAll('input[data-vp]'), function(inp){
@@ -289,11 +355,10 @@
       var file = fileInput.files && fileInput.files[0];
       fileInput.value = '';
       if(!file) return;
-      if(!els.pass.value.trim()){ setMsg('Укажите пароль, чтобы загрузить лого', 'err'); els.settings.classList.add('open'); return; }
       if(file.size > 2 * 1024 * 1024){ status.textContent = 'Файл больше 2 МБ'; status.className = 'logo-status err'; return; }
       status.textContent = 'Загружаю…'; status.className = 'logo-status wait';
       var fd = new FormData();
-      fd.append('pass', els.pass.value.trim());
+      fd.append('pass', ADMIN_PASS);
       fd.append('file', file);
       fd.append('kind', 'logo');
       fetch('/upload-image.php', { method:'POST', body: fd })
@@ -591,65 +656,116 @@
   }
 
   // ---- набор готовых иконок (внутренняя разметка svg, viewBox 0 0 24 24) ----
+  // {t: название для поиска, s: разметка}. Сгруппировано по темам — рядом стоят
+  // похожие иконки (все камеры вместе, все серверные вместе и т.д.), а не вперемешку.
   var ICON_PRESETS = [
-    '<rect x="2" y="3" width="20" height="6" rx="1.5"></rect><rect x="2" y="13" width="20" height="6" rx="1.5"></rect><path d="M6 6h.01M6 16h.01"></path>',
-    '<path d="M18 10h1a4 4 0 010 8H6a4.5 4.5 0 01-.6-8.96A6 6 0 0117.7 8.2"></path>',
-    '<path d="M23 7l-7 5 7 5V7z"></path><rect height="14" rx="2" width="15" x="1" y="5"></rect>',
-    '<rect height="11" rx="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path>',
-    '<path d="M12 2v6M12 16v6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M16 12h6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"></path>',
-    '<path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"></path>',
-    '<rect height="14" rx="2" width="20" x="2" y="3"></rect><path d="M8 21h8M12 17v4"></path>',
-    '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>',
-    '<path d="M5 12.5a10 10 0 0114 0M8.5 16a5 5 0 017 0M2 9a15 15 0 0120 0"></path><circle cx="12" cy="19.5" r="1"></circle>',
-    '<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path>',
-    '<path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path>',
-    '<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path>',
-    '<rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M22 6l-10 7L2 6"></path>',
-    '<path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle>',
-    '<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>',
-    '<rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"></path>',
-    '<path d="M9 12l2 2 4-4"></path><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>',
-    '<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path>',
-    // ---- ниже — иконки, которых не было в исходном наборе, но которые уже используются
-    // в кейсах на сайте (cases.items[*].icon в content.json) — добавлены, чтобы пикер их узнавал
-    '<circle cx="12" cy="5" r="2.5"></circle><circle cx="5" cy="19" r="2.5"></circle><circle cx="19" cy="19" r="2.5"></circle><path d="M12 7.5v3.8M11.2 11.8L6.4 16.4M12.8 11.8l4.8 4.6"></path>',
-    '<rect height="14" rx="2.5" width="20" x="2" y="5"></rect><path d="M2 10h20M6 14.5h4"></path><circle cx="16.5" cy="14.5" r="1.6"></circle>',
-    '<path d="M23 7.5l-6.5 4.5 6.5 4.5v-9z"></path><rect height="13" rx="2.5" width="15" x="1" y="5.5"></rect><path d="M4.5 15h5"></path>',
-    '<rect height="8" rx="2.2" width="19" x="2.5" y="2.5"></rect><rect height="8" rx="2.2" width="19" x="2.5" y="13.5"></rect><path d="M6.5 6.5h.01M6.5 17.5h.01M10.5 6.5h4M10.5 17.5h4"></path>',
-    '<rect height="10" rx="1.8" width="13" x="1" y="6"></rect><path d="M14 9.5h3.6L21 13v3h-7z"></path><circle cx="6" cy="18.6" r="1.8"></circle><circle cx="17.6" cy="18.6" r="1.8"></circle>',
-    '<path d="M3 8.5V5.5A2.5 2.5 0 015.5 3h3M15.5 3h3A2.5 2.5 0 0121 5.5v3M21 15.5v3a2.5 2.5 0 01-2.5 2.5h-3M8.5 21h-3A2.5 2.5 0 013 18.5v-3"></path><circle cx="12" cy="11" r="2.2"></circle><path d="M8.6 16.2c.9-1.4 2-2.1 3.4-2.1s2.5.7 3.4 2.1"></path>'
+    // Облако / серверы
+    {t:'Облако',                svg:'<path d="M18 10h1a4 4 0 010 8H6a4.5 4.5 0 01-.6-8.96A6 6 0 0117.7 8.2"></path>'},
+    {t:'База данных',           svg:'<ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path>'},
+    {t:'Сервер',                svg:'<rect height="8" rx="2.2" width="19" x="2.5" y="2.5"></rect><rect height="8" rx="2.2" width="19" x="2.5" y="13.5"></rect><path d="M6.5 6.5h.01M6.5 17.5h.01M10.5 6.5h4M10.5 17.5h4"></path>'},
+    {t:'Сервер (стойка)',       svg:'<rect x="2" y="2" width="20" height="8" rx="2"></rect><rect x="2" y="14" width="20" height="8" rx="2"></rect><path d="M6 6h.01M6 18h.01"></path>'},
+    {t:'Сервер (проверено)',    svg:'<path d="M22 8.5V5.5A2.5 2.5 0 0019.5 3h-15A2.5 2.5 0 002 5.5v13A2.5 2.5 0 004.5 21h6"></path><path d="M2 9h20"></path><path d="M16 16l3 3 5-5"></path>'},
+    // Видео / камеры
+    {t:'Видеокамера',           svg:'<path d="M23 7l-7 5 7 5V7z"></path><rect height="14" rx="2" width="15" x="1" y="5"></rect>'},
+    {t:'Видеокамера (компакт)', svg:'<path d="M23 7.5l-6.5 4.5 6.5 4.5v-9z"></path><rect height="13" rx="2.5" width="15" x="1" y="5.5"></rect><path d="M4.5 15h5"></path>'},
+    {t:'Камера наблюдения',     svg:'<rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle>'},
+    {t:'Видео (плёнка)',        svg:'<rect x="1" y="5" width="15" height="13" rx="2.5"></rect><path d="M23 8l-6.5 4.5L23 17V8z"></path>'},
+    // Безопасность / СКУД
+    {t:'Замок',                 svg:'<rect height="11" rx="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path>'},
+    {t:'Щит',                   svg:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>'},
+    {t:'Щит (проверено)',       svg:'<path d="M9 12l2 2 4-4"></path><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>'},
+    {t:'Карта доступа',         svg:'<rect height="14" rx="2.5" width="20" x="2" y="5"></rect><path d="M2 10h20M6 14.5h4"></path><circle cx="16.5" cy="14.5" r="1.6"></circle>'},
+    {t:'Скан / распознавание',  svg:'<path d="M3 8.5V5.5A2.5 2.5 0 015.5 3h3M15.5 3h3A2.5 2.5 0 0121 5.5v3M21 15.5v3a2.5 2.5 0 01-2.5 2.5h-3M8.5 21h-3A2.5 2.5 0 013 18.5v-3"></path><circle cx="12" cy="11" r="2.2"></circle><path d="M8.6 16.2c.9-1.4 2-2.1 3.4-2.1s2.5.7 3.4 2.1"></path>'},
+    {t:'Охрана',                svg:'<circle cx="9" cy="7" r="4"></circle><path d="M3 21v-2a6 6 0 0112 0v2"></path><rect x="15" y="10" width="7" height="9" rx="1"></rect><path d="M17 14h3"></path>'},
+    // Компьютеры / техника
+    {t:'Монитор',                svg:'<rect height="14" rx="2" width="20" x="2" y="3"></rect><path d="M8 21h8M12 17v4"></path>'},
+    {t:'Монитор (проверено)',    svg:'<rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8M12 17v4"></path><path d="M9 12l2 2 4-4"></path>'},
+    {t:'Терминал / карта',       svg:'<rect x="2" y="5" width="19" height="14" rx="2.5"></rect><path d="M6 15h5"></path>'},
+    {t:'Принтер',                svg:'<path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8" rx="1"></rect>'},
+    // Сети
+    {t:'Wi-Fi',                 svg:'<path d="M5 12.5a10 10 0 0114 0M8.5 16a5 5 0 017 0M2 9a15 15 0 0120 0"></path><circle cx="12" cy="19.5" r="1"></circle>'},
+    {t:'Сеть (узлы)',           svg:'<circle cx="12" cy="5" r="2.5"></circle><circle cx="5" cy="19" r="2.5"></circle><circle cx="19" cy="19" r="2.5"></circle><path d="M12 7.5v3.8M11.2 11.8L6.4 16.4M12.8 11.8l4.8 4.6"></path>'},
+    // Контакты
+    {t:'Телефон',               svg:'<path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"></path>'},
+    {t:'Почта',                 svg:'<rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M22 6l-10 7L2 6"></path>'},
+    // Люди
+    {t:'Пользователи',          svg:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path>'},
+    // Гео / здания
+    {t:'Локация',               svg:'<path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle>'},
+    {t:'Дом',                   svg:'<path d="M3 9l9-6 9 6v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><path d="M9 22V12h6v10"></path>'},
+    {t:'Дом (крыша)',           svg:'<path d="M3 12l9-9 9 9"></path><path d="M5 10v10h14V10"></path>'},
+    {t:'Здание',                svg:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"></path>'},
+    // Время
+    {t:'Часы',                  svg:'<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>'},
+    {t:'Часы (циферблат)',      svg:'<path d="M12 20a8 8 0 100-16 8 8 0 000 16z"></path><path d="M12 8v4l3 2"></path>'},
+    // Логистика
+    {t:'Грузовик',              svg:'<rect height="10" rx="1.8" width="13" x="1" y="6"></rect><path d="M14 9.5h3.6L21 13v3h-7z"></path><circle cx="6" cy="18.6" r="1.8"></circle><circle cx="17.6" cy="18.6" r="1.8"></circle>'},
+    // Аналитика / документы
+    {t:'График',                svg:'<path d="M3 3v18h18"></path><path d="M7 14l4-4 3 3 5-6"></path>'},
+    {t:'Индикатор',             svg:'<rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"></path>'},
+    {t:'Документ',              svg:'<rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M6 8h12M6 12h8"></path>'},
+    {t:'Документ (проверено)',  svg:'<path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>'},
+    {t:'Обновление / проверка', svg:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="M22 4 12 14.01l-3-3"></path>'},
+    // Прочее / интерфейс
+    {t:'Меню',                  svg:'<rect x="2" y="3" width="20" height="6" rx="1.5"></rect><rect x="2" y="13" width="20" height="6" rx="1.5"></rect><path d="M6 6h.01M6 16h.01"></path>'},
+    {t:'Настройки',             svg:'<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path>'},
+    {t:'Приложения',            svg:'<rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect>'},
+    {t:'Сигнал / настройка',    svg:'<path d="M12 2v6M12 16v6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M16 12h6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"></path>'},
+    {t:'Цель',                  svg:'<circle cx="12" cy="12" r="9"></circle><path d="M12 3v18M3 12h18"></path>'}
   ];
+  // сравнение «эта ли иконка сейчас выбрана» через реальную сериализацию браузера, а не
+  // сырое ===: source-файлы хранят самозакрывающиеся <path .../>, а DOM innerHTML отдаёт
+  // их уже как <path ...></path> — без этого текущая иконка никогда не подсвечивалась
+  function iconNormKey(svgInner){
+    var tmp = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    try { tmp.innerHTML = svgInner || ''; } catch(e) { return (svgInner || '').replace(/\s+/g, ''); }
+    return tmp.innerHTML.replace(/\s+/g, '');
+  }
   function openIconPicker(cur, cb){
+    var curKey = iconNormKey(cur);
     var ov = document.createElement('div');
     ov.style.cssText = 'position:fixed;inset:0;z-index:50;background:rgba(6,8,12,.72);'+
       'display:flex;align-items:center;justify-content:center;padding:20px';
     var box = document.createElement('div');
     box.style.cssText = 'background:var(--panel);border:1px solid var(--line);border-radius:16px;'+
-      'padding:20px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5)';
-    box.innerHTML = '<h2 style="margin:0 0 4px;font-size:15px">Выберите иконку</h2>'+
-      '<p style="margin:0 0 14px;font-size:12px;color:var(--muted)">Клик по иконке — применить к карточке.</p>';
+      'padding:20px;max-width:520px;width:100%;max-height:70vh;display:flex;flex-direction:column;'+
+      'box-shadow:0 20px 60px rgba(0,0,0,.5)';
+    box.innerHTML = '<h2 style="margin:0 0 4px;font-size:15px;flex-shrink:0">Выберите иконку</h2>'+
+      '<p style="margin:0 0 10px;font-size:12px;color:var(--muted);flex-shrink:0">Клик по иконке — применить к карточке.</p>';
+    var search = document.createElement('input');
+    search.type = 'text'; search.placeholder = 'Поиск: камера, сервер, дом…';
+    search.style.cssText = 'flex-shrink:0;margin-bottom:10px;width:100%;background:var(--panel2);'+
+      'border:1px solid var(--line);border-radius:8px;color:var(--text);padding:8px 10px;font-size:13px';
+    box.appendChild(search);
     var grid = document.createElement('div');
-    grid.style.cssText = 'display:grid;grid-template-columns:repeat(6,1fr);gap:10px';
-    ICON_PRESETS.forEach(function(mk){
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(6,1fr);gap:6px;overflow-y:auto;padding-right:4px';
+    var buttons = ICON_PRESETS.map(function(ic){
       var b = document.createElement('button');
       b.type = 'button';
+      b.title = ic.t;
       b.style.cssText = 'aspect-ratio:1;display:flex;align-items:center;justify-content:center;'+
-        'background:var(--panel2);border:1px solid '+(mk===cur?'var(--accent)':'var(--line)')+';'+
-        'border-radius:12px;cursor:pointer;padding:10px';
-      b.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#e7ebf0" '+
-        'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+mk+'</svg>';
-      b.addEventListener('click', function(){ cb(mk); if(ov.parentNode) document.body.removeChild(ov); });
+        'background:var(--panel2);border:1px solid '+(iconNormKey(ic.svg)===curKey?'var(--accent)':'var(--line)')+';'+
+        'border-radius:10px;cursor:pointer;padding:5px';
+      b.innerHTML = '<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#e7ebf0" '+
+        'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+ic.svg+'</svg>';
+      b.addEventListener('click', function(){ cb(ic.svg); if(ov.parentNode) document.body.removeChild(ov); });
       grid.appendChild(b);
+      return {btn: b, name: ic.t.toLowerCase()};
     });
     box.appendChild(grid);
+    search.addEventListener('input', function(){
+      var q = search.value.trim().toLowerCase();
+      buttons.forEach(function(o){ o.btn.style.display = (!q || o.name.indexOf(q) > -1) ? '' : 'none'; });
+    });
     var cancel = document.createElement('button');
     cancel.type = 'button'; cancel.className = 'ghost'; cancel.textContent = 'Отмена';
-    cancel.style.marginTop = '16px';
+    cancel.style.cssText = 'margin-top:16px;flex-shrink:0';
     cancel.addEventListener('click', function(){ if(ov.parentNode) document.body.removeChild(ov); });
     box.appendChild(cancel);
     ov.appendChild(box);
     ov.addEventListener('click', function(e){ if(e.target === ov) document.body.removeChild(ov); });
     document.body.appendChild(ov);
+    search.focus();
   }
 
   // ---- медиатека: выбор уже загруженной картинки или загрузка новой (аватары отзывов и т.п.) ----
@@ -682,7 +798,7 @@
     box.appendChild(uploadRow);
 
     var grid = document.createElement('div');
-    grid.style.cssText = 'display:grid;grid-template-columns:repeat(5,1fr);gap:10px;min-height:44px';
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(10,1fr);gap:6px;min-height:44px';
     grid.textContent = 'Загрузка списка…';
     grid.style.color = 'var(--muted)'; grid.style.fontSize = '12px';
     box.appendChild(grid);
@@ -730,27 +846,22 @@
       });
     }
 
-    if(!els.pass.value.trim()){
-      grid.textContent = 'Укажите пароль («Пароль…»), чтобы видеть список загруженных картинок';
-    } else {
-      fetch('/list-uploads.php', { method:'POST', body: JSON.stringify({pass: els.pass.value.trim()}) })
-        .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
-        .then(function(res){
-          if(!res.ok || !res.j.ok) throw new Error((res.j && res.j.error) || 'ошибка');
-          renderGrid(res.j.items || []);
-        })
-        .catch(function(e){ grid.textContent = 'Не удалось загрузить список: ' + e.message; });
-    }
+    fetch('/list-uploads.php', { method:'POST', body: JSON.stringify({pass: ADMIN_PASS}) })
+      .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+      .then(function(res){
+        if(!res.ok || !res.j.ok) throw new Error((res.j && res.j.error) || 'ошибка');
+        renderGrid(res.j.items || []);
+      })
+      .catch(function(e){ grid.textContent = 'Не удалось загрузить список: ' + e.message; });
 
     fileInput.addEventListener('change', function(){
       var file = fileInput.files && fileInput.files[0];
       fileInput.value = '';
       if(!file) return;
-      if(!els.pass.value.trim()){ status.textContent = 'Укажите пароль'; return; }
       if(file.size > 2 * 1024 * 1024){ status.textContent = 'Файл больше 2 МБ'; return; }
       status.textContent = 'Загружаю…';
       var fd = new FormData();
-      fd.append('pass', els.pass.value.trim());
+      fd.append('pass', ADMIN_PASS);
       fd.append('file', file);
       fd.append('kind', 'gallery');
       fetch('/upload-image.php', { method:'POST', body: fd })
@@ -897,8 +1008,9 @@
     'main .eyebrow', 'main .step-num',
     'main .case-tags span',
     'main .price-badge', 'main .cap', 'main .price-val', 'main .price-per',
+    'main .rev-name',
     'main .contact-list .ci b', 'main .contact-list .ci span',
-    '.foot-about p',
+    '.foot-about p', '.foot-bottom span',
     // текст на кнопках — CTA-ссылки и «Подробнее» у кейсов (не только main:
     // всплывающие окна физически лежат вне <main>, рядом с footer)
     'main .btn', '.case-more',
@@ -921,7 +1033,8 @@
     {container: 'main .price',     item: '.price-card'},
     {container: 'main .spheres',   item: '.sphere'},
     {container: 'main .process',   item: '.step', numSel: '.step-num'},
-    {container: 'main .choose-grid', item: '.ci', icon: '.ci-icon'}
+    {container: 'main .choose-grid', item: '.ci', icon: '.ci-icon'},
+    {container: 'main .reviews',   item: '.rev', img: '.rev-logo img'}
   ];
 
   function enhanceRaw(){
@@ -996,6 +1109,19 @@
       });
     });
   }
+  function wireRawImg(img){
+    if(img.__rawImg) return;
+    img.__rawImg = true;
+    img.title = 'Клик — выбрать/загрузить картинку';
+    img.style.cursor = 'pointer';
+    img.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      openMediaPicker(img.getAttribute('src') || '', function(v){
+        img.setAttribute('src', v);
+        markDirty();
+      });
+    });
+  }
   function enhanceRawBlocks(){
     RAW_BLOCK_SELECTORS.forEach(function(cfg){
       Array.prototype.forEach.call(idoc.querySelectorAll(cfg.container), function(cont){
@@ -1003,6 +1129,9 @@
         cont.__blockCfg = cfg;
         if(cfg.icon){
           Array.prototype.forEach.call(cont.querySelectorAll(':scope > ' + cfg.item + ' ' + cfg.icon), wireRawIcon);
+        }
+        if(cfg.img){
+          Array.prototype.forEach.call(cont.querySelectorAll(':scope > ' + cfg.item + ' ' + cfg.img), wireRawImg);
         }
         if(cont.querySelector(':scope > .__ed-addwrap')) return; // уже подключено
         var wrap = idoc.createElement('div');
@@ -1023,6 +1152,10 @@
             var iconBox = clone.querySelector(cfg.icon);
             var svg = iconBox && iconBox.querySelector('svg');
             if(svg) svg.innerHTML = '';
+          }
+          if(cfg.img){
+            var clonedImg = clone.querySelector(cfg.img);
+            if(clonedImg) clonedImg.removeAttribute('src');
           }
           cont.insertBefore(clone, wrap);
           renumberIfNeeded(cont);
@@ -1188,9 +1321,8 @@
   }
 
   els.save.addEventListener('click', function(){
-    if(!els.pass.value.trim()){ setMsg('Укажите пароль', 'err'); els.settings.classList.add('open'); els.pass.focus(); return; }
-    var pass = els.pass.value.trim();
-    persist();
+    if(!ADMIN_PASS){ setMsg('Сессия истекла — войдите заново', 'err'); showLoginGate(); return; }
+    var pass = ADMIN_PASS;
     els.save.disabled = true; setMsg('Сохраняю…', 'wait');
 
     var jobs = [];

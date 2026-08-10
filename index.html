@@ -300,6 +300,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border:0;border-radiu
 .post p{font-size:14px;color:var(--muted)}
 .post .more{margin-top:16px;font-size:14px;font-weight:600;color:var(--accent);display:inline-flex;align-items:center;gap:7px;transition:.25s}
 .post:hover .more{gap:12px}
+.post-disabled{cursor:default}
+.post-disabled:hover{transform:none;border-color:var(--line);background:var(--surface)}
+.post-disabled .more{color:var(--muted)}
+.post-disabled:hover .more{gap:7px}
 
 /* ---------- contacts ---------- */
 .contacts{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
@@ -374,6 +378,19 @@ form.lead-form > p{font-size:14.5px;color:var(--muted);margin-bottom:24px}
 .lead-modal-success-icon{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff}
 .lead-modal-success p{font-size:19px;font-weight:700;color:var(--text);margin:0}
 .lead-modal-success span{color:var(--muted);font-size:14px}
+
+/* ---------- юридические документы (политика/согласие) во всплывающем окне ---------- */
+.legal-modal-overlay{position:fixed;inset:0;background:rgba(3,7,18,.72);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+.legal-modal-overlay.show{display:flex}
+.legal-modal{position:relative;max-width:680px;width:100%;max-height:86vh;overflow:auto;background:var(--bg-2);border:1px solid var(--line);border-radius:20px;padding:32px 28px;box-shadow:0 30px 80px rgba(0,0,0,.55);animation:modalIn .3s ease}
+.legal-modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;line-height:1}
+.legal-modal-close:hover{color:var(--text);border-color:var(--accent)}
+.legal-modal-body h3{font-size:19px;margin-bottom:14px;padding-right:30px}
+.legal-modal-body h4{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin:20px 0 8px}
+.legal-modal-body h4:first-of-type{margin-top:0}
+.legal-modal-body p{font-size:14px;color:#cbd5e1;line-height:1.6;margin-bottom:10px}
+.legal-link{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.legal-link:hover{color:var(--accent)}
 
 /* ---------- cta band ---------- */
 .cta-band{
@@ -750,10 +767,17 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     </div>
     <div class="foot-bottom">
       <span data-cms="footer.copyright">© 2026 IT-Stream. Концепт-редизайн главной страницы.</span>
-      <span data-cms="footer.legal">Политика конфиденциальности · Согласие на обработку ПДн</span>
+      <span><button type="button" class="legal-link" data-legal="privacy">Политика конфиденциальности</button> · <button type="button" class="legal-link" data-legal="consent">Согласие на обработку ПДн</button></span>
     </div>
   </div>
 </footer>
+
+<div class="legal-modal-overlay" id="legalModalOverlay">
+  <div class="legal-modal">
+    <button type="button" class="legal-modal-close" id="legalModalClose" aria-label="Закрыть">×</button>
+    <div class="legal-modal-body" id="legalModalBody">Загрузка…</div>
+  </div>
+</div>
 
 <div class="fab">
   <a href="tel:88003012660" aria-label="Позвонить">
@@ -911,12 +935,13 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
       '</div>';
     },
     'blog.posts': function(it, pth){
-      return '<a href="#contacts" class="post reveal" data-cms-item="'+pth+'">'+
+      // пока нет страниц отдельных статей — карточка не кликабельна (не <a>, без перехода)
+      return '<div class="post post-disabled reveal" data-cms-item="'+pth+'">'+
         '<span class="date" data-cms="'+pth+'.tag">'+esc(it.tag)+'</span>'+
         '<h3 data-cms="'+pth+'.title">'+esc(it.title)+'</h3>'+
         '<p data-cms="'+pth+'.desc">'+esc(it.desc)+'</p>'+
         '<span class="more">Читать →</span>'+
-      '</a>';
+      '</div>';
     },
     'footer.services': function(it, pth){
       return '<li data-cms-item="'+pth+'"><a href="'+escAttr(it.href)+'" data-cms-href="'+pth+'.href" data-cms="'+pth+'.label">'+esc(it.label)+'</a></li>';
@@ -1204,6 +1229,30 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     new MutationObserver(function(){ build(); sync(); }).observe(select, {childList:true, characterData:true, subtree:true});
   }
   document.querySelectorAll('.field select').forEach(enhanceSelect);
+})();
+
+// ---------- политика конфиденциальности / согласие на ПДн — во всплывающем окне ----------
+(function(){
+  var overlay = document.getElementById('legalModalOverlay');
+  var body = document.getElementById('legalModalBody');
+  var closeBtn = document.getElementById('legalModalClose');
+  if(!overlay) return;
+  var cache = {};
+  function openLegal(kind){
+    var file = kind === 'consent' ? '/legal-consent.html' : '/legal-privacy.html';
+    overlay.classList.add('show');
+    if(cache[kind]){ body.innerHTML = cache[kind]; return; }
+    body.innerHTML = 'Загрузка…';
+    fetch(file).then(function(r){ return r.text(); }).then(function(t){ cache[kind] = t; body.innerHTML = t; })
+      .catch(function(){ body.innerHTML = 'Не удалось загрузить документ.'; });
+  }
+  function closeLegal(){ overlay.classList.remove('show'); }
+  document.querySelectorAll('.legal-link').forEach(function(b){
+    b.addEventListener('click', function(e){ e.preventDefault(); openLegal(b.getAttribute('data-legal')); });
+  });
+  closeBtn.addEventListener('click', closeLegal);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) closeLegal(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeLegal(); });
 })();
 </script>
 </body>

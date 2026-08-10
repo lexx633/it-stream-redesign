@@ -1,6 +1,6 @@
 <?php
 // Приём заявок из всплывающих форм (попапов) сайта it-win.ru.
-// POST { name, phone, comment, page, url } -> письмо на info@it-win.ru + лог-бэкап вне веб-корня.
+// POST { name, phone, comment, page, url } -> письмо на info@it-stream.ru + лог-бэкап вне веб-корня.
 // Обязательное поле — только телефон (см. валидацию на клиенте и здесь же на сервере).
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
@@ -43,7 +43,7 @@ if (is_dir($LOG_DIR) && is_writable($LOG_DIR)) {
   @file_put_contents($LOG_DIR . '/leads.log', $logLine, FILE_APPEND | LOCK_EX);
 }
 
-$to = 'info@it-win.ru';
+$to = 'info@it-stream.ru, lexx633@ya.ru';
 $subject = '=?UTF-8?B?' . base64_encode('Заявка с сайта it-win.ru' . ($page !== '' ? " — $page" : '')) . '?=';
 
 $body  = "Имя: " . ($name !== '' ? $name : '-') . "\n";
@@ -65,8 +65,8 @@ if ($company !== '' || $teamSize !== '' || $task !== '') {
 }
 $body .= "Дата: " . date('Y-m-d H:i:s') . "\n";
 
-$headers  = "From: no-reply@it-win.ru\r\n";
-$headers .= "Reply-To: no-reply@it-win.ru\r\n";
+$headers  = "From: no-reply@it-stream.ru\r\n";
+$headers .= "Reply-To: no-reply@it-stream.ru\r\n";
 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
 @mail($to, $subject, $body, $headers);
