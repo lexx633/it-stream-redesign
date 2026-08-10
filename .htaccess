@@ -5,6 +5,20 @@
 RewriteEngine On
 RewriteBase /
 
+# Весь трафик — только по HTTPS (сертификат на домене уже есть).
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Демо-витрины клиентских проектов в подкаталогах отдаются как есть:
+# правила чистых адресов ниже их не трогают (иначе слэш снимается и
+# mod_dir зацикливает редирект на каталоге).
+RewriteRule ^profclinic-arbat(/|$) - [L]
+
+# Тот же капкан для .well-known (ACME/security.txt): реальный каталог,
+# правило ниже снимает слэш, сервер тут же добавляет его обратно — петля.
+RewriteRule ^.well-known(/|$) - [L]
+
 # Переезд страницы: старые адреса → новый /it-outsourcing (301)
 RewriteRule ^telecom/?$ /it-outsourcing [R=301,L,NC]
 RewriteRule ^it-autsorsing/?$ /it-outsourcing [R=301,L,NC]
