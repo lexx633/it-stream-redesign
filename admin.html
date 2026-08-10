@@ -56,7 +56,11 @@
     border-left:0;border-right:0;border-bottom-left-radius:0;border-bottom-right-radius:0;
     max-height:calc(100vh - var(--bar-h));overflow-y:auto;
     transform:translateY(-110%)}
-  .vars-panel .vars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0 28px}
+  .vars-panel .vars-grid{display:flex;flex-wrap:wrap;align-items:flex-start;gap:0 40px}
+  .vars-panel .vars-group{flex:1 1 240px;max-width:300px;padding-bottom:8px}
+  .vars-panel .vars-group h3{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);
+    margin:18px 0 4px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .vars-panel .vars-group:first-child h3{margin-top:0}
   .vars-panel .vars-grid label{margin:12px 0 5px}
 </style>
 </head>
@@ -157,31 +161,45 @@
   function setMsg(t, cls){ els.msg.textContent = t || ''; els.msg.className = 'msg ' + (cls||''); }
 
   // ---- панель «Переменные» — общие для всех страниц (главная + подстраницы) ----
-  var VARS = [
-    {p:'vars.company',               t:'Название компании'},
-    {p:'vars.logo_mark',             t:'Символ логотипа'},
-    {p:'contacts.phone_free',        t:'Телефон (бесплатный)'},
-    {p:'contacts.phone_free_href',   t:'  ↳ ссылка (tel:)'},
-    {p:'contacts.phone_support',     t:'Телефон (поддержка)'},
-    {p:'contacts.phone_support_href',t:'  ↳ ссылка (tel:)'},
-    {p:'contacts.phone_sales',       t:'Телефон (продажи)'},
-    {p:'contacts.phone_sales_href',  t:'  ↳ ссылка (tel:)'},
-    {p:'contacts.email',             t:'E-mail'},
-    {p:'contacts.email_href',        t:'  ↳ ссылка (mailto:)'},
-    {p:'vars.address1',              t:'Адрес'},
-    {p:'vars.office_label',          t:'Подпись адреса'},
-    {p:'form.ph_name',               t:'Плейсхолдер поля «Имя» (все формы)'},
-    {p:'form.ph_phone',              t:'Плейсхолдер поля «Телефон» (все формы)'},
-    {p:'form.ph_email',              t:'Плейсхолдер поля «E-mail» (все формы)'},
-    {p:'form.ph_service',            t:'Текст «Интересует…» в списке услуг (все формы)'}
+  var VAR_GROUPS = [
+    { g:'Название и бренд', items:[
+      {p:'vars.company',               t:'Название компании'},
+      {p:'vars.logo_mark',             t:'Символ логотипа'}
+    ]},
+    { g:'Контакты', items:[
+      {p:'contacts.phone_free',        t:'Телефон (бесплатный)'},
+      {p:'contacts.phone_free_href',   t:'  ↳ ссылка (tel:)'},
+      {p:'contacts.phone_support',     t:'Телефон (поддержка)'},
+      {p:'contacts.phone_support_href',t:'  ↳ ссылка (tel:)'},
+      {p:'contacts.phone_sales',       t:'Телефон (продажи)'},
+      {p:'contacts.phone_sales_href',  t:'  ↳ ссылка (tel:)'},
+      {p:'contacts.email',             t:'E-mail'},
+      {p:'contacts.email_href',        t:'  ↳ ссылка (mailto:)'}
+    ]},
+    { g:'Адрес', items:[
+      {p:'vars.address1',              t:'Адрес'},
+      {p:'vars.office_label',          t:'Подпись адреса'}
+    ]},
+    { g:'Плейсхолдеры форм', items:[
+      {p:'form.ph_name',               t:'Поле «Имя» (все формы)'},
+      {p:'form.ph_phone',              t:'Поле «Телефон» (все формы)'},
+      {p:'form.ph_email',              t:'Поле «E-mail» (все формы)'},
+      {p:'form.ph_service',            t:'Текст «Интересует…» в списке услуг (все формы)'}
+    ]}
   ];
+  // плоский список — используется остальным кодом (обход всех полей при открытии/сохранении)
+  var VARS = VAR_GROUPS.reduce(function(acc, gr){ return acc.concat(gr.items); }, []);
   var varsPanel = null;
   function buildVarsPanel(){
     varsPanel = document.createElement('div');
     varsPanel.className = 'settings vars-panel';
     varsPanel.id = 'varsPanel';
     var h = '<h2>Переменные — правим в одном месте</h2><div class="vars-grid">';
-    VARS.forEach(function(v){ h += '<div class="field"><label>'+v.t+'</label><input data-vp="'+v.p+'" type="text"></div>'; });
+    VAR_GROUPS.forEach(function(gr){
+      h += '<div class="vars-group"><h3>'+gr.g+'</h3>';
+      gr.items.forEach(function(v){ h += '<div class="field"><label>'+v.t+'</label><input data-vp="'+v.p+'" type="text"></div>'; });
+      h += '</div>';
+    });
     h += '</div>';
     h += '<div class="note">Эти значения повторяются по всей странице (телефоны в шапке, контактах '+
          'и подвале; название — в логотипе и подвале). Правка здесь меняет их сразу везде.</div>';
