@@ -369,29 +369,65 @@
     enhance();
   }
 
-  // всплывающая кнопка × над блоком (только JSON-режим — есть списковая модель)
+  // всплывающая группа кнопок ◀ × ▶ над блоком — работает и с JSON-списками (главная),
+  // и с raw-блоками на статичных страницах (data-raw-block-list, см. enhanceRawBlocks)
   function ensureCtl(){
     if(ctl) return;
-    ctl = idoc.createElement('button');
-    ctl.className = '__ed __ed-del';
-    ctl.type = 'button';
-    ctl.textContent = '×';
-    ctl.title = 'Удалить блок';
-    ctl.style.cssText = 'position:absolute;z-index:9999;display:none;width:26px;height:26px;'+
-      'line-height:1;font-size:18px;font-weight:700;border:0;border-radius:50%;cursor:pointer;'+
-      'background:#f87171;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35);padding:0';
+    ctl = idoc.createElement('div');
+    ctl.className = '__ed __ed-ctl';
     ctl.contentEditable = 'false';
-    ctl.addEventListener('mousedown', function(e){ e.preventDefault(); });
-    ctl.addEventListener('click', function(e){
+    ctl.style.cssText = 'position:absolute;z-index:9999;display:none;gap:4px';
+    function mkBtn(txt, title, cls){
+      var b = idoc.createElement('button');
+      b.type = 'button'; b.className = '__ed ' + cls; b.textContent = txt; b.title = title;
+      b.style.cssText = 'width:26px;height:26px;line-height:1;font-size:15px;font-weight:700;'+
+        'border:0;border-radius:50%;cursor:pointer;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35);padding:0';
+      b.addEventListener('mousedown', function(e){ e.preventDefault(); });
+      return b;
+    }
+    var left = mkBtn('◀', 'Переместить влево', '__ed-move');
+    var del  = mkBtn('×', 'Удалить блок', '__ed-del');
+    var right= mkBtn('▶', 'Переместить вправо', '__ed-move');
+    left.style.background = '#5b8cff'; right.style.background = '#5b8cff'; del.style.background = '#f87171';
+    del.style.fontSize = '18px';
+    function moveTarget(dir){
+      if(!ctlTarget) return;
+      var cont = ctlTarget.parentElement;
+      if(cont.hasAttribute('data-raw-block-list')){
+        var sib = siblingBlock(ctlTarget, dir);
+        if(sib){ if(dir < 0) cont.insertBefore(ctlTarget, sib); else cont.insertBefore(sib, ctlTarget); markDirty(); }
+        hideCtl();
+        return;
+      }
+      var listPath = cont.getAttribute('data-cms-list');
+      var idx = itemIndex(ctlTarget);
+      var arr = getVal(listPath);
+      var j = idx + dir;
+      if(Array.isArray(arr) && idx > -1 && j >= 0 && j < arr.length){
+        var tmp = arr[idx]; arr[idx] = arr[j]; arr[j] = tmp;
+        reRender();
+      }
+      hideCtl();
+    }
+    left.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); moveTarget(-1); });
+    right.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); moveTarget(1); });
+    del.addEventListener('click', function(e){
       e.preventDefault(); e.stopPropagation();
       if(!ctlTarget) return;
       var cont = ctlTarget.parentElement;
+      if(cont.hasAttribute('data-raw-block-list')){
+        if(iwin.confirm('Удалить этот блок?')){ ctlTarget.remove(); markDirty(); }
+        hideCtl();
+        return;
+      }
       var listPath = cont.getAttribute('data-cms-list');
       var idx = itemIndex(ctlTarget);
       var arr = getVal(listPath);
       if(Array.isArray(arr) && idx > -1){ arr.splice(idx, 1); reRender(); }
       hideCtl();
     });
+    ctl.appendChild(left); ctl.appendChild(del); ctl.appendChild(right);
+    ctl.style.display = 'none';
     idoc.body.appendChild(ctl);
   }
   function itemIndex(item){
@@ -399,13 +435,40 @@
       function(c){ return !c.classList.contains('__ed'); });
     return kids.indexOf(item);
   }
+  // ближайший «настоящий» (не служебный __ed) сосед блока в нужную сторону
+  function siblingBlock(item, dir){
+    var sib = dir < 0 ? item.previousElementSibling : item.nextElementSibling;
+    while(sib && sib.classList.contains('__ed')) sib = dir < 0 ? sib.previousElementSibling : sib.nextElementSibling;
+    return sib;
+  }
   function showCtlFor(item){
     ensureCtl();
     ctlTarget = item;
+    var cont = item.parentElement;
+    var isRaw = cont.hasAttribute('data-raw-block-list');
+    var canLeft, canRight;
+    if(isRaw){
+      canLeft = !!siblingBlock(item, -1);
+      canRight = !!siblingBlock(item, 1);
+    } else {
+      var listPath = cont.getAttribute('data-cms-list');
+      var arr = getVal(listPath);
+      var idx = itemIndex(item);
+      canLeft = idx > 0;
+      canRight = Array.isArray(arr) && idx < arr.length - 1;
+    }
+    var kids = ctl.children; // [left, del, right]
+    kids[0].disabled = !canLeft;
+    kids[0].style.opacity = kids[0].disabled ? '.35' : '1';
+    kids[0].style.cursor = kids[0].disabled ? 'default' : 'pointer';
+    kids[2].disabled = !canRight;
+    kids[2].style.opacity = kids[2].disabled ? '.35' : '1';
+    kids[2].style.cursor = kids[2].disabled ? 'default' : 'pointer';
     var r = item.getBoundingClientRect();
-    ctl.style.left = (iwin.scrollX + r.right - 13) + 'px';
+    ctl.style.display = 'flex';
+    var w = ctl.getBoundingClientRect().width;
+    ctl.style.left = (iwin.scrollX + r.right - w) + 'px';
     ctl.style.top  = (iwin.scrollY + r.top  - 13) + 'px';
-    ctl.style.display = 'block';
   }
   function hideCtl(){ if(ctl){ ctl.style.display = 'none'; } ctlTarget = null; }
 
@@ -413,7 +476,8 @@
     var el = node;
     while(el && el !== idoc.body){
       var p = el.parentElement;
-      if(p && p.getAttribute && p.getAttribute('data-cms-list') != null && !el.classList.contains('__ed'))
+      if(p && p.getAttribute && !el.classList.contains('__ed') &&
+         (p.getAttribute('data-cms-list') != null || p.hasAttribute('data-raw-block-list')))
         return el;
       el = p;
     }
@@ -592,6 +656,22 @@
     '.case-modal-overlay li', '.case-modal-overlay .case-modal-tags span'
   ].join(',');
 
+  // ---- карточные блоки на статичных страницах — добавление/удаление/порядок ----
+  // Общий безопасный набор для всех 5 страниц (одна вёрстка/CSS-шаблон, см. TRACKS/decisions).
+  // Селектор без совпадений на конкретной странице просто ничего не находит — вреда нет.
+  // Сознательно не включены: .contact-list .ci (контакты в шапке — не «контентный» блок),
+  // .steps-flow на surveillance.html (парный список с .steps-desc — реордер рассинхронит их).
+  var RAW_BLOCK_SELECTORS = [
+    {container: 'main .services',  item: '.svc'},
+    {container: 'main .benefits',  item: '.ben'},
+    {container: 'main .cases',     item: '.case'},
+    {container: 'main .faq',       item: '.q'},
+    {container: 'main .price',     item: '.price-card'},
+    {container: 'main .spheres',   item: '.sphere'},
+    {container: 'main .process',   item: '.step'},
+    {container: 'main .choose-grid', item: '.ci'}
+  ];
+
   function enhanceRaw(){
     if(!idoc.getElementById('__ed_style')){
       var st = idoc.createElement('style');
@@ -601,7 +681,11 @@
         '[data-raw-edit]:hover{outline-color:#5b8cff;background:rgba(91,140,255,.10);cursor:text}'+
         '[data-raw-edit]:focus{outline:2px solid #5b8cff;background:rgba(91,140,255,.14)}'+
         '[data-raw-href]{outline:2px dashed transparent;outline-offset:2px;cursor:pointer}'+
-        '[data-raw-href]:hover{outline-color:#fbbf24;background:rgba(251,191,36,.10)}';
+        '[data-raw-href]:hover{outline-color:#fbbf24;background:rgba(251,191,36,.10)}'+
+        '.__ed-add{display:inline-flex;align-items:center;gap:6px;margin:10px auto 0;padding:8px 16px;'+
+          'font:600 14px/1 inherit;color:#5b8cff;background:rgba(91,140,255,.10);'+
+          'border:1px dashed #5b8cff;border-radius:10px;cursor:pointer}'+
+        '.__ed-addwrap{width:100%;display:flex;justify-content:center;margin-top:8px}';
       idoc.head.appendChild(st);
     }
 
@@ -625,6 +709,39 @@
         var cur = a.getAttribute('href') || '';
         var v = iwin.prompt('Ссылка (tel:.../mailto:...):', cur);
         if(v != null && v.trim()){ a.setAttribute('href', v.trim()); markDirty(); }
+      });
+    });
+
+    enhanceRawBlocks();
+  }
+
+  // «+ добавить» под каждым карточным контейнером; сами карточки помечаем
+  // data-raw-block-list на контейнере — дальше их подхватывают общие
+  // ensureCtl/showCtlFor/deletableFrom (те же ◀ × ▶, что и в JSON-режиме).
+  function enhanceRawBlocks(){
+    RAW_BLOCK_SELECTORS.forEach(function(cfg){
+      Array.prototype.forEach.call(idoc.querySelectorAll(cfg.container), function(cont){
+        cont.setAttribute('data-raw-block-list', '1');
+        if(cont.querySelector(':scope > .__ed-addwrap')) return; // уже подключено
+        var wrap = idoc.createElement('div');
+        wrap.className = '__ed __ed-addwrap';
+        wrap.contentEditable = 'false';
+        var b = idoc.createElement('button');
+        b.type = 'button'; b.className = '__ed __ed-add';
+        b.textContent = '＋ добавить';
+        b.addEventListener('click', function(e){
+          e.preventDefault(); e.stopPropagation();
+          var items = Array.prototype.filter.call(cont.children, function(c){
+            return !c.classList.contains('__ed') && c.matches(cfg.item);
+          });
+          if(!items.length) return; // пустой контейнер — клонировать нечего
+          var clone = items[items.length - 1].cloneNode(true);
+          cont.insertBefore(clone, wrap);
+          enhanceRaw(); // подключить contenteditable/ссылки у склонированных полей
+          markDirty();
+        });
+        wrap.appendChild(b);
+        cont.appendChild(wrap);
       });
     });
   }
@@ -675,16 +792,16 @@
     }, true);
     idoc.addEventListener('submit', function(e){ e.preventDefault(); }, true);
 
-    if(isJson){
-      idoc.addEventListener('mouseover', function(e){
-        var item = deletableFrom(e.target);
-        if(item) showCtlFor(item);
-      });
-      idoc.addEventListener('mouseout', function(e){
-        if(!e.relatedTarget || (e.relatedTarget !== ctl && !deletableFrom(e.relatedTarget))) hideCtl();
-      });
-      iwin.addEventListener('scroll', hideCtl, {passive:true});
+    idoc.addEventListener('mouseover', function(e){
+      var item = deletableFrom(e.target);
+      if(item) showCtlFor(item);
+    });
+    idoc.addEventListener('mouseout', function(e){
+      if(!e.relatedTarget || (!(ctl && ctl.contains(e.relatedTarget)) && !deletableFrom(e.relatedTarget))) hideCtl();
+    });
+    iwin.addEventListener('scroll', hideCtl, {passive:true});
 
+    if(isJson){
       iwin.CMS.data = data;
       iwin.CMS.render();
       iwin.CMS.revealAll();
@@ -740,6 +857,14 @@
     var clone = idoc.documentElement.cloneNode(true);
     var st = clone.querySelector('#__ed_style');
     if(st) st.parentNode.removeChild(st);
+    // служебные элементы редактора (кнопка «+ добавить», всплывающие ◀ × ▶) —
+    // никогда не должны попасть в сохранённый файл
+    Array.prototype.forEach.call(clone.querySelectorAll('.__ed'), function(el){
+      if(el.parentNode) el.parentNode.removeChild(el);
+    });
+    Array.prototype.forEach.call(clone.querySelectorAll('[data-raw-block-list]'), function(el){
+      el.removeAttribute('data-raw-block-list');
+    });
     Array.prototype.forEach.call(clone.querySelectorAll('[data-raw-edit]'), function(el){
       el.removeAttribute('data-raw-edit');
       el.removeAttribute('contenteditable');
