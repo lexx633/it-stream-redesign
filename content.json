@@ -1,6 +1,7 @@
 {
   "vars.company": "IT-Stream",
   "vars.logo_mark": "Λ",
+  "vars.logo_url": "",
   "vars.office_label": "Офис в Москве",
   "vars.address1": "ул. Енисейская, д. 7, с. 4, оф. 18",
   "form.ph_name": "Ваше имя",

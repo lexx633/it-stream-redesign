@@ -83,6 +83,7 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
   display:grid;place-items:center;font-size:19px;font-weight:800;color:#04121a;
   box-shadow:0 8px 24px -6px rgba(34,211,238,.6);
 }
+.logo-mark img{width:100%;height:100%;object-fit:contain;border-radius:inherit;padding:5px}
 .nav-links{display:flex;gap:26px;margin-left:auto;font-size:15px;font-weight:500}
 .nav-links a{color:var(--muted);transition:.2s;position:relative}
 .nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:.25s;border-radius:2px}
@@ -943,6 +944,12 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     document.querySelectorAll('[data-cms-src]').forEach(function(el){
       var v = resolve(data, el.getAttribute('data-cms-src'));
       if(v != null) el.setAttribute('src', v);
+    });
+    // логотип: если загружена картинка — показываем её вместо символа
+    document.querySelectorAll('[data-cms="vars.logo_mark"]').forEach(function(el){
+      var logoUrl = resolve(data, 'vars.logo_url');
+      if(logoUrl){ el.innerHTML = '<img src="'+escAttr(logoUrl)+'" alt="">'; }
+      else { el.textContent = resolve(data, 'vars.logo_mark') || ''; }
     });
   }
 

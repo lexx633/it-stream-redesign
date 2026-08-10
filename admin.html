@@ -62,6 +62,19 @@
     margin:18px 0 4px;padding-bottom:6px;border-bottom:1px solid var(--line)}
   .vars-panel .vars-group:first-child h3{margin-top:0}
   .vars-panel .vars-grid label{margin:12px 0 5px}
+
+  /* загрузка лого — внутри поля «Символ логотипа» */
+  .logo-upload{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .logo-preview{width:34px;height:34px;border-radius:9px;object-fit:contain;background:var(--panel2);
+    border:1px solid var(--line);padding:3px}
+  .file-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;
+    font-size:12px;font-weight:500;border:1px solid var(--line);border-radius:8px;
+    padding:7px 12px;cursor:pointer;color:var(--text);background:transparent}
+  .file-btn:hover{border-color:var(--accent)}
+  .file-btn input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .logo-clear{padding:7px 12px;font-size:12px}
+  .logo-status{font-size:11px;color:var(--muted);flex-basis:100%}
+  .logo-status.ok{color:var(--ok)} .logo-status.err{color:var(--err)}
 </style>
 </head>
 <body>
@@ -161,6 +174,7 @@
   function setMsg(t, cls){ els.msg.textContent = t || ''; els.msg.className = 'msg ' + (cls||''); }
 
   // ---- панель «Переменные» — общие для всех страниц (главная + подстраницы) ----
+  // href:true — служебная ссылка при своём телефоне, в сортировке уходит под основные поля колонки.
   var VAR_GROUPS = [
     { g:'Название и бренд', items:[
       {p:'vars.company',               t:'Название компании'},
@@ -168,13 +182,12 @@
     ]},
     { g:'Контакты', items:[
       {p:'contacts.phone_free',        t:'Телефон (бесплатный)'},
-      {p:'contacts.phone_free_href',   t:'  ↳ ссылка (tel:)'},
+      {p:'contacts.phone_free_href',   t:'  ↳ ссылка (tel:)', href:true},
       {p:'contacts.phone_support',     t:'Телефон (поддержка)'},
-      {p:'contacts.phone_support_href',t:'  ↳ ссылка (tel:)'},
+      {p:'contacts.phone_support_href',t:'  ↳ ссылка (tel:)', href:true},
       {p:'contacts.phone_sales',       t:'Телефон (продажи)'},
-      {p:'contacts.phone_sales_href',  t:'  ↳ ссылка (tel:)'},
-      {p:'contacts.email',             t:'E-mail'},
-      {p:'contacts.email_href',        t:'  ↳ ссылка (mailto:)'}
+      {p:'contacts.phone_sales_href',  t:'  ↳ ссылка (tel:)', href:true},
+      {p:'contacts.email',             t:'E-mail'} // ссылка mailto: считается из значения автоматически, отдельного поля нет
     ]},
     { g:'Адрес', items:[
       {p:'vars.address1',              t:'Адрес'},
@@ -187,8 +200,14 @@
       {p:'form.ph_service',            t:'Текст «Интересует…» в списке услуг (все формы)'}
     ]}
   ];
-  // плоский список — используется остальным кодом (обход всех полей при открытии/сохранении)
-  var VARS = VAR_GROUPS.reduce(function(acc, gr){ return acc.concat(gr.items); }, []);
+  // в колонке — сперва основные поля (по алфавиту), служебные «↳ ссылка» — под ними (тоже по алфавиту)
+  function sortedGroupItems(items){
+    return items.slice().sort(function(a, b){
+      var ah = a.href ? 1 : 0, bh = b.href ? 1 : 0;
+      if(ah !== bh) return ah - bh;
+      return a.t.localeCompare(b.t, 'ru');
+    });
+  }
   var varsPanel = null;
   function buildVarsPanel(){
     varsPanel = document.createElement('div');
@@ -197,7 +216,10 @@
     var h = '<h2>Переменные — правим в одном месте</h2><div class="vars-grid">';
     VAR_GROUPS.forEach(function(gr){
       h += '<div class="vars-group"><h3>'+gr.g+'</h3>';
-      gr.items.forEach(function(v){ h += '<div class="field"><label>'+v.t+'</label><input data-vp="'+v.p+'" type="text"></div>'; });
+      sortedGroupItems(gr.items).forEach(function(v){
+        h += '<div class="field"><label>'+v.t+'</label><input data-vp="'+v.p+'" type="text"></div>';
+        if(v.p === 'vars.logo_mark') h += LOGO_UPLOAD_HTML;
+      });
       h += '</div>';
     });
     h += '</div>';
@@ -207,12 +229,18 @@
     document.body.appendChild(varsPanel);
     Array.prototype.forEach.call(varsPanel.querySelectorAll('input[data-vp]'), function(inp){
       inp.addEventListener('input', function(){
-        setVal(inp.getAttribute('data-vp'), inp.value);
+        var p = inp.getAttribute('data-vp');
+        setVal(p, inp.value);
+        if(p === 'contacts.email'){
+          var v = inp.value.trim();
+          setVal('contacts.email_href', v ? 'mailto:' + v : '');
+        }
         if(idoc && isJson) reRender(); // на статичных страницах live-рендера из data нет — увидит после сохранения
         varsDirty = true;
         markDirty();
       });
     });
+    wireLogoUpload(varsPanel);
   }
   function toggleVarsPanel(){
     if(!varsPanel) buildVarsPanel();
@@ -223,9 +251,72 @@
         var v = getVal(inp.getAttribute('data-vp'));
         inp.value = v == null ? '' : v;
       });
+      refreshLogoPreview(varsPanel);
     }
   }
   els.vars.addEventListener('click', toggleVarsPanel);
+
+  // ---- загрузка лого (картинкой) вместо символа ----
+  var LOGO_UPLOAD_HTML =
+    '<div class="logo-upload">' +
+      '<img class="logo-preview" hidden alt="">' +
+      '<label class="file-btn">Загрузить лого<input type="file" accept="image/png,image/jpeg,image/webp" id="logoFile"></label>' +
+      '<button type="button" class="ghost logo-clear" id="logoClear" hidden>Очистить лого</button>' +
+      '<span class="logo-status" id="logoStatus"></span>' +
+    '</div>';
+  function refreshLogoPreview(panel){
+    var img = panel.querySelector('.logo-preview');
+    var clearBtn = panel.querySelector('#logoClear');
+    var symbolInput = panel.querySelector('input[data-vp="vars.logo_mark"]');
+    if(!img || !data) return;
+    var url = getVal('vars.logo_url');
+    if(url){
+      img.src = url; img.hidden = false;
+      clearBtn.hidden = false;
+      if(symbolInput) symbolInput.disabled = true;
+    } else {
+      img.hidden = true; img.removeAttribute('src');
+      clearBtn.hidden = true;
+      if(symbolInput) symbolInput.disabled = false;
+    }
+  }
+  function wireLogoUpload(panel){
+    var fileInput = panel.querySelector('#logoFile');
+    var clearBtn = panel.querySelector('#logoClear');
+    var status = panel.querySelector('#logoStatus');
+    if(!fileInput) return;
+    fileInput.addEventListener('change', function(){
+      var file = fileInput.files && fileInput.files[0];
+      fileInput.value = '';
+      if(!file) return;
+      if(!els.pass.value.trim()){ setMsg('Укажите пароль, чтобы загрузить лого', 'err'); els.settings.classList.add('open'); return; }
+      if(file.size > 2 * 1024 * 1024){ status.textContent = 'Файл больше 2 МБ'; status.className = 'logo-status err'; return; }
+      status.textContent = 'Загружаю…'; status.className = 'logo-status wait';
+      var fd = new FormData();
+      fd.append('pass', els.pass.value.trim());
+      fd.append('file', file);
+      fetch('/upload-logo.php', { method:'POST', body: fd })
+        .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+        .then(function(res){
+          if(!res.ok || !res.j.ok) throw new Error((res.j && res.j.error) || 'ошибка загрузки');
+          setVal('vars.logo_url', res.j.url);
+          status.textContent = 'Загружено'; status.className = 'logo-status ok';
+          refreshLogoPreview(panel);
+          if(idoc && isJson) reRender();
+          varsDirty = true;
+          markDirty();
+        })
+        .catch(function(e){ status.textContent = 'Ошибка: ' + e.message; status.className = 'logo-status err'; });
+    });
+    if(clearBtn) clearBtn.addEventListener('click', function(){
+      setVal('vars.logo_url', '');
+      refreshLogoPreview(panel);
+      if(idoc && isJson) reRender();
+      varsDirty = true;
+      markDirty();
+      if(status){ status.textContent = ''; status.className = 'logo-status'; }
+    });
+  }
 
   // ---- доступ к значению по пути ("services.items.0.title") — только JSON-режим ----
   function splitPath(path){
