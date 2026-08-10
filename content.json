@@ -1,9 +1,8 @@
 {
   "vars.company": "IT-Stream",
   "vars.logo_mark": "Λ",
-  "vars.office_label": "Офисы в Москве",
-  "vars.address1": "ул. Воронцовская, д. 35Б, к. 3",
-  "vars.address2": "ул. Енисейская, д. 7, с. 4, оф. 18",
+  "vars.office_label": "Офис в Москве",
+  "vars.address1": "ул. Енисейская, д. 7, с. 4, оф. 18",
   "form.ph_name": "Ваше имя",
   "form.ph_phone": "Телефон",
   "form.ph_email": "E-mail",
@@ -71,11 +70,9 @@
     { "label": "Услуги", "href": "#services", "children": [
       { "num": "1.", "label": "ИТ-аутсорсинг", "href": "/it-outsourcing" },
       { "num": "2.", "label": "ИТ-безопасность", "href": "/security" },
-      { "num": "3.", "label": "Серверы и облако", "soon": true },
-      { "num": "4.", "label": "Сети и телеком", "soon": true },
-      { "num": "5.", "label": "СКУД", "href": "/skud" },
-      { "num": "6.", "label": "СКС", "href": "/sks" },
-      { "num": "7.", "label": "Видеонаблюдение", "href": "/surveillance" }
+      { "num": "3.", "label": "СКУД", "href": "/skud" },
+      { "num": "4.", "label": "СКС", "href": "/sks" },
+      { "num": "5.", "label": "Видеонаблюдение", "href": "/surveillance" }
     ] },
     { "label": "Преимущества", "href": "#why" },
     { "label": "Расчёт", "href": "#calc" },
