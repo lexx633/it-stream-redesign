@@ -13,6 +13,14 @@ function fail($code, $msg){
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') fail(405, 'only POST');
 
+// honeypot: скрытое от людей CSS-ом поле "website" — если заполнено, значит
+// заявку прислал бот, а не человек. Отвечаем "успехом" молча, письмо не шлём
+// и в лог не пишем, чтобы бот не понял, что его отсеяли, и не менял тактику.
+if (trim((string)($_POST['website'] ?? '')) !== '') {
+  echo json_encode(array('ok' => true), JSON_UNESCAPED_UNICODE);
+  exit;
+}
+
 function clean_line($s){ return trim(str_replace(array("\r", "\n"), ' ', (string)$s)); }
 
 $name    = clean_line($_POST['name'] ?? '');
