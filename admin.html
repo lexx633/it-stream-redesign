@@ -441,6 +441,14 @@
     while(sib && sib.classList.contains('__ed')) sib = dir < 0 ? sib.previousElementSibling : sib.nextElementSibling;
     return sib;
   }
+  // блоки идут строками сверху вниз (обычный поток / flex-column), а не карточками
+  // слева направо (грид/flex-row) — тогда стрелки должны быть ▲/▼, а не ◀/▶
+  function isVerticalList(cont){
+    var cs = iwin.getComputedStyle(cont);
+    if(cs.display === 'block' || cs.display === 'list-item') return true;
+    if(cs.display.indexOf('flex') > -1 && cs.flexDirection.indexOf('column') > -1) return true;
+    return false;
+  }
   function showCtlFor(item){
     ensureCtl();
     ctlTarget = item;
@@ -458,6 +466,11 @@
       canRight = Array.isArray(arr) && idx < arr.length - 1;
     }
     var kids = ctl.children; // [left, del, right]
+    var vertical = isVerticalList(cont);
+    kids[0].textContent = vertical ? '▲' : '◀';
+    kids[0].title = vertical ? 'Переместить вверх' : 'Переместить влево';
+    kids[2].textContent = vertical ? '▼' : '▶';
+    kids[2].title = vertical ? 'Переместить вниз' : 'Переместить вправо';
     kids[0].disabled = !canLeft;
     kids[0].style.opacity = kids[0].disabled ? '.35' : '1';
     kids[0].style.cursor = kids[0].disabled ? 'default' : 'pointer';
@@ -544,9 +557,13 @@
       var st = idoc.createElement('style');
       st.id = '__ed_style';
       st.textContent =
-        '[data-cms]{outline:1px dashed transparent;outline-offset:2px;transition:outline-color .1s,background .1s;border-radius:3px}'+
-        '[data-cms]:hover{outline-color:#5b8cff;background:rgba(91,140,255,.10);cursor:text}'+
-        '[data-cms]:focus{outline:2px solid #5b8cff;background:rgba(91,140,255,.14)}'+
+        // background (не background-color) тут нельзя: часть текста на сайте — градиентная
+        // (color:transparent + background-clip:text, напр. счётчики .stat b) — background
+        // затирает background-image градиента и буквы визуально пропадают. background-color
+        // сидит под градиентом и его не портит, а обводной outline и так виден на любом тексте.
+        '[data-cms]{outline:1px dashed transparent;outline-offset:2px;transition:outline-color .1s,background-color .1s;border-radius:3px}'+
+        '[data-cms]:hover{outline-color:#5b8cff;background-color:rgba(91,140,255,.10);cursor:text}'+
+        '[data-cms]:focus{outline:2px solid #5b8cff;background-color:rgba(91,140,255,.14)}'+
         'img[data-cms-src]{outline:2px dashed transparent;outline-offset:2px;cursor:pointer}'+
         'img[data-cms-src]:hover{outline-color:#5b8cff}'+
         '[data-cms-icon]{outline:1px dashed transparent;outline-offset:3px;cursor:pointer;border-radius:8px}'+
@@ -568,7 +585,26 @@
       el.setAttribute('contenteditable', 'true');
       el.setAttribute('spellcheck', 'false');
       el.addEventListener('input', function(){ setVal(path, isHtml ? el.innerHTML : el.textContent); markDirty(); });
-      el.addEventListener('keydown', function(e){ if(e.key === 'Enter' && !isHtml && el.tagName !== 'P'){ e.preventDefault(); el.blur(); } });
+      // Enter — перенос строки внутри поля (не отправка/не выход из редактирования).
+      // Вставляем сам символ \n текстовым узлом, а не полагаемся на дефолтное поведение
+      // браузера (в разных браузерах contenteditable на не-P элементе вставляет то <br>,
+      // то новый <div> — оба варианта ломают textContent/сохранение). white-space:pre-line
+      // на сайте (см. index.html) превращает \n в видимый перенос при показе.
+      el.addEventListener('keydown', function(e){
+        if(e.key !== 'Enter' || isHtml || el.tagName === 'P') return;
+        e.preventDefault();
+        var sel = iwin.getSelection();
+        if(!sel || !sel.rangeCount) return;
+        var range = sel.getRangeAt(0);
+        range.deleteContents();
+        var nl = idoc.createTextNode('\n');
+        range.insertNode(nl);
+        range.setStartAfter(nl);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        el.dispatchEvent(new Event('input', {bubbles:true}));
+      });
     });
 
     Array.prototype.forEach.call(idoc.querySelectorAll('img[data-cms-src]'), function(img){
@@ -677,9 +713,11 @@
       var st = idoc.createElement('style');
       st.id = '__ed_style';
       st.textContent =
-        '[data-raw-edit]{outline:1px dashed transparent;outline-offset:2px;transition:outline-color .1s,background .1s;border-radius:3px}'+
-        '[data-raw-edit]:hover{outline-color:#5b8cff;background:rgba(91,140,255,.10);cursor:text}'+
-        '[data-raw-edit]:focus{outline:2px solid #5b8cff;background:rgba(91,140,255,.14)}'+
+        // см. комментарий у [data-cms] в enhance() — background-color, не background,
+        // иначе градиентный текст (.grad и т.п.) визуально пропадает под подсветкой
+        '[data-raw-edit]{outline:1px dashed transparent;outline-offset:2px;transition:outline-color .1s,background-color .1s;border-radius:3px}'+
+        '[data-raw-edit]:hover{outline-color:#5b8cff;background-color:rgba(91,140,255,.10);cursor:text}'+
+        '[data-raw-edit]:focus{outline:2px solid #5b8cff;background-color:rgba(91,140,255,.14)}'+
         '[data-raw-href]{outline:2px dashed transparent;outline-offset:2px;cursor:pointer}'+
         '[data-raw-href]:hover{outline-color:#fbbf24;background:rgba(251,191,36,.10)}'+
         '.__ed-add{display:inline-flex;align-items:center;gap:6px;margin:10px auto 0;padding:8px 16px;'+

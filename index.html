@@ -32,6 +32,8 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:auto;scroll-padding-top:90px}
+/* переносы строк, вставленные в админке через Enter, — иначе браузер схлопнёт \n в пробел */
+[data-cms]{white-space:pre-line}
 body{
   font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
   background:var(--bg);color:var(--text);line-height:1.6;
