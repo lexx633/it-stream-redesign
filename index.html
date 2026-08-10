@@ -639,35 +639,35 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     <div class="contacts">
       <div class="contact-list">
         <div class="ci reveal">
-          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+          <div class="ci-icon" data-cms-icon="contacts.cc_icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.8 19.8 0 012.12 4.2 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.1 9.9a16 16 0 006 6l1.26-1.26a2 2 0 012.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg></div>
           <div>
             <span data-cms="contacts.cc_label">Единый call-центр · Пн–Пт 09:00–20:00</span>
             <a href="tel:88003012660" data-cms="contacts.phone_free" data-cms-href="contacts.phone_free_href">8 (800) 301-26-60</a>
           </div>
         </div>
         <div class="ci reveal">
-          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="ci-icon" data-cms-icon="contacts.support_icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
           <div>
             <span data-cms="contacts.support_label">Техническая поддержка · круглосуточно</span>
             <a href="tel:74951233757" data-cms="contacts.phone_support" data-cms-href="contacts.phone_support_href">8 (495) 123-37-57</a>
           </div>
         </div>
         <div class="ci reveal">
-          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
+          <div class="ci-icon" data-cms-icon="contacts.sales_icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-6 9 6v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
           <div>
             <span data-cms="contacts.sales_label">Отдел продаж · Пн–Пт 09:00–20:00</span>
             <a href="tel:74951233738" data-cms="contacts.phone_sales" data-cms-href="contacts.phone_sales_href">8 (495) 123-37-38</a>
           </div>
         </div>
         <div class="ci reveal">
-          <div class="ci-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></div>
+          <div class="ci-icon" data-cms-icon="contacts.email_icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></div>
           <div>
             <span data-cms="contacts.email_label">Почта</span>
             <a href="mailto:info@it-stream.ru" data-cms="contacts.email" data-cms-href="contacts.email_href">info@it-stream.ru</a>
           </div>
         </div>
         <div class="ci reveal">
-          <div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div class="ci-icon" data-cms-icon="vars.office_icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
           <div>
             <b data-cms="vars.office_label">Офис в Москве</b>
             <span data-cms="vars.address1">ул. Енисейская, д. 7, с. 4, оф. 18</span>
@@ -946,6 +946,14 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     document.querySelectorAll('[data-cms-src]').forEach(function(el){
       var v = resolve(data, el.getAttribute('data-cms-src'));
       if(v != null) el.setAttribute('src', v);
+    });
+    // иконки вне шаблонизированных списков (контакты в шапке контактной секции) —
+    // сами по себе SVG внутри контейнера, а не отдельный [data-cms] текстовый узел
+    document.querySelectorAll('[data-cms-icon]').forEach(function(el){
+      var v = resolve(data, el.getAttribute('data-cms-icon'));
+      if(v == null) return;
+      var svg = el.querySelector('svg');
+      if(svg) svg.innerHTML = v;
     });
     // логотип: если загружена картинка — показываем её вместо символа
     document.querySelectorAll('[data-cms="vars.logo_mark"]').forEach(function(el){

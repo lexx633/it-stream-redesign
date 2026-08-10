@@ -295,7 +295,8 @@
       var fd = new FormData();
       fd.append('pass', els.pass.value.trim());
       fd.append('file', file);
-      fetch('/upload-logo.php', { method:'POST', body: fd })
+      fd.append('kind', 'logo');
+      fetch('/upload-image.php', { method:'POST', body: fd })
         .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
         .then(function(res){
           if(!res.ok || !res.j.ok) throw new Error((res.j && res.j.error) || 'ошибка загрузки');
@@ -395,7 +396,11 @@
       var cont = ctlTarget.parentElement;
       if(cont.hasAttribute('data-raw-block-list')){
         var sib = siblingBlock(ctlTarget, dir);
-        if(sib){ if(dir < 0) cont.insertBefore(ctlTarget, sib); else cont.insertBefore(sib, ctlTarget); markDirty(); }
+        if(sib){
+          if(dir < 0) cont.insertBefore(ctlTarget, sib); else cont.insertBefore(sib, ctlTarget);
+          renumberIfNeeded(cont);
+          markDirty();
+        }
         hideCtl();
         return;
       }
@@ -416,7 +421,7 @@
       if(!ctlTarget) return;
       var cont = ctlTarget.parentElement;
       if(cont.hasAttribute('data-raw-block-list')){
-        if(iwin.confirm('Удалить этот блок?')){ ctlTarget.remove(); markDirty(); }
+        if(iwin.confirm('Удалить этот блок?')){ ctlTarget.remove(); renumberIfNeeded(cont); markDirty(); }
         hideCtl();
         return;
       }
@@ -440,6 +445,17 @@
     var sib = dir < 0 ? item.previousElementSibling : item.nextElementSibling;
     while(sib && sib.classList.contains('__ed')) sib = dir < 0 ? sib.previousElementSibling : sib.nextElementSibling;
     return sib;
+  }
+  // для блоков с видимым номером (01/02/03…, напр. .ben-num, .step-num) — номер
+  // должен идти по месту в списке, а не «уезжать» вместе с переставленным блоком
+  function renumberIfNeeded(cont){
+    var cfg = cont.__blockCfg;
+    if(!cfg || !cfg.numSel) return;
+    var items = Array.prototype.filter.call(cont.children, function(c){ return !c.classList.contains('__ed'); });
+    items.forEach(function(it, i){
+      var numEl = it.querySelector(cfg.numSel);
+      if(numEl) numEl.textContent = (i + 1 < 10 ? '0' : '') + (i + 1);
+    });
   }
   // блоки идут строками сверху вниз (обычный поток / flex-column), а не карточками
   // слева направо (грид/flex-row) — тогда стрелки должны быть ▲/▼, а не ◀/▶
@@ -484,6 +500,83 @@
     ctl.style.top  = (iwin.scrollY + r.top  - 13) + 'px';
   }
   function hideCtl(){ if(ctl){ ctl.style.display = 'none'; } ctlTarget = null; }
+
+  // ---- всплывающая кнопка «Цвет» при выделении текста — оборачивает выделенное
+  // в <span class="grad"> (тот же градиентный акцент, что и «IT систем» на CTA).
+  // Работает и в JSON-режиме (только data-cms-html поля — обычные data-cms хранят
+  // чистый textContent, span там не переживёт сохранение), и в raw-режиме (там
+  // сохраняется весь DOM целиком, span переживает без проблем в любом текстовом поле).
+  var selToolbar = null, selToolbarTarget = null;
+  function ensureSelToolbar(){
+    if(selToolbar) return;
+    selToolbar = idoc.createElement('button');
+    selToolbar.type = 'button';
+    selToolbar.className = '__ed __ed-color';
+    selToolbar.contentEditable = 'false';
+    selToolbar.title = 'Выделить градиентом (акцентный цвет)';
+    selToolbar.textContent = '🎨 Цвет';
+    selToolbar.style.cssText = 'position:absolute;z-index:9999;display:none;'+
+      'padding:6px 14px;font-size:12px;font-weight:700;border:0;border-radius:8px;cursor:pointer;'+
+      'background:linear-gradient(120deg,#22d3ee,#6366f1);color:#04121a;box-shadow:0 4px 14px rgba(0,0,0,.4);'+
+      'white-space:nowrap';
+    selToolbar.addEventListener('mousedown', function(e){ e.preventDefault(); });
+    selToolbar.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      applyGradientToSelection();
+    });
+    idoc.body.appendChild(selToolbar);
+  }
+  function hideSelToolbar(){ if(selToolbar) selToolbar.style.display = 'none'; selToolbarTarget = null; }
+  function applyGradientToSelection(){
+    if(!selToolbarTarget) return;
+    var sel = iwin.getSelection();
+    if(!sel || !sel.rangeCount || sel.isCollapsed) return;
+    var range = sel.getRangeAt(0);
+    var anc = range.commonAncestorContainer;
+    var host = anc.nodeType === 1 ? anc : anc.parentElement;
+    var gradParent = host ? host.closest('.grad') : null;
+    if(gradParent && selToolbarTarget.contains(gradParent) && range.toString().trim() === gradParent.textContent.trim()){
+      // выделение = весь текст уже градиентного span — снимаем обёртку (toggle)
+      var frag = idoc.createDocumentFragment();
+      while(gradParent.firstChild) frag.appendChild(gradParent.firstChild);
+      gradParent.parentNode.replaceChild(frag, gradParent);
+    } else {
+      var span = idoc.createElement('span');
+      span.className = 'grad';
+      var content = range.extractContents();
+      span.appendChild(content);
+      range.insertNode(span);
+      sel.removeAllRanges();
+      var nr = idoc.createRange();
+      nr.selectNodeContents(span);
+      sel.addRange(nr);
+    }
+    selToolbarTarget.dispatchEvent(new Event('input', {bubbles:true}));
+    hideSelToolbar();
+  }
+  // matchSelector — какие поля считаются подходящими под кнопку (разное в JSON/raw режимах)
+  function wireSelectionToolbar(matchSelector){
+    idoc.addEventListener('mouseup', function(e){
+      var host = e.target.closest ? e.target.closest(matchSelector) : null;
+      if(!host) return;
+      setTimeout(function(){
+        var sel = iwin.getSelection();
+        if(!sel || sel.isCollapsed || !sel.rangeCount){ hideSelToolbar(); return; }
+        var range = sel.getRangeAt(0);
+        if(!host.contains(range.commonAncestorContainer)){ hideSelToolbar(); return; }
+        ensureSelToolbar();
+        selToolbarTarget = host;
+        var r = range.getBoundingClientRect();
+        selToolbar.style.display = 'block';
+        var w = selToolbar.getBoundingClientRect().width;
+        selToolbar.style.left = (iwin.scrollX + r.left + r.width / 2 - w / 2) + 'px';
+        selToolbar.style.top = (iwin.scrollY + r.top - 38) + 'px';
+      }, 0);
+    });
+    idoc.addEventListener('mousedown', function(e){
+      if(selToolbar && e.target !== selToolbar && !selToolbar.contains(e.target)) hideSelToolbar();
+    });
+  }
 
   function deletableFrom(node){
     var el = node;
@@ -559,6 +652,119 @@
     document.body.appendChild(ov);
   }
 
+  // ---- медиатека: выбор уже загруженной картинки или загрузка новой (аватары отзывов и т.п.) ----
+  function openMediaPicker(cur, cb){
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:50;background:rgba(6,8,12,.72);'+
+      'display:flex;align-items:center;justify-content:center;padding:20px';
+    var box = document.createElement('div');
+    box.style.cssText = 'background:var(--panel);border:1px solid var(--line);border-radius:16px;'+
+      'padding:20px;max-width:640px;width:100%;max-height:82vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)';
+    box.innerHTML = '<h2 style="margin:0 0 4px;font-size:15px">Выберите картинку</h2>'+
+      '<p style="margin:0 0 14px;font-size:12px;color:var(--muted)">Клик по картинке из уже загруженных — применить. Или загрузите новую.</p>';
+
+    function close(){ if(ov.parentNode) document.body.removeChild(ov); }
+
+    var uploadRow = document.createElement('div');
+    uploadRow.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:14px';
+    var fileLabel = document.createElement('label');
+    fileLabel.style.cssText = 'position:relative;overflow:hidden;display:inline-flex;align-items:center;'+
+      'font-size:13px;font-weight:600;color:#5b8cff;background:rgba(91,140,255,.10);'+
+      'border:1px dashed #5b8cff;border-radius:9px;padding:9px 16px;cursor:pointer';
+    fileLabel.textContent = 'Загрузить новую…';
+    var fileInput = document.createElement('input');
+    fileInput.type = 'file'; fileInput.accept = 'image/png,image/jpeg,image/webp';
+    fileInput.style.cssText = 'position:absolute;inset:0;opacity:0;cursor:pointer';
+    fileLabel.appendChild(fileInput);
+    var status = document.createElement('span');
+    status.style.cssText = 'font-size:12px;color:var(--muted)';
+    uploadRow.appendChild(fileLabel); uploadRow.appendChild(status);
+    box.appendChild(uploadRow);
+
+    var grid = document.createElement('div');
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(5,1fr);gap:10px;min-height:44px';
+    grid.textContent = 'Загрузка списка…';
+    grid.style.color = 'var(--muted)'; grid.style.fontSize = '12px';
+    box.appendChild(grid);
+
+    var urlRow = document.createElement('div');
+    urlRow.style.cssText = 'display:flex;gap:8px;margin-top:16px';
+    var urlInput = document.createElement('input');
+    urlInput.type = 'text'; urlInput.placeholder = 'или вставьте ссылку на картинку'; urlInput.value = cur || '';
+    urlInput.style.cssText = 'flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:8px;'+
+      'color:var(--text);padding:8px 10px;font-size:13px';
+    var applyBtn = document.createElement('button');
+    applyBtn.type = 'button'; applyBtn.textContent = 'Применить';
+    applyBtn.addEventListener('click', function(){ var v = urlInput.value.trim(); if(v){ cb(v); close(); } });
+    urlRow.appendChild(urlInput); urlRow.appendChild(applyBtn);
+    box.appendChild(urlRow);
+
+    var cancel = document.createElement('button');
+    cancel.type = 'button'; cancel.className = 'ghost'; cancel.textContent = 'Отмена';
+    cancel.style.marginTop = '10px';
+    cancel.addEventListener('click', close);
+    box.appendChild(cancel);
+
+    ov.appendChild(box);
+    ov.addEventListener('click', function(e){ if(e.target === ov) close(); });
+    document.body.appendChild(ov);
+
+    function renderGrid(items){
+      grid.innerHTML = ''; grid.style.color = ''; grid.style.fontSize = '';
+      if(!items.length){
+        grid.textContent = 'Пока ничего не загружено — загрузите первую картинку выше.';
+        grid.style.color = 'var(--muted)'; grid.style.fontSize = '12px';
+        return;
+      }
+      grid.style.display = 'grid';
+      items.forEach(function(it){
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.style.cssText = 'aspect-ratio:1;padding:0;overflow:hidden;background:var(--panel2);'+
+          'border:1px solid '+(it.url===cur?'var(--accent)':'var(--line)')+';border-radius:10px;cursor:pointer';
+        var im = document.createElement('img');
+        im.src = it.url; im.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+        b.appendChild(im);
+        b.addEventListener('click', function(){ cb(it.url); close(); });
+        grid.appendChild(b);
+      });
+    }
+
+    if(!els.pass.value.trim()){
+      grid.textContent = 'Укажите пароль («Пароль…»), чтобы видеть список загруженных картинок';
+    } else {
+      fetch('/list-uploads.php', { method:'POST', body: JSON.stringify({pass: els.pass.value.trim()}) })
+        .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+        .then(function(res){
+          if(!res.ok || !res.j.ok) throw new Error((res.j && res.j.error) || 'ошибка');
+          renderGrid(res.j.items || []);
+        })
+        .catch(function(e){ grid.textContent = 'Не удалось загрузить список: ' + e.message; });
+    }
+
+    fileInput.addEventListener('change', function(){
+      var file = fileInput.files && fileInput.files[0];
+      fileInput.value = '';
+      if(!file) return;
+      if(!els.pass.value.trim()){ status.textContent = 'Укажите пароль'; return; }
+      if(file.size > 2 * 1024 * 1024){ status.textContent = 'Файл больше 2 МБ'; return; }
+      status.textContent = 'Загружаю…';
+      var fd = new FormData();
+      fd.append('pass', els.pass.value.trim());
+      fd.append('file', file);
+      fd.append('kind', 'gallery');
+      fetch('/upload-image.php', { method:'POST', body: fd })
+        .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+        .then(function(res){
+          if(!res.ok || !res.j.ok) throw new Error((res.j && res.j.error) || 'ошибка загрузки');
+          status.textContent = '';
+          cb(res.j.url);
+          close();
+        })
+        .catch(function(e){ status.textContent = 'Ошибка: ' + e.message; });
+    });
+  }
+
   // ================= JSON-режим (главная страница) =================
   function enhance(){
     if(!idoc.getElementById('__ed_style')){
@@ -622,8 +828,7 @@
         e.preventDefault(); e.stopPropagation();
         var path = img.getAttribute('data-cms-src');
         var cur = getVal(path) || '';
-        var v = iwin.prompt('Ссылка на изображение:', cur);
-        if(v != null){ setVal(path, v.trim()); img.src = v.trim(); markDirty(); }
+        openMediaPicker(cur, function(v){ setVal(path, v); img.src = v; markDirty(); });
       });
     });
 
@@ -679,6 +884,8 @@
       var body = q.querySelector('.q-body');
       if(body) body.style.maxHeight = 'none';
     });
+
+    if(!idoc.__selToolbarJson){ idoc.__selToolbarJson = true; wireSelectionToolbar('[data-cms-html]'); }
   }
 
   // ================= режим правки статических страниц =================
@@ -689,6 +896,7 @@
     'main p', 'main li',
     'main .eyebrow', 'main .step-num',
     'main .case-tags span',
+    'main .price-badge', 'main .cap', 'main .price-val', 'main .price-per',
     'main .contact-list .ci b', 'main .contact-list .ci span',
     '.foot-about p',
     // текст на кнопках — CTA-ссылки и «Подробнее» у кейсов (не только main:
@@ -706,14 +914,14 @@
   // Сознательно не включены: .contact-list .ci (контакты в шапке — не «контентный» блок),
   // .steps-flow на surveillance.html (парный список с .steps-desc — реордер рассинхронит их).
   var RAW_BLOCK_SELECTORS = [
-    {container: 'main .services',  item: '.svc'},
-    {container: 'main .benefits',  item: '.ben'},
-    {container: 'main .cases',     item: '.case'},
+    {container: 'main .services',  item: '.svc', icon: '.svc-icon'},
+    {container: 'main .benefits',  item: '.ben', numSel: '.ben-num'},
+    {container: 'main .cases',     item: '.case', icon: '.case-ico'},
     {container: 'main .faq',       item: '.q'},
     {container: 'main .price',     item: '.price-card'},
     {container: 'main .spheres',   item: '.sphere'},
-    {container: 'main .process',   item: '.step'},
-    {container: 'main .choose-grid', item: '.ci'}
+    {container: 'main .process',   item: '.step', numSel: '.step-num'},
+    {container: 'main .choose-grid', item: '.ci', icon: '.ci-icon'}
   ];
 
   function enhanceRaw(){
@@ -728,6 +936,8 @@
         '[data-raw-edit]:focus{outline:2px solid #5b8cff;background-color:rgba(91,140,255,.14)}'+
         '[data-raw-href]{outline:2px dashed transparent;outline-offset:2px;cursor:pointer}'+
         '[data-raw-href]:hover{outline-color:#fbbf24;background:rgba(251,191,36,.10)}'+
+        '[data-raw-icon]{outline:1px dashed transparent;outline-offset:3px;cursor:pointer;border-radius:8px}'+
+        '[data-raw-icon]:hover{outline-color:#5b8cff;background:rgba(91,140,255,.10)}'+
         '.__ed-add{display:inline-flex;align-items:center;gap:6px;margin:10px auto 0;padding:8px 16px;'+
           'font:600 14px/1 inherit;color:#5b8cff;background:rgba(91,140,255,.10);'+
           'border:1px dashed #5b8cff;border-radius:10px;cursor:pointer}'+
@@ -759,15 +969,41 @@
     });
 
     enhanceRawBlocks();
+
+    if(!idoc.__selToolbarRaw){ idoc.__selToolbarRaw = true; wireSelectionToolbar('[data-raw-edit]'); }
   }
 
   // «+ добавить» под каждым карточным контейнером; сами карточки помечаем
   // data-raw-block-list на контейнере — дальше их подхватывают общие
   // ensureCtl/showCtlFor/deletableFrom (те же ◀ × ▶, что и в JSON-режиме).
+  function wireRawIcon(iconBox){
+    if(iconBox.__rawIcon) return;
+    iconBox.__rawIcon = true;
+    iconBox.setAttribute('data-raw-icon', '1');
+    iconBox.title = 'Клик — выбрать иконку из набора';
+    iconBox.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      var svg = iconBox.querySelector('svg');
+      var cur = svg ? svg.innerHTML.trim() : '';
+      openIconPicker(cur, function(mk){
+        if(!svg){
+          svg = idoc.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('viewBox', '0 0 24 24');
+          iconBox.appendChild(svg);
+        }
+        svg.innerHTML = mk;
+        markDirty();
+      });
+    });
+  }
   function enhanceRawBlocks(){
     RAW_BLOCK_SELECTORS.forEach(function(cfg){
       Array.prototype.forEach.call(idoc.querySelectorAll(cfg.container), function(cont){
         cont.setAttribute('data-raw-block-list', '1');
+        cont.__blockCfg = cfg;
+        if(cfg.icon){
+          Array.prototype.forEach.call(cont.querySelectorAll(':scope > ' + cfg.item + ' ' + cfg.icon), wireRawIcon);
+        }
         if(cont.querySelector(':scope > .__ed-addwrap')) return; // уже подключено
         var wrap = idoc.createElement('div');
         wrap.className = '__ed __ed-addwrap';
@@ -782,8 +1018,15 @@
           });
           if(!items.length) return; // пустой контейнер — клонировать нечего
           var clone = items[items.length - 1].cloneNode(true);
+          // новый блок — не дублируем иконку исходного, пусть выберут свою
+          if(cfg.icon){
+            var iconBox = clone.querySelector(cfg.icon);
+            var svg = iconBox && iconBox.querySelector('svg');
+            if(svg) svg.innerHTML = '';
+          }
           cont.insertBefore(clone, wrap);
-          enhanceRaw(); // подключить contenteditable/ссылки у склонированных полей
+          renumberIfNeeded(cont);
+          enhanceRaw(); // подключить contenteditable/ссылки/иконку у склонированного блока
           markDirty();
         });
         wrap.appendChild(b);
@@ -825,6 +1068,14 @@
 
       var a = t.closest ? t.closest('a,button') : null;
       if(!a) return;
+
+      // карточка сама целиком <a href="..."> (напр. services.items ведущие сразу
+      // на другую страницу), а кликнули по иконке/тексту ВНУТРИ неё — отдаём клик
+      // собственному обработчику поля (иконка/текст), а не переходу по ссылке.
+      // Если data-cms сам и есть эта ссылка (напр. пункт меню nav.links) — это
+      // НЕ тот случай, переход по страницам админки должен работать как раньше.
+      var editable = t.closest ? t.closest('[data-cms],[data-cms-icon],[data-cms-src],[data-cms-rating],[data-raw-edit],[data-raw-icon]') : null;
+      if(editable && editable !== a && a.contains(editable)) return;
       if(a.tagName === 'A'){
         var key = pageKeyFromHref(a.getAttribute('href'));
         if(key && key !== pageKey){
@@ -918,6 +1169,10 @@
     });
     Array.prototype.forEach.call(clone.querySelectorAll('[data-raw-href]'), function(el){
       el.removeAttribute('data-raw-href');
+      el.removeAttribute('title');
+    });
+    Array.prototype.forEach.call(clone.querySelectorAll('[data-raw-icon]'), function(el){
+      el.removeAttribute('data-raw-icon');
       el.removeAttribute('title');
     });
     return '<!DOCTYPE html>\n' + clone.outerHTML;

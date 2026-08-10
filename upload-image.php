@@ -1,7 +1,9 @@
 <?php
-// Загрузка картинки логотипа для лендинга it-win.ru.
-// POST multipart/form-data: pass, file. Сохраняет в uploads/logo.<ext>
-// (перезаписывая предыдущую версию, старые расширения подчищаются).
+// Универсальная загрузка картинки для лендинга it-win.ru.
+// POST multipart/form-data: pass, file, kind (необязательно).
+//   kind=logo    — фиксированное имя uploads/logo.<ext>, перезаписывает предыдущую версию.
+//   kind=gallery (по умолчанию) — уникальное имя, старые файлы не трогает
+//   (аватары отзывов, произвольные картинки из медиатеки).
 // Пароль — тот же хэш, что проверяет save.php.
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
@@ -42,11 +44,19 @@ $ext = $ALLOWED[$mime];
 if (!is_dir($UPLOAD_DIR)) { @mkdir($UPLOAD_DIR, 0755, true); }
 if (!is_dir($UPLOAD_DIR) || !is_writable($UPLOAD_DIR)) fail(500, 'upload dir not writable');
 
-// старые версии лого с другим расширением больше не нужны
-foreach (glob($UPLOAD_DIR . '/logo.*') as $old) { @unlink($old); }
+$kind = isset($_POST['kind']) ? (string)$_POST['kind'] : 'gallery';
 
-$target = $UPLOAD_DIR . '/logo.' . $ext;
+if ($kind === 'logo') {
+  // старые версии лого с другим расширением больше не нужны
+  foreach (glob($UPLOAD_DIR . '/logo.*') as $old) { @unlink($old); }
+  $name = 'logo.' . $ext;
+} else {
+  $name = 'img-' . date('Ymd-His') . '-' . substr(bin2hex(random_bytes(4)), 0, 8) . '.' . $ext;
+}
+
+$target = $UPLOAD_DIR . '/' . $name;
 if (!move_uploaded_file($f['tmp_name'], $target)) fail(500, 'move failed');
 @chmod($target, 0644);
 
-echo json_encode(array('ok' => true, 'url' => '/uploads/logo.' . $ext . '?v=' . time()), JSON_UNESCAPED_UNICODE);
+$v = $kind === 'logo' ? ('?v=' . time()) : '';
+echo json_encode(array('ok' => true, 'url' => '/uploads/' . $name . $v), JSON_UNESCAPED_UNICODE);
