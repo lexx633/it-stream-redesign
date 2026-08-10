@@ -404,7 +404,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     render: function(){ applyStaticCms(window.CMS.data); render(window.CMS.data); },
     revealAll: function(){ document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); }); }
   };
-  fetch('content.json', {cache:'no-store'})
+  fetch('/content.json', {cache:'no-store'})
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(data){ window.CMS.data = data; applyStaticCms(data); render(data); })
     .catch(function(){})
