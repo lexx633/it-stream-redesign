@@ -1,6 +1,6 @@
 <?php
 // Приём заявок из всплывающих форм (попапов) сайта it-win.ru.
-// POST { name, phone, comment, page, url } -> письмо на info@it-stream.ru + лог-бэкап вне веб-корня.
+// POST { name, phone, comment, page, url } -> письмо на адрес(а) из content.json (contacts.leads_email) + лог-бэкап вне веб-корня.
 // Обязательное поле — только телефон (см. валидацию на клиенте и здесь же на сервере).
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
@@ -43,7 +43,19 @@ if (is_dir($LOG_DIR) && is_writable($LOG_DIR)) {
   @file_put_contents($LOG_DIR . '/leads.log', $logLine, FILE_APPEND | LOCK_EX);
 }
 
-$to = 'info@it-stream.ru, lexx633@ya.ru';
+// адрес(а) получателя — редактируются в админке («Переменные» → «Куда шлём заявки с форм»),
+// хранятся в content.json как contacts.leads_email; несколько адресов — через запятую
+$to = 'info@it-stream.ru';
+$CONTENT_FILE = __DIR__ . '/content.json';
+if (is_readable($CONTENT_FILE)) {
+  $contentJson = json_decode(file_get_contents($CONTENT_FILE), true);
+  if (is_array($contentJson) && !empty($contentJson['contacts.leads_email'])) {
+    $to = $contentJson['contacts.leads_email'];
+  }
+}
+$recipients = array_filter(array_map('trim', explode(',', $to)));
+if (empty($recipients)) $recipients = array('info@it-stream.ru');
+
 $subject = '=?UTF-8?B?' . base64_encode('Заявка с сайта it-win.ru' . ($page !== '' ? " — $page" : '')) . '?=';
 
 $body  = "Имя: " . ($name !== '' ? $name : '-') . "\n";
@@ -69,7 +81,10 @@ $headers  = "From: no-reply@it-stream.ru\r\n";
 $headers .= "Reply-To: no-reply@it-stream.ru\r\n";
 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
-@mail($to, $subject, $body, $headers);
+// каждому получателю — отдельное письмо (в To только он сам, второй адресат не виден)
+foreach ($recipients as $rcpt) {
+  @mail($rcpt, $subject, $body, $headers);
+}
 
 // не роняем UX даже если mail() молча не сработал — лид уже в логе
 echo json_encode(array('ok' => true), JSON_UNESCAPED_UNICODE);
