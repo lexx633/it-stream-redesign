@@ -78,6 +78,44 @@
   .vars-panel .vars-group:first-child h3{margin-top:0}
   .vars-panel .vars-grid label{margin:12px 0 5px}
 
+  /* панель «Страницы» — дерево слева (поиск + группы «Страницы»/«Блог» + пункт
+     «Переменные»), содержимое справа (для «Переменные» — тот же vars-grid,
+     что раньше был отдельной панелью; для реальной страницы клик сразу
+     уводит со страницы, правая часть не успевает понадобиться) */
+  .pages-panel{left:0;right:0;width:auto;max-width:none;
+    border-left:0;border-right:0;border-bottom-left-radius:0;border-bottom-right-radius:0;
+    padding:0;display:flex;align-items:stretch;
+    max-height:calc(100vh - var(--bar-h));
+    transform:translateY(-110%)}
+  .pages-panel.open{transform:none}
+  .pages-tree{width:280px;flex-shrink:0;border-right:1px solid var(--line);
+    padding:16px;overflow-y:auto;max-height:calc(100vh - var(--bar-h))}
+  .pages-search{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+    color:var(--text);padding:8px 10px;font-size:13px;margin-bottom:14px}
+  .pages-search:focus{outline:none;border-color:var(--accent)}
+  .pages-group{margin-bottom:4px}
+  .pages-group h3{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+    margin:16px 0 4px;padding:0 10px}
+  .pages-group:first-child h3{margin-top:0}
+  .pages-item{display:block;width:100%;text-align:left;background:transparent;border:0;
+    padding:8px 10px;border-radius:8px;font-size:13.5px;color:var(--text);cursor:pointer}
+  .pages-item:hover{background:var(--panel2)}
+  .pages-item.cur{background:rgba(91,140,255,.16);color:var(--accent)}
+  .pages-item.sub{padding-left:22px;font-size:13px;color:var(--muted)}
+  .pages-item.sub:hover{color:var(--text)}
+  .pages-item.vars-toggle{font-weight:600}
+  .pages-empty-note{padding:8px 10px 4px;font-size:12px;color:var(--muted)}
+  .pages-content{flex:1;padding:20px 24px;overflow-y:auto;max-height:calc(100vh - var(--bar-h))}
+  .pages-empty{color:var(--muted);font-size:13px;margin:0}
+  .pages-content .vars-grid{display:flex;flex-wrap:wrap;align-items:flex-start;gap:0 40px}
+  .pages-content .vars-group{flex:1 1 240px;max-width:300px;padding-bottom:8px}
+  .pages-content .vars-group h3{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);
+    margin:18px 0 4px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .pages-content .vars-group:first-child h3{margin-top:0}
+  .pages-content .vars-grid label{margin:12px 0 5px}
+  .pages-content h2{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 0 12px}
+  .pages-content .note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
+
   /* загрузка лого — внутри поля «Символ логотипа» */
   .logo-upload{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:8px}
   .logo-preview{width:34px;height:34px;border-radius:9px;object-fit:contain;background:var(--panel2);
@@ -96,17 +134,26 @@
 
 <div class="bar">
   <span class="title">Редактор IT-Stream</span>
-  <select id="pageSel"></select>
+  <button class="ghost" id="pagesBtn" type="button">Страницы ▾</button>
   <span class="hint" id="hint"></span>
   <span class="spacer"></span>
   <span id="msg" class="msg"></span>
   <button class="ghost" id="reload" type="button" title="Отменить несохранённые правки">Сбросить</button>
-  <button class="ghost" id="vars" type="button" title="Телефон, почта, адрес, название — в одном месте">Переменные…</button>
   <button id="save" type="button" disabled>Сохранить</button>
   <button class="ghost" id="logout" type="button" title="Забыть пароль в этом браузере">Выйти</button>
 </div>
 
 <div class="stage"><iframe id="frame"></iframe></div>
+
+<div class="settings pages-panel" id="pagesPanel">
+  <div class="pages-tree" id="pagesTree">
+    <input class="pages-search" id="pagesSearch" type="text" placeholder="Поиск по названию…">
+    <div id="pagesTreeList"></div>
+  </div>
+  <div class="pages-content" id="pagesContent">
+    <p class="pages-empty">Выберите страницу слева или откройте «Переменные».</p>
+  </div>
+</div>
 
 <div class="login-gate" id="loginGate">
   <form class="login-box" id="loginForm">
@@ -126,12 +173,14 @@
   // json:true — правка через content.json (структурная модель, добавление/удаление блоков).
   // json:false — статическая страница, правим текст прямо в HTML, сохраняем документ целиком.
   var PAGES = {
-    'index':           {file:'index.html',         title:'Главная',       json:true},
-    'it-outsourcing':  {file:'it-outsourcing.html', title:'ИТ-аутсорсинг', json:false},
-    'skud':            {file:'skud.html',           title:'СКУД',          json:false},
-    'sks':             {file:'sks.html',            title:'СКС',           json:false},
-    'surveillance':    {file:'surveillance.html',    title:'Видеонаблюдение', json:false},
-    'security':        {file:'security.html',        title:'ИТ-безопасность', json:false}
+    'index':           {file:'index.html',         title:'Главная',       json:true, group:'pages'},
+    'it-outsourcing':  {file:'it-outsourcing.html', title:'ИТ-аутсорсинг', json:false, group:'pages'},
+    'skud':            {file:'skud.html',           title:'СКУД',          json:false, group:'pages'},
+    'sks':             {file:'sks.html',            title:'СКС',           json:false, group:'pages'},
+    'surveillance':    {file:'surveillance.html',    title:'Видеонаблюдение', json:false, group:'pages'},
+    'security':        {file:'security.html',        title:'ИТ-безопасность', json:false, group:'pages'},
+    'blog':            {file:'blog.html',            title:'Блог — список статей', json:true, group:'blog'},
+    'blog-post':       {file:'blog-post.html',        title:'Блог — статья', json:true, group:'blog'}
   };
   var qs = new URLSearchParams(location.search);
   // /skud/admin — mod_rewrite подставляет ?page=skud только на сервере,
@@ -141,16 +190,22 @@
   if(!PAGES[pageKey]) pageKey = 'index';
   var PAGE = PAGES[pageKey];
   var isJson = PAGE.json;
+  // статья блога — конкретный пост выбирается через ?slug=, сама страница
+  // (blog-post.html) один физический файл на все статьи (см. .htaccess)
+  var postSlug = qs.get('slug') || '';
 
   var frame = document.getElementById('frame');
   var els = {
     save:   document.getElementById('save'),
     reload: document.getElementById('reload'),
     logout: document.getElementById('logout'),
-    vars:   document.getElementById('vars'),
     msg:    document.getElementById('msg'),
     hint:   document.getElementById('hint'),
-    pageSel:document.getElementById('pageSel'),
+    pagesBtn:     document.getElementById('pagesBtn'),
+    pagesPanel:   document.getElementById('pagesPanel'),
+    pagesSearch:  document.getElementById('pagesSearch'),
+    pagesTreeList:document.getElementById('pagesTreeList'),
+    pagesContent: document.getElementById('pagesContent'),
     loginGate: document.getElementById('loginGate'),
     loginForm: document.getElementById('loginForm'),
     loginPass: document.getElementById('loginPass'),
@@ -159,22 +214,13 @@
   var data = null;
   var ADMIN_PASS = ''; // подтверждённый сервером пароль текущей сессии — см. экран входа ниже
 
-  // ---- переключатель страниц в шапке ----
-  Object.keys(PAGES).forEach(function(k){
-    var o = document.createElement('option');
-    o.value = k; o.textContent = PAGES[k].title;
-    if(k === pageKey) o.selected = true;
-    els.pageSel.appendChild(o);
-  });
-  els.pageSel.addEventListener('change', function(){
-    goToPage(els.pageSel.value);
-  });
-  function goToPage(key){
-    if(key === pageKey) return;
-    if(dirty && !confirm('Есть несохранённые правки. Перейти без сохранения?')) {
-      els.pageSel.value = pageKey; return;
-    }
-    location.href = '/admin.html?page=' + key;
+  // ---- переход между страницами (раньше — <select>, теперь дерево «Страницы») ----
+  function goToPage(key, slug){
+    if(key === pageKey && (slug || '') === postSlug) { els.pagesPanel.classList.remove('open'); return; }
+    if(dirty && !confirm('Есть несохранённые правки. Перейти без сохранения?')) return;
+    var url = '/admin.html?page=' + key;
+    if(slug) url += '&slug=' + encodeURIComponent(slug);
+    location.href = url;
   }
 
   els.hint.textContent = isJson
@@ -183,7 +229,7 @@
   // admin.html физически лежит в корне сайта, но открывается и по «красивому»
   // адресу /skud/admin — относительные пути в этом случае резолвятся неверно,
   // поэтому все ссылки на соседние файлы делаем абсолютными от корня.
-  frame.src = '/' + PAGE.file + '?_edit=1';
+  frame.src = '/' + PAGE.file + '?_edit=1' + (pageKey === 'blog-post' && postSlug ? '&slug=' + encodeURIComponent(postSlug) : '');
 
   function setMsg(t, cls){ els.msg.textContent = t || ''; els.msg.className = 'msg ' + (cls||''); }
 
@@ -276,11 +322,13 @@
       return a.t.localeCompare(b.t, 'ru');
     });
   }
-  var varsPanel = null;
-  function buildVarsPanel(){
-    varsPanel = document.createElement('div');
-    varsPanel.className = 'settings vars-panel';
-    varsPanel.id = 'varsPanel';
+  // ---- панель «Страницы» — дерево слева (поиск + «Переменные» + «Страницы» + «Блог»),
+  // содержимое справа. Реальная страница/статья уводит со страницы (goToPage);
+  // «Переменные» рендерятся прямо в правой части без перехода. ----
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escAttr(s){ return esc(s).replace(/"/g,'&quot;'); }
+
+  function varsContentHtml(){
     var h = '<h2>Переменные — правим в одном месте</h2><div class="vars-grid">';
     VAR_GROUPS.forEach(function(gr){
       h += '<div class="vars-group"><h3>'+gr.g+'</h3>';
@@ -293,9 +341,10 @@
     h += '</div>';
     h += '<div class="note">Эти значения повторяются по всей странице (телефоны в шапке, контактах '+
          'и подвале; название — в логотипе и подвале). Правка здесь меняет их сразу везде.</div>';
-    varsPanel.innerHTML = h;
-    document.body.appendChild(varsPanel);
-    Array.prototype.forEach.call(varsPanel.querySelectorAll('input[data-vp]'), function(inp){
+    return h;
+  }
+  function wireVarsContent(container){
+    Array.prototype.forEach.call(container.querySelectorAll('input[data-vp]'), function(inp){
       inp.addEventListener('input', function(){
         var p = inp.getAttribute('data-vp');
         setVal(p, inp.value);
@@ -307,21 +356,71 @@
         varsDirty = true;
         markDirty();
       });
+      if(data){ var v = getVal(inp.getAttribute('data-vp')); inp.value = v == null ? '' : v; }
     });
-    wireLogoUpload(varsPanel);
+    wireLogoUpload(container);
+    refreshLogoPreview(container);
   }
-  function toggleVarsPanel(){
-    if(!varsPanel) buildVarsPanel();
-    var open = varsPanel.classList.toggle('open');
-    if(open && data){
-      Array.prototype.forEach.call(varsPanel.querySelectorAll('input[data-vp]'), function(inp){
-        var v = getVal(inp.getAttribute('data-vp'));
-        inp.value = v == null ? '' : v;
-      });
-      refreshLogoPreview(varsPanel);
+  var activeTreeKey = null; // '__vars__', когда открыты «Переменные»
+  function showVarsView(){
+    activeTreeKey = '__vars__';
+    els.pagesContent.innerHTML = varsContentHtml();
+    wireVarsContent(els.pagesContent);
+    renderPagesTree();
+  }
+
+  function renderPagesTree(){
+    var q = (els.pagesSearch.value || '').trim().toLowerCase();
+    function match(label){ return !q || (label||'').toLowerCase().indexOf(q) !== -1; }
+
+    var html = '';
+    if(match('Переменные')){
+      html += '<button type="button" class="pages-item vars-toggle'+(activeTreeKey==='__vars__'?' cur':'')+'" data-vars="1">Переменные</button>';
     }
+
+    var pageKeys = Object.keys(PAGES).filter(function(k){ return PAGES[k].group === 'pages' && match(PAGES[k].title); });
+    if(pageKeys.length){
+      html += '<div class="pages-group"><h3>Страницы</h3>';
+      pageKeys.forEach(function(k){
+        var cur = activeTreeKey !== '__vars__' && k === pageKey;
+        html += '<button type="button" class="pages-item'+(cur?' cur':'')+'" data-key="'+k+'">'+esc(PAGES[k].title)+'</button>';
+      });
+      html += '</div>';
+    }
+
+    var posts = (data && data['blog.posts']) || [];
+    var filteredPosts = posts.filter(function(p){ return match(p.title || p.slug || ''); });
+    var showBlogList = match('Список статей') || match('Блог');
+    if(showBlogList || filteredPosts.length){
+      html += '<div class="pages-group"><h3>Блог</h3>';
+      if(showBlogList){
+        var curList = activeTreeKey !== '__vars__' && pageKey === 'blog';
+        html += '<button type="button" class="pages-item'+(curList?' cur':'')+'" data-key="blog">Список статей</button>';
+      }
+      filteredPosts.forEach(function(p){
+        var curPost = activeTreeKey !== '__vars__' && pageKey === 'blog-post' && postSlug === p.slug;
+        html += '<button type="button" class="pages-item sub'+(curPost?' cur':'')+'" data-key="blog-post" data-slug="'+escAttr(p.slug)+'">'+esc(p.title || p.slug)+'</button>';
+      });
+      html += '</div>';
+    }
+
+    if(!html) html = '<p class="pages-empty-note">Ничего не найдено</p>';
+    els.pagesTreeList.innerHTML = html;
+
+    Array.prototype.forEach.call(els.pagesTreeList.querySelectorAll('[data-vars]'), function(b){
+      b.addEventListener('click', showVarsView);
+    });
+    Array.prototype.forEach.call(els.pagesTreeList.querySelectorAll('[data-key]'), function(b){
+      b.addEventListener('click', function(){
+        goToPage(b.getAttribute('data-key'), b.getAttribute('data-slug') || '');
+      });
+    });
   }
-  els.vars.addEventListener('click', toggleVarsPanel);
+  els.pagesSearch.addEventListener('input', renderPagesTree);
+  els.pagesBtn.addEventListener('click', function(){
+    var open = els.pagesPanel.classList.toggle('open');
+    if(open) renderPagesTree();
+  });
 
   // ---- загрузка лого (картинкой) вместо символа ----
   var LOGO_UPLOAD_HTML =
@@ -417,7 +516,7 @@
     'hero.card.rows': function(){ return {l:'Показатель', v:'значение'}; },
     'stats.items':    function(){ return {value:'100+', label:'подпись показателя'}; },
     'why.benefits':   function(){ return {num:'05', title:'Преимущество', text:'Короткое описание преимущества.'}; },
-    'blog.posts':     function(){ return {tag:'Раздел', title:'Заголовок статьи', desc:'Короткое описание статьи.'}; },
+    'blog.posts':     function(){ return {slug:'novaya-statya-'+Date.now(), title:'Заголовок статьи', excerpt:'Короткое описание статьи.', date:new Date().toISOString().slice(0,10), tags:[], body:'<p>Текст статьи.</p>'}; },
     'footer.services':function(){ return {label:'Ссылка', href:'#services'}; },
     'footer.company': function(){ return {label:'Ссылка', href:'#'}; }
   };
@@ -1214,7 +1313,6 @@
         var key = pageKeyFromHref(a.getAttribute('href'));
         if(key && key !== pageKey){
           e.preventDefault(); e.stopPropagation();
-          els.pageSel.value = key;
           goToPage(key);
           return;
         }
@@ -1266,11 +1364,11 @@
     // напр. плейсхолдеры полей форм), которые правятся разом на всех страницах
     fetch('/content.json?_=' + Date.now(), {cache:'no-store'})
       .then(function(r){ if(!r.ok) throw new Error('content.json ' + r.status); return r.json(); })
-      .then(function(j){ data = j; whenFrameReady(installEditor); })
+      .then(function(j){ data = j; renderPagesTree(); whenFrameReady(installEditor); })
       .catch(function(e){
         if(isJson){ setMsg('Не удалось загрузить content.json: ' + e.message, 'err'); return; }
         // статичная страница может работать и без общих переменных
-        data = {}; whenFrameReady(installEditor);
+        data = {}; renderPagesTree(); whenFrameReady(installEditor);
       });
   }
   frame.addEventListener('load', boot);

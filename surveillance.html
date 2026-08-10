@@ -202,7 +202,9 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 .case h3{font-size:17px;margin-bottom:8px}
 .case p{font-size:14px;color:var(--muted);margin-bottom:12px}
 .case-tags{display:flex;flex-wrap:wrap;gap:7px}
-.case-tags span{font-size:12px;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);color:#b8c5dd}
+.case-tags span,.case-tags a{font-size:12px;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);color:#b8c5dd;transition:.2s}
+.case-tags a:hover{border-color:rgba(34,211,238,.45);color:var(--accent)}
+.page-head .case-tags{margin-top:18px}
 .case-more{margin:14px 0 0 auto;background:none;border:0;padding:0;font-size:13.5px;font-weight:600;color:var(--accent);cursor:pointer;display:flex;width:max-content;align-items:center;gap:5px}
 .case-more:hover{color:#fff}
 .case-more::after{content:"→";transition:.2s}
@@ -517,6 +519,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <span class="eyebrow">Контроль, безопасность, прозрачность процессов</span>
         <h1>Видеонаблюдение для бизнеса</h1>
         <p class="lead">Полный цикл: от проектирования до обслуживания. Под ключ, с гарантией и SLA — вы получаете не просто камеры, а управляемую систему безопасности с понятным отчётом и быстрым доступом к архиву.</p>
+        <div class="case-tags"><a href="/blog?tag=surveillance"><span>Видеонаблюдение</span></a></div>
         <div class="hero-cta">
           <a href="#contacts" class="btn btn-ghost">Получить бесплатный аудит объекта</a>
         </div>
@@ -691,7 +694,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div>
           <h3>Склад 1200 м²: контроль отгрузок и потерь</h3>
           <p>18 IP-камер, архив 30 дней, интеграция с СКУД. Спорные ситуации при приёмке снизились на 50%, потери ТМЦ — на 30%.</p>
-          <div class="case-tags"><span>Видеонаблюдение</span><span>Склад</span></div>
+          <div class="case-tags"><a href="/blog?tag=surveillance"><span>Видеонаблюдение</span></a><a href="/blog?tag=warehouse"><span>Склад</span></a></div>
           <button type="button" class="case-more" data-case="storage">Подробнее</button>
         </div>
       </div>
@@ -700,7 +703,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div>
           <h3>Офис 5 этажей: доступ для руководителей с телефона</h3>
           <p>24 камеры, разграничение прав, привязка фрагментов к заявкам службы безопасности. Разбор инцидента — 1–2 часа вместо 1–2 дней.</p>
-          <div class="case-tags"><span>Видеонаблюдение</span><span>Офис</span></div>
+          <div class="case-tags"><a href="/blog?tag=surveillance"><span>Видеонаблюдение</span></a><a href="/blog?tag=office"><span>Офис</span></a></div>
           <button type="button" class="case-more" data-case="office">Подробнее</button>
         </div>
       </div>
@@ -709,7 +712,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div>
           <h3>Стройплощадка 1,2 Га: доказательная база при спорах</h3>
           <p>8 уличных камер с ИК-подсветкой, детекция движения ночью, фиксация «до/после» по этапам работ. Ночные инциденты снизились на 50–60%.</p>
-          <div class="case-tags"><span>Видеонаблюдение</span><span>Стройка</span></div>
+          <div class="case-tags"><a href="/blog?tag=surveillance"><span>Видеонаблюдение</span></a><a href="/blog?tag=construction"><span>Стройка</span></a></div>
           <button type="button" class="case-more" data-case="construction">Подробнее</button>
         </div>
       </div>
@@ -718,7 +721,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div>
           <h3>Коттеджный посёлок на 120 домов: контроль периметра</h3>
           <p>16 периметральных камер, распознавание госномеров на КПП, архив 45 дней. Учёт гостевого транспорта стал прозрачным.</p>
-          <div class="case-tags"><span>Видеонаблюдение</span><span>Периметр</span></div>
+          <div class="case-tags"><a href="/blog?tag=surveillance"><span>Видеонаблюдение</span></a><a href="/blog?tag=perimeter"><span>Периметр</span></a></div>
           <button type="button" class="case-more" data-case="village">Подробнее</button>
         </div>
       </div>

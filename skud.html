@@ -199,7 +199,9 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 .case h3{font-size:17px;margin-bottom:8px}
 .case p{font-size:14px;color:var(--muted);margin-bottom:12px}
 .case-tags{display:flex;flex-wrap:wrap;gap:7px}
-.case-tags span{font-size:12px;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);color:#b8c5dd}
+.case-tags span,.case-tags a{font-size:12px;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);color:#b8c5dd;transition:.2s}
+.case-tags a:hover{border-color:rgba(34,211,238,.45);color:var(--accent)}
+.page-head .case-tags{margin-top:18px}
 
 /* ---------- contacts ---------- */
 .contacts{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
@@ -412,6 +414,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
     <span class="eyebrow">Контроль и управление доступом</span>
     <h1>СКУД для бизнеса</h1>
     <p class="lead">Ограничиваем доступ на территорию, ведём учёт рабочего времени и защищаем периметр объекта — от&nbsp;проекта до сервисного обслуживания, одной командой.</p>
+    <div class="case-tags"><a href="/blog?tag=skud"><span>СКУД</span></a></div>
   </div>
 </section>
 
@@ -520,7 +523,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div>
           <h3>Установка СКУД в автосервисе</h3>
           <p>Контроль и безопасность на всей территории сервиса, полная ясность в текущем моменте.</p>
-          <div class="case-tags"><span>СКУД</span><span>Безопасность</span></div>
+          <div class="case-tags"><a href="/blog?tag=skud"><span>СКУД</span></a><a href="/blog?tag=security"><span>Безопасность</span></a></div>
         </div>
       </div>
       <div class="case reveal">
@@ -528,7 +531,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div>
           <h3>ЖК бизнес-класса: замена старой СКУД</h3>
           <p>Демонтаж устаревшего оборудования, установка Face ID и распознавания автомобильных номеров.</p>
-          <div class="case-tags"><span>СКУД</span><span>Face ID</span></div>
+          <div class="case-tags"><a href="/blog?tag=skud"><span>СКУД</span></a><a href="/blog?tag=face-id"><span>Face ID</span></a></div>
         </div>
       </div>
     </div>

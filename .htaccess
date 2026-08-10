@@ -14,6 +14,12 @@ RewriteRule ^it-autsorsing/?$ /it-outsourcing [R=301,L,NC]
 RewriteCond %{DOCUMENT_ROOT}/$1.html -f
 RewriteRule ^([a-z0-9_-]+)/admin/?$ admin.html?page=$1 [L,QSA,NC]
 
+# Статья блога: /blog/<slug> -> blog-post.html (общий физический файл,
+# сам JS внутри читает slug из location.pathname и рендерит статью из
+# content.json). Отдельного файла на каждую статью нет и не будет —
+# см. docs/decisions.md по причине (не плодить raw-файлы).
+RewriteRule ^blog/([a-z0-9-]+)/?$ blog-post.html [L]
+
 # Любой хвостовой слэш убираем: /admin/ → /admin, /telecom/ → /telecom
 RewriteRule ^(.+)/$ /$1 [R=301,L]
 

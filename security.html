@@ -227,7 +227,9 @@ header.scrolled{background:rgba(7,11,22,.82);backdrop-filter:blur(18px);-webkit-
 .case h3{font-size:17px;margin-bottom:8px}
 .case p{font-size:14px;color:var(--muted);margin-bottom:12px}
 .case-tags{display:flex;flex-wrap:wrap;gap:7px}
-.case-tags span{font-size:12px;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);color:#b8c5dd}
+.case-tags span,.case-tags a{font-size:12px;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);color:#b8c5dd;transition:.2s}
+.case-tags a:hover{border-color:rgba(34,211,238,.45);color:var(--accent)}
+.page-head .case-tags{margin-top:18px}
 .case-more{margin:14px 0 0 auto;background:none;border:0;padding:0;font-size:13.5px;font-weight:600;color:var(--accent);cursor:pointer;display:flex;width:max-content;align-items:center;gap:5px}
 .case-more:hover{color:#fff}
 .case-more::after{content:"→";transition:.2s}
@@ -496,6 +498,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <span class="eyebrow">Аудит · защита данных · мониторинг 24/7</span>
         <h1>Защита бизнеса от кибератак, утечек и шифровальщиков</h1>
         <p class="lead">Комплексная ИТ-безопасность: аудит, защита данных, мониторинг 24/7. Работаем с малым и средним бизнесом, стройкой, автосервисами, УК, коттеджными посёлками.</p>
+        <div class="case-tags"><a href="/blog?tag=security"><span>ИТ-безопасность</span></a></div>
         <div class="hero-cta">
           <a href="#contacts" class="btn btn-ghost">Получить аудит безопасности</a>
         </div>
@@ -687,7 +690,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div>
           <h3>Блокировка фишинговой атаки до перевода денег</h3>
           <p>Письмо якобы от контрагента с просьбой сменить реквизиты перехвачено защитой почты и отправлено в карантин. Платёж не ушёл мошенникам.</p>
-          <div class="case-tags"><span>ИТ-безопасность</span><span>Фишинг</span></div>
+          <div class="case-tags"><a href="/blog?tag=security"><span>ИТ-безопасность</span></a><a href="/blog?tag=phishing"><span>Фишинг</span></a></div>
           <button type="button" class="case-more" data-case="phishing">Подробнее</button>
         </div>
       </div>
@@ -696,7 +699,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div>
           <h3>Восстановление данных после шифровальщика за 4 часа</h3>
           <p>Файлы зашифрованы вечером, утром — плановые отгрузки. Данные восстановлены из бэкапа за 4 часа, простоя бизнес не заметил.</p>
-          <div class="case-tags"><span>ИТ-безопасность</span><span>Бэкапы</span></div>
+          <div class="case-tags"><a href="/blog?tag=security"><span>ИТ-безопасность</span></a><a href="/blog?tag=backups"><span>Бэкапы</span></a></div>
           <button type="button" class="case-more" data-case="ransomware">Подробнее</button>
         </div>
       </div>
@@ -705,7 +708,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div>
           <h3>Остановка утечки персональных данных через права доступа</h3>
           <p>Доступ к базе клиентов был «на всех», файлы копировали на личные устройства. Несанкционированные доступы снижены до нуля.</p>
-          <div class="case-tags"><span>ИТ-безопасность</span><span>ПДн</span></div>
+          <div class="case-tags"><a href="/blog?tag=security"><span>ИТ-безопасность</span></a><a href="/blog?tag=personal-data"><span>ПДн</span></a></div>
           <button type="button" class="case-more" data-case="leak">Подробнее</button>
         </div>
       </div>
@@ -714,7 +717,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         <div>
           <h3>Безопасный удалённый доступ без риска взлома</h3>
           <p>Прямой RDP к серверам с открытыми портами и попытками подбора паролей. Порты закрыты, атаки прекратились, удалёнка сохранена.</p>
-          <div class="case-tags"><span>ИТ-безопасность</span><span>Удалённый доступ</span></div>
+          <div class="case-tags"><a href="/blog?tag=security"><span>ИТ-безопасность</span></a><a href="/blog?tag=remote-access"><span>Удалённый доступ</span></a></div>
           <button type="button" class="case-more" data-case="remote">Подробнее</button>
         </div>
       </div>
