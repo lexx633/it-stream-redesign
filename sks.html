@@ -538,6 +538,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
           <div class="field"><input type="email" name="email" placeholder="E-mail"></div>
         </div>
         <div class="field"><textarea name="comment" placeholder="Коротко об объекте и задаче"></textarea></div>
+        <div class="hp-field" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
         <label class="agree"><input type="checkbox" required checked>Согласен на обработку персональных данных в соответствии с политикой конфиденциальности</label>
         <button type="submit" class="btn btn-primary" style="width:100%">Отправить заявку</button>
         <div class="form-msg" id="formMsg">Заявка отправлена. Менеджер свяжется с вами в течение 5 минут.</div>
@@ -682,9 +683,32 @@ footer{border-top:1px solid var(--line);padding:56px 0 32px;background:rgba(7,11
         [form.name, form.phone].forEach(function(f){ if(!f.value.trim()) f.style.borderColor = '#f87171'; });
         return;
       }
-      msg.classList.add('show');
-      form.querySelector('button[type=submit]').textContent = 'Отправлено';
-      form.reset();
+      var btn = form.querySelector('button[type=submit]');
+      var btnText = btn.textContent, msgText = msg.textContent;
+      btn.disabled = true;
+      msg.classList.remove('show');
+      var data = new FormData();
+      data.append('name', name);
+      data.append('phone', ph);
+      data.append('comment', form.comment.value.trim());
+      data.append('page', document.title);
+      data.append('url', location.href);
+      data.append('source', (form.querySelector('h3') || {}).textContent || '');
+      data.append('website', form.website.value);
+      fetch('/send-lead.php', {method:'POST', body:data})
+        .then(function(r){ if(!r.ok) throw new Error('bad'); })
+        .then(function(){
+          msg.textContent = msgText;
+          msg.classList.add('show');
+          btn.textContent = 'Отправлено';
+          form.reset();
+        })
+        .catch(function(){
+          btn.disabled = false;
+          btn.textContent = btnText;
+          msg.textContent = 'Не удалось отправить. Позвоните нам: 8 (800) 301-26-60';
+          msg.classList.add('show');
+        });
     });
     form.addEventListener('input', function(e){ e.target.style.borderColor = ''; });
   }
